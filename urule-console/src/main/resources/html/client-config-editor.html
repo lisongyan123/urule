@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="${contextPath}/urule/res/urule-asserts/css/bootstrap.min.css">
+<title>客户端推送配置</title>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/jquery.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootstrap.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootbox.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/js/common.bundle.js"></script>
+</head>
+<body>
+<div id='container'></div>
+<script type="text/javascript">
+	window._server="${contextPath}/urule";
+	window._core_version="${version}";
+	window._date_=${_date_};
+	window._lis_="${_lis_}";
+	window._clientProvider=${clientProvider};
+</script>
+<script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/js/clientConfigEditor.bundle.js"></script>
+</body>
+</html>

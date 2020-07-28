@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="${contextPath}/urule/res/urule-asserts/css/bootstrap.min.css">
+<title>${title}</title>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/jquery.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootstrap.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootbox.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootstrapValidator.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/js/common.bundle.js"></script>
+<style type="text/css">
+	 body {  
+	    -webkit-touch-callout: none;  
+	    -webkit-user-select: none;  
+	    -khtml-user-select: none;  
+	    -moz-user-select: none;  
+	    -ms-user-select: none;  
+	    user-select: none;  
+	}
+ </style>  
+</head>
+<body>
+<div id='container'></div>
+<script type="text/javascript">
+	window._server="${contextPath}/urule";
+	window._welcomePage="${welcomePage}";
+	window._core_version="${version}";
+	window._securityEnable=${securityEnable};
+	window._date_=${_date_};
+	window._lis_="${_lis_}";
+	window._logOutUrl="${logoutURL}";
+	window._cluster=${cluster};
+	window._showFileExtensionName=${showFileExtensionName};
+	window._fileMenuExtension="${fileMenuExtension}";
+	window._fileMenuExtensionUrl="${fileMenuExtensionUrl}";
+</script>
+<script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/js/frame.bundle.js"></script>
+</body>
+</html>

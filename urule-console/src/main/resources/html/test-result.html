@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+</head>
+<body style="margin:5px;">
+${content}
+<script type="text/javascript">
+	var list=document.getElementsByName('detail');
+	for(var i=0;i<list.length;i++){
+		var item=list[i];
+		item.addEventListener('click',function(e){
+			var target=e.target;
+			var id=target.getAttribute('c-data');
+			var contentId="detailContent-"+id;
+			var content=document.getElementById(contentId);
+			var display=content.style.display;
+			if(display==='none'){
+				content.style.display='block';
+			}else{
+				content.style.display='none';
+			}
+		});
+	}
+	document.getElementById("see_success").onclick=function(){
+		seeRows('success');
+		document.getElementById("see_success").style.color='blue';
+		document.getElementById("see_fail").style.color='black';
+		document.getElementById("see_all").style.color='black';
+	};
+	document.getElementById("see_fail").onclick=function(){
+		seeRows('fail');
+		document.getElementById("see_success").style.color='black';
+		document.getElementById("see_fail").style.color='blue';
+		document.getElementById("see_all").style.color='black';
+	};
+	document.getElementById("see_all").onclick=function(){
+		seeRows('all');
+		document.getElementById("see_success").style.color='black';
+		document.getElementById("see_fail").style.color='black';
+		document.getElementById("see_all").style.color='blue';
+	};
+	function seeRows(display){
+		var successRows=document.getElementsByName('success_row');
+		for(var i=0;i<successRows.length;i++){
+			var row=successRows[i];
+			if(display==='success'){			
+				row.style.display='';
+			}else if(display==='fail'){
+				row.style.display='none';
+			}else if(display==='all'){
+				row.style.display='';
+			}
+		}
+		var failRows=document.getElementsByName('fail_row');
+		for(var i=0;i<failRows.length;i++){
+			var row=failRows[i];
+			if(display==='success'){			
+				row.style.display='none';
+			}else if(display==='fail'){
+				row.style.display='';
+			}else if(display==='all'){
+				row.style.display='';
+			}
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="${contextPath}/urule/res/urule-asserts/css/bootstrap.min.css">
+<title>Restful服务调用测试</title>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/jquery.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootstrap.min.js"></script>
+ <script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/venderjs/bootbox.min.js"></script>
+	<style type="text/css">
+	.CodeMirror {
+            font-size:13px;
+            color: #333333;
+            font-family: Microsoft YaHei Arial sans-serif;
+            background-color: #FFF;
+            border:1px solid #ece2e2;
+            height:1820px !important;
+        }	
+	</style>
+</head>
+<body style="margin:5px">
+<div id='container'></div>
+<script type="text/javascript">
+	window._server="${contextPath}/urule";
+	window.restUsername="${username}";
+	window.restPassword="${password}";
+	window.restUrl="${url}";
+	window.jsonData=${json};
+	window.restSecurity=${security};
+</script>
+<script type="text/javascript" src="${contextPath}/urule/res/urule-asserts/js/restfulMock.bundle.js"></script>
+</body>
+</html>

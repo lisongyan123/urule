@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	">
+	<import resource="classpath:urule-core-context.xml"/>
+
+	<context:property-placeholder location="classpath:urule-console-context.properties" ignore-unresolvable="true"/>
+
+	<bean id="urule.resourcePackageCache" class="com.bstek.urule.console.cache.DefaultResourcePackageCache">
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+		<property name="resourcePackageCheckCycle" value="${urule.resourcePackageCheckCycle}"></property>
+	</bean>
+
+	<bean id="urule.restfulServiceServletHandler" class="com.bstek.urule.console.servlet.rest.RestfulServiceServletHandler">
+		<property name="resourcePackageCache" ref="urule.resourcePackageCache"></property>
+		<property name="knowledgeService" ref="urule.knowledgeService"></property>
+	</bean>
+
+	<bean id="urule.actionTemplateServletHandler" class="com.bstek.urule.console.servlet.actiontemplate.ActionTemplateServletHandler"></bean>
+
+	<bean id="urule.conditionTemplateServletHandler" class="com.bstek.urule.console.servlet.conditiontemplate.ConditionTemplateServletHandler"></bean>
+
+	<bean id="urule.knowledgePackageService" class="com.bstek.urule.console.DefaultKnowledgePackageService">
+		<property name="knowledgeBuilder" ref="urule.knowledgeBuilder"></property>
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+	</bean>
+
+	<bean id="urule.consoleServletHandler" class="com.bstek.urule.console.servlet.console.ConsoleServletHandler">
+		<property name="debugMessageHolder" ref="urule.debugMessageHolder"></property>
+	</bean>
+
+	<bean id="urule.loginServletHandler" class="com.bstek.urule.console.servlet.login.LoginServletHandler">
+		<property name="consoleTitle" value="${urule.console.title}"></property>
+		<property name="companyId" value="${urule.security.companyId}"></property>
+		<property name="securityRepositoryService" ref="urule.securityRepositoryService"></property>
+	</bean>
+	<bean id="urule.userServletHandler" class="com.bstek.urule.console.servlet.user.UserServletHandler">
+		<property name="securityRepositoryService" ref="urule.securityRepositoryService"></property>
+	</bean>
+
+	<bean id="urule.compareServletHandler" class="com.bstek.urule.console.servlet.compare.CompareServletHandler"></bean>
+
+	<bean id="urule.jsonServletHandler" class="com.bstek.urule.console.servlet.json.JsonServletHandler"></bean>
+
+	<bean id="urule.consoleLogWriter" class="com.bstek.urule.console.servlet.console.ConsoleLogWriter">
+		<property name="debugMessageHolder" ref="urule.debugMessageHolder"></property>
+	</bean>
+
+	<bean id="urule.designerConfigure" class="com.bstek.urule.console.servlet.DesignerConfigure">
+		<property name="constantLink" value="${urule.constant.link}"></property>
+		<property name="variableLink" value="${urule.variable.link}"></property>
+	</bean>
+
+	<bean id="urule.dynamicJarsServletHandler" class="com.bstek.urule.console.servlet.dynamic.DynamicJarsServletHandler">
+		<property name="dynamicJarRepositoryService" ref="urule.dynamicJarRepositoryService"></property>
+		<property name="dynamicSpringConfigLoader" ref="urule.dynamicSpringConfigLoader"></property>
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="remoteDynamicJarsBuilder" ref="urule.remoteDynamicJarsBuilder"></property>
+	</bean>
+
+	<bean id="urule.complexScorecardEditorServletHandler" class="com.bstek.urule.console.servlet.complexscorecard.ComplexScorecardEditorServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="complexScorecardDeserializer" ref="urule.complexScorecardDeserializer"></property>
+		<property name="commonServletHandler" ref="urule.commonServletHandler"></property>
+		<property name="dslRuleSetBuilder" ref="urule.dslRuleSetBuilder"></property>
+	</bean>
+
+	<bean id="urule.conditionTemplateContentRefactor" class="com.bstek.urule.console.repository.refactor.field.ConditionTemplateContentRefactor"></bean>
+	<bean id="urule.actionTemplateContentRefactor" class="com.bstek.urule.console.repository.refactor.field.ActionTemplateContentRefactor"></bean>
+
+	<bean id="urule.conditionTemplateFileRefactor" class="com.bstek.urule.console.repository.refactor.file.ConditionTemplateFileRefactor"></bean>
+	<bean id="urule.actionTemplateFileRefactor" class="com.bstek.urule.console.repository.refactor.file.ActionTemplateFileRefactor"></bean>
+
+	<bean id="urule.decisionTableFileRefactor" class="com.bstek.urule.console.repository.refactor.file.DecisionTableFileRefactor"></bean>
+	<bean id="urule.decisionTreeFileRefactor" class="com.bstek.urule.console.repository.refactor.file.DecisionTreeFileRefactor"></bean>
+	<bean id="urule.flowFileRefactor" class="com.bstek.urule.console.repository.refactor.file.FlowFileRefactor"></bean>
+	<bean id="urule.knowledgePackageFileRefactor" class="com.bstek.urule.console.repository.refactor.file.KnowledgePackageFileRefactor"></bean>
+	<bean id="urule.rulesetFileRefactor" class="com.bstek.urule.console.repository.refactor.file.RulesetFileRefactor"></bean>
+	<bean id="urule.scorecardFileRefactor" class="com.bstek.urule.console.repository.refactor.file.ScorecardFileRefactor"></bean>
+	<bean id="urule.complexScorecardFileRefactor" class="com.bstek.urule.console.repository.refactor.file.ComplexScorecardFileRefactor"></bean>
+	<bean id="urule.crossTableFileRefactor" class="com.bstek.urule.console.repository.refactor.file.CrossTableFileRefactor"></bean>
+
+	<bean id="urule.decisionTableContentRefactor" class="com.bstek.urule.console.repository.refactor.field.DecisionTableContentRefactor"></bean>
+	<bean id="urule.decisionTreeContentRefactor" class="com.bstek.urule.console.repository.refactor.field.DecisionTreeContentRefactor"></bean>
+	<bean id="urule.flowContentRefactor" class="com.bstek.urule.console.repository.refactor.field.FlowContentRefactor"></bean>
+	<bean id="urule.rulesetContentRefactor" class="com.bstek.urule.console.repository.refactor.field.RulesetContentRefactor"></bean>
+	<bean id="urule.scorecardContentRefactor" class="com.bstek.urule.console.repository.refactor.field.ScorecardContentRefactor"></bean>
+	<bean id="urule.complexScorecardContentRefactor" class="com.bstek.urule.console.repository.refactor.field.ComplexScorecardContentRefactor"></bean>
+	<bean id="urule.scriptRulesetContentRefactor" class="com.bstek.urule.console.repository.refactor.field.ScriptRulesetContentRefactor"></bean>
+	<bean id="urule.crossTableContentRefactor" class="com.bstek.urule.console.repository.refactor.field.CrossTableContentRefactor"></bean>
+
+	<bean id="urule.debugMessageHolder" class="com.bstek.urule.console.servlet.console.DebugMessageHolder"></bean>
+
+	<bean id="urule.httpSessionKnowledgeCache" class="com.bstek.urule.console.servlet.respackage.HttpSessionKnowledgeCache"></bean>
+
+	<bean id="urule.tempFileResourceProvider" class="com.bstek.urule.console.repository.TempFileResourceProvider"></bean>
+
+	<bean id="urule.repositoryResourceProvider" class="com.bstek.urule.console.repository.RepositoryResourceProvider">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+	</bean>
+	<bean id="urule.authorityConfigServletHandler" class="com.bstek.urule.console.servlet.authority.AuthorityConfigServletHandler">
+		<property name="authorityRepositoryService" ref="urule.authorityRepositoryService"></property>
+		<property name="authorityService" ref="urule.authorityService"></property>
+		<property name="authorityType" value="${urule.authority.type}"></property>
+	</bean>
+	<bean id="urule.permissionServletHandler" class="com.bstek.urule.console.servlet.permission.PermissionServletHandler">
+		<property name="authorityRepositoryService" ref="urule.authorityRepositoryService"></property>
+		<property name="authorityType" value="${urule.authority.type}"></property>
+	</bean>
+
+	<bean id="urule.authorityService" class="com.bstek.urule.console.repository.authority.AuthorityServiceImpl">
+		<property name="authorityRepositoryService" ref="urule.authorityRepositoryService"></property>
+	</bean>
+
+	<bean id="urule.authorityRepositoryService" class="com.bstek.urule.console.repository.authority.AuthorityRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+	<bean id="urule.knowledgePackageRepositoryService" class="com.bstek.urule.console.repository.KnowledgePackageRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+	<bean id="urule.securityRepositoryService" class="com.bstek.urule.console.repository.SecurityRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+		<property name="companyId" value="${urule.security.companyId}"></property>
+	</bean>
+
+	<bean id="urule.crosstabEditorServletHandler" class="com.bstek.urule.console.servlet.crosstab.CrosstabEditorServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="crosstableDeserializer" ref="urule.crosstableDeserializer"></property>
+		<property name="commonServletHandler" ref="urule.commonServletHandler"></property>
+		<property name="dslRuleSetBuilder" ref="urule.dslRuleSetBuilder"></property>
+	</bean>
+	<bean id="urule.scorecardEditorServletHandler" class="com.bstek.urule.console.servlet.scorecard.ScorecardEditorServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="scorecardDeserializer" ref="urule.scorecardDeserializer"></property>
+		<property name="commonServletHandler" ref="urule.commonServletHandler"></property>
+		<property name="dslRuleSetBuilder" ref="urule.dslRuleSetBuilder"></property>
+	</bean>
+
+	<bean id="urule.resourceLoaderServletHandler" class="com.bstek.urule.console.servlet.ResourceLoaderServletHandler"></bean>
+
+	<bean id="urule.loadKnowledgeServletHandler" class="com.bstek.urule.console.servlet.knowledge.LoadKnowledgeServletHandler">
+		<property name="knowledgePackageService" ref="urule.knowledgePackageService"></property>
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+		<property name="remoteDynamicJarsBuilder" ref="urule.remoteDynamicJarsBuilder"></property>
+	</bean>
+
+	<bean id="urule.xmlServletHandler" class="com.bstek.urule.console.servlet.xml.XmlServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="builtInActionLibraryBuilder" ref="urule.builtInActionLibraryBuilder"></property>
+	</bean>
+
+	<bean id="urule.templateRepositoryService" class="com.bstek.urule.console.repository.TemplateRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+	<bean id="urule.templateServletHandler" class="com.bstek.urule.console.servlet.template.TemplateServletHandler">
+		<property name="templateRepositoryService" ref="urule.templateRepositoryService"></property>
+	</bean>
+
+	<bean id="urule.referenceService" class="com.bstek.urule.console.repository.reference.ReferenceServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+	<bean id="urule.frameServletHandler" class="com.bstek.urule.console.servlet.frame.FrameServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+		<property name="welcomePage" value="${urule.welcomePage}"></property>
+		<property name="title" value="${urule.console.title}"></property>
+		<property name="logoutURL" value="${urule.logout.url}"></property>
+		<property name="securityEnable" value="${urule.security.enable}"></property>
+	</bean>
+	<bean id="urule.packageServletHandler" class="com.bstek.urule.console.servlet.respackage.PackageServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="resourcePackageCache" ref="urule.resourcePackageCache"></property>
+		<property name="knowledgeBuilder" ref="urule.knowledgeBuilder"></property>
+		<property name="httpSessionKnowledgeCache" ref="urule.httpSessionKnowledgeCache"></property>
+		<property name="knowledgePackageService" ref="urule.knowledgePackageService"></property>
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+		<property name="remoteDynamicJarsBuilder" ref="urule.remoteDynamicJarsBuilder"></property>
+	</bean>
+	<bean id="urule.testScenorioServletHandler" class="com.bstek.urule.console.servlet.test.TestScenorioServletHandler">
+		<property name="scenarioRepositoryService" ref="urule.scenarioRepositoryService"></property>
+		<property name="knowledgeBuilder" ref="urule.knowledgeBuilder"></property>
+		<property name="httpSessionKnowledgeCache" ref="urule.httpSessionKnowledgeCache"></property>
+	</bean>
+
+	<bean id="urule.testResultServletHandler" class="com.bstek.urule.console.servlet.test.TestResultServletHandler"></bean>
+
+	<bean id="urule.reteDiagramServletHandler" class="com.bstek.urule.console.servlet.diagram.ReteDiagramServletHandler">
+		<property name="knowledgeBuilder" ref="urule.knowledgeBuilder"></property>
+	</bean>
+
+	<bean id="urule.ruleSetServletEditorHandler" class="com.bstek.urule.console.servlet.ruleset.RuleSetServletEditorHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+	</bean>
+	<bean id="urule.decisionTreeEditorServletHandler" class="com.bstek.urule.console.servlet.decisiontree.DecisionTreeEditorServletHandler">
+		<property name="variableTreeNodeParser" ref="urule.variableTreeNodeParser"></property>
+		<property name="conditionTreeNodeParser" ref="urule.conditionTreeNodeParser"></property>
+		<property name="actionTreeNodeParser" ref="urule.actionTreeNodeParser"></property>
+	</bean>
+	<bean id="urule.variableEditorServletHandler" class="com.bstek.urule.console.servlet.variable.VariableEditorServletHandler"></bean>
+	<bean id="urule.constantServletHandler" class="com.bstek.urule.console.servlet.constant.ConstantServletHandler"></bean>
+	<bean id="urule.parameterServletHandler" class="com.bstek.urule.console.servlet.parameter.ParameterServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="commonServletHandler" ref="urule.commonServletHandler"></property>
+	</bean>
+	<bean id="urule.actionServletHandler" class="com.bstek.urule.console.servlet.action.ActionServletHandler"></bean>
+	<bean id="urule.ruleFlowDesignerServletHandler" class="com.bstek.urule.console.servlet.flow.RuleFlowDesignerServletHandler">
+		<property name="knowledgePackageRepositoryService" ref="urule.knowledgePackageRepositoryService"></property>
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="flowDeserializer" ref="urule.flowDeserializer"></property>
+		<property name="lhsParser" ref="urule.lhsParser"></property>
+	</bean>
+
+	<bean id="urule.ulEditorServletHandler" class="com.bstek.urule.console.servlet.ul.ULEditorServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="dslRuleSetBuilder" ref="urule.dslRuleSetBuilder"></property>
+		<property name="resourceLibraryBuilder" ref="urule.resourceLibraryBuilder"></property>
+	</bean>
+	<bean id="urule.decisiontableEditorServletHandler" class="com.bstek.urule.console.servlet.decisiontable.DecisiontableEditorServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="decisionTableDeserializer" ref="urule.decisionTableDeserializer"></property>
+		<property name="commonServletHandler" ref="urule.commonServletHandler"></property>
+		<property name="dslRuleSetBuilder" ref="urule.dslRuleSetBuilder"></property>
+	</bean>
+	<bean id="urule.scriptDecisiontableEditorServletHandler" class="com.bstek.urule.console.servlet.scriptdecisiontable.ScriptDecisiontableEditorServletHandler"></bean>
+
+	<bean id="urule.commonServletHandler" class="com.bstek.urule.console.servlet.common.CommonServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+		<property name="builtInActionLibraryBuilder" ref="urule.builtInActionLibraryBuilder"></property>
+		<property name="valueParser" ref="urule.valueParser"></property>
+		<property name="jointParser" ref="urule.jointParser"></property>
+		<property name="junctionParser" ref="urule.junctionParser"></property>
+		<property name="ruleParser" ref="urule.ruleParser"></property>
+		<property name="loopRuleParser" ref="urule.loopRuleParser"></property>
+		<property name="executeMethodActionParser" ref="urule.executeMethodActionParser"></property>
+	</bean>
+	<bean id="urule.clientConfigServletHandler" class="com.bstek.urule.console.servlet.client.ClientConfigServletHandler">
+		<property name="repositoryService" ref="urule.repositoryService"></property>
+	</bean>
+
+
+	<bean id="urule.repositoryBuilder" class="com.bstek.urule.console.repository.RepositoryBuilder" destroy-method="destroy">
+		<property name="repositoryXml" value="${urule.repository.xml}"></property>
+		<property name="repoHomeDir" value="${urule.repository.dir}"></property>
+		<property name="repositoryDatasourceName" value="${urule.repository.datasourcename}"></property>
+		<property name="databaseType" value="${urule.repository.databasetype}"></property>
+		<property name="databaseCluster" value="${urule.repository.databaseCluster}"></property>
+	</bean>
+
+	<bean id="urule.defaultDynamicJarCreator" class="com.bstek.urule.console.DefaultDynamicJarCreator">
+		<property name="dynamicJarRepositoryService" ref="urule.dynamicJarRepositoryService"></property>
+	</bean>
+
+	<bean id="urule.dynamicJarRepositoryService" class="com.bstek.urule.console.repository.dynamic.DynamicJarRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+	<bean id="urule.repositoryService" class="com.bstek.urule.console.repository.RepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+	<bean id="urule.scenarioRepositoryService" class="com.bstek.urule.console.repository.scenario.ScenarioRepositoryServiceImpl">
+		<property name="repositoryBuilder" ref="urule.repositoryBuilder"></property>
+	</bean>
+
+</beans>
