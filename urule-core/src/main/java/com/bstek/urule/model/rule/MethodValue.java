@@ -1,84 +1,92 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
 
 import java.util.List;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2015年2月28日
- */
 public class MethodValue extends AbstractValue {
-	private String beanId;
-	private String beanLabel;
-	private String methodLabel;
-	private String methodName;
-	private List<Parameter> parameters;
-	private ValueType valueType=ValueType.Method;
-	@Override
-	public ValueType getValueType() {
-		return valueType;
-	}
+    private String beanId;
+    private String beanLabel;
+    private String methodLabel;
+    private String methodName;
+    private List<Parameter> parameters;
+    private ValueType valueType;
 
-	@Override
-	public String getId() {
-		String id="[BEAN]["+beanId+"."+methodName+"]";
-		if(arithmetic!=null){
-			id+=arithmetic.getId();
-		}
-		return id;
-	}
+    public MethodValue() {
+        this.valueType = ValueType.Method;
+    }
 
-	public String getBeanId() {
-		return beanId;
-	}
+    public ValueType getValueType() {
+        return this.valueType;
+    }
 
-	public void setBeanId(String beanId) {
-		this.beanId = beanId;
-	}
+    @JsonIgnore
+    public String getId() {
+        StringBuilder var1 = new StringBuilder();
+        var1.append("[BEAN][" + this.beanId + "." + this.methodName + "]");
+        if (this.parameters != null) {
+            var1.append("(");
 
-	public String getBeanLabel() {
-		return beanLabel;
-	}
+            for(int var2 = 0; var2 < this.parameters.size(); ++var2) {
+                if (var2 > 0) {
+                    var1.append(",");
+                }
 
-	public void setBeanLabel(String beanLabel) {
-		this.beanLabel = beanLabel;
-	}
+                Parameter var3 = (Parameter)this.parameters.get(var2);
+                var1.append(var3.getId());
+            }
 
-	public String getMethodLabel() {
-		return methodLabel;
-	}
+            var1.append(")");
+        }
 
-	public void setMethodLabel(String methodLabel) {
-		this.methodLabel = methodLabel;
-	}
+        if (this.arithmetic != null) {
+            var1.append(this.arithmetic.getId());
+        }
 
-	public String getMethodName() {
-		return methodName;
-	}
+        return var1.toString();
+    }
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
+    public String getBeanId() {
+        return this.beanId;
+    }
 
-	public List<Parameter> getParameters() {
-		return parameters;
-	}
+    public void setBeanId(String var1) {
+        this.beanId = var1;
+    }
 
-	public void setParameters(List<Parameter> parameters) {
-		this.parameters = parameters;
-	}
+    public String getBeanLabel() {
+        return this.beanLabel;
+    }
+
+    public void setBeanLabel(String var1) {
+        this.beanLabel = var1;
+    }
+
+    public String getMethodLabel() {
+        return this.methodLabel;
+    }
+
+    public void setMethodLabel(String var1) {
+        this.methodLabel = var1;
+    }
+
+    public String getMethodName() {
+        return this.methodName;
+    }
+
+    public void setMethodName(String var1) {
+        this.methodName = var1;
+    }
+
+    public List<Parameter> getParameters() {
+        return this.parameters;
+    }
+
+    public void setParameters(List<Parameter> var1) {
+        this.parameters = var1;
+    }
 }

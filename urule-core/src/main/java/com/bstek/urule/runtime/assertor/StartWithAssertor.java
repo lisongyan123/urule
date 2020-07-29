@@ -1,45 +1,32 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
 public class StartWithAssertor implements Assertor {
+    public StartWithAssertor() {
+    }
 
-	public boolean eval(Object left, Object right,Datatype datatype) {
-		if(left==null || right==null){
-			return false;
-		}
-		if(!(left instanceof String) || !(right instanceof String)){
-			return false;
-		}
-		String leftStr=(String)left;
-		String rightStr=(String)right;
-		if(leftStr.startsWith(rightStr)){
-			return true;
-		}
-		return false;
-	}
+    public boolean eval(Object var1, Object var2, Datatype var3) {
+        if (var1 != null && var2 != null) {
+            if (var1 instanceof String && var2 instanceof String) {
+                String var4 = (String)var1;
+                String var5 = (String)var2;
+                return var4.startsWith(var5);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-	public boolean support(Op op) {
-		return op.equals(Op.StartWith);
-	}
+    public Op supportOp() {
+        return Op.StartWith;
+    }
 }

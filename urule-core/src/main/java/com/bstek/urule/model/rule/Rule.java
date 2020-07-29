@@ -1,141 +1,210 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
 
-import java.util.Date;
-
 import com.bstek.urule.model.rule.lhs.Lhs;
+import java.util.Date;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月25日
- */
-public class Rule implements RuleInfo{
-	private String name;
-	private Integer salience;
-	private Date effectiveDate;
-	private Date expiresDate;
-	private Boolean enabled;
-	private Boolean debug;
-	private String activationGroup;
-	private String agendaGroup;
-	private Boolean autoFocus;
-	private String ruleflowGroup;
-	private Lhs lhs;
-	private Rhs rhs;
-	private Other other;
-	private Boolean loop;
-	private Boolean loopRule=false;
-	private String remark;
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Date getEffectiveDate() {
-		return effectiveDate;
-	}
-	public Integer getSalience() {
-		return salience;
-	}
-	public void setSalience(Integer salience) {
-		this.salience = salience;
-	}
-	public Boolean getEnabled() {
-		return enabled;
-	}
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-	public Boolean getDebug() {
-		return debug;
-	}
-	public void setDebug(Boolean debug) {
-		this.debug = debug;
-	}
-	public Boolean getAutoFocus() {
-		return autoFocus;
-	}
-	public void setAutoFocus(Boolean autoFocus) {
-		this.autoFocus = autoFocus;
-	}
-	public void setEffectiveDate(Date effectiveDate) {
-		this.effectiveDate = effectiveDate;
-	}
-	public Date getExpiresDate() {
-		return expiresDate;
-	}
-	public void setExpiresDate(Date expiresDate) {
-		this.expiresDate = expiresDate;
-	}
-	public String getActivationGroup() {
-		return activationGroup;
-	}
-	public void setActivationGroup(String activationGroup) {
-		this.activationGroup = activationGroup;
-	}
-	public String getAgendaGroup() {
-		return agendaGroup;
-	}
-	public void setAgendaGroup(String agendaGroup) {
-		this.agendaGroup = agendaGroup;
-	}
-	public String getRuleflowGroup() {
-		return ruleflowGroup;
-	}
-	public void setRuleflowGroup(String ruleflowGroup) {
-		this.ruleflowGroup = ruleflowGroup;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	public Lhs getLhs() {
-		return lhs;
-	}
-	public void setLhs(Lhs lhs) {
-		this.lhs = lhs;
-	}
-	public Rhs getRhs() {
-		return rhs;
-	}
-	public void setRhs(Rhs rhs) {
-		this.rhs = rhs;
-	}
-	public Other getOther() {
-		return other;
-	}
-	public void setOther(Other other) {
-		this.other = other;
-	}
-	
-	public Boolean getLoop() {
-		return loop;
-	}
-	public void setLoop(Boolean loop) {
-		this.loop = loop;
-	}
-	public Boolean isLoopRule() {
-		return loopRule;
-	}
-	public void setLoopRule(Boolean loopRule) {
-		this.loopRule = loopRule;
-	}
+public class Rule implements Comparable<Rule> {
+    private String id;
+    private String name;
+    private String file;
+    private Integer salience;
+    private Date effectiveDate;
+    private Date expiresDate;
+    private Boolean enabled;
+    private Boolean debug;
+    @JsonIgnore
+    private boolean debugFromGlobal;
+    private String mutexGroup;
+    private String pendedGroup;
+    private Boolean autoFocus;
+    private Lhs lhs;
+    private Rhs rhs;
+    private Other other;
+    private Boolean loop;
+    private Boolean loopRule = false;
+    private String remark;
+    private boolean withElse;
+    @JsonIgnore
+    private Rule elseRule;
+
+    public Rule() {
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String var1) {
+        this.id = var1;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public String getFile() {
+        return this.file;
+    }
+
+    public void setFile(String var1) {
+        this.file = var1;
+    }
+
+    public Date getEffectiveDate() {
+        return this.effectiveDate;
+    }
+
+    public Integer getSalience() {
+        return this.salience;
+    }
+
+    public void setSalience(Integer var1) {
+        this.salience = var1;
+    }
+
+    public Boolean getEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(Boolean var1) {
+        this.enabled = var1;
+    }
+
+    public Boolean getDebug() {
+        return this.debug;
+    }
+
+    public void setDebug(Boolean var1) {
+        this.debug = var1;
+    }
+
+    public boolean isDebugFromGlobal() {
+        return this.debugFromGlobal;
+    }
+
+    public void setDebugFromGlobal(boolean var1) {
+        this.debugFromGlobal = var1;
+    }
+
+    public Boolean getAutoFocus() {
+        return this.autoFocus;
+    }
+
+    public void setAutoFocus(Boolean var1) {
+        this.autoFocus = var1;
+    }
+
+    public void setEffectiveDate(Date var1) {
+        this.effectiveDate = var1;
+    }
+
+    public Date getExpiresDate() {
+        return this.expiresDate;
+    }
+
+    public void setExpiresDate(Date var1) {
+        this.expiresDate = var1;
+    }
+
+    public String getMutexGroup() {
+        return this.mutexGroup;
+    }
+
+    public void setMutexGroup(String var1) {
+        this.mutexGroup = var1;
+    }
+
+    public String getPendedGroup() {
+        return this.pendedGroup;
+    }
+
+    public void setPendedGroup(String var1) {
+        this.pendedGroup = var1;
+    }
+
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String var1) {
+        this.remark = var1;
+    }
+
+    public Lhs getLhs() {
+        return this.lhs;
+    }
+
+    public void setLhs(Lhs var1) {
+        this.lhs = var1;
+    }
+
+    public Rhs getRhs() {
+        return this.rhs;
+    }
+
+    public void setRhs(Rhs var1) {
+        this.rhs = var1;
+    }
+
+    public Other getOther() {
+        return this.other;
+    }
+
+    public void setOther(Other var1) {
+        this.other = var1;
+    }
+
+    public Boolean getLoop() {
+        return this.loop;
+    }
+
+    public void setLoop(Boolean var1) {
+        this.loop = var1;
+    }
+
+    public Boolean isLoopRule() {
+        return this.loopRule;
+    }
+
+    public void setLoopRule(Boolean var1) {
+        this.loopRule = var1;
+    }
+
+    public boolean isWithElse() {
+        return this.withElse;
+    }
+
+    public void setWithElse(boolean var1) {
+        this.withElse = var1;
+    }
+
+    public Rule getElseRule() {
+        return this.elseRule;
+    }
+
+    public void setElseRule(Rule var1) {
+        this.elseRule = var1;
+    }
+
+    public int compareTo(Rule var1) {
+        Integer var2 = var1.getSalience();
+        Integer var3 = this.getSalience();
+        if (var2 != null && var3 != null) {
+            return var2 - var3;
+        } else if (var2 != null) {
+            return 1;
+        } else {
+            return var3 != null ? -1 : 0;
+        }
+    }
 }

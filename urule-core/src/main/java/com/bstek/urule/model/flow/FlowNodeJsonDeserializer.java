@@ -1,25 +1,15 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
 
+import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
@@ -27,124 +17,147 @@ import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.bstek.urule.runtime.KnowledgePackageWrapper;
-
-/**
- * @author Jacky.gao
- * @since 2015年4月21日
- */
 public class FlowNodeJsonDeserializer extends JsonDeserializer<List<FlowNode>> {
-	@Override
-	public List<FlowNode> deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JsonProcessingException {
-		ObjectMapper mapper = (ObjectMapper)jsonParser.getCodec();
-        JsonNode jsonNode = mapper.readTree(jsonParser);
-        List<FlowNode> flowNodes=new ArrayList<FlowNode>();
-        Iterator<JsonNode> childrenNodesIter=jsonNode.getElements();
-        while(childrenNodesIter.hasNext()){
-        	JsonNode childNode=childrenNodesIter.next();
-        	JsonNode type=childNode.get("type");
-        	if(type==null){
-        		continue;
-        	}
-        	FlowNode node=null;
-        	FlowNodeType nodeType=FlowNodeType.valueOf(type.getTextValue());
-        	switch(nodeType){
-        	case Action:
-        		ActionNode actionNode=new ActionNode();
-        		JsonNode actionBeanNode=childNode.get("actionBean");
-        		if(actionBeanNode!=null){
-        			actionNode.setActionBean(actionBeanNode.getTextValue());
-        		}
-        		node=actionNode;
-        		break;
-        	case Script:
-        		ScriptNode scriptNode=new ScriptNode();
-        		JsonNode sn=childNode.get("script");
-        		if(sn!=null){
-        			scriptNode.setScript(sn.getTextValue());
-        		}
-        		node=scriptNode;
-        		break;
-        	case Decision:
-        		DecisionNode decisionNode=new DecisionNode();
-        		DecisionType decisionType=DecisionType.valueOf(childNode.get("decisionType").getTextValue());
-        		decisionNode.setDecisionType(decisionType);
-        		JsonNode itemsNode=childNode.get("items");
-        		Iterator<JsonNode> iter=itemsNode.getElements();
-        		List<DecisionItem> items=new ArrayList<DecisionItem>();
-        		while(iter.hasNext()){
-        			JsonNode itemNode=iter.next();
-        			DecisionItem item=new DecisionItem();
-        			item.setTo(itemNode.get("to").getTextValue());
-        			if(decisionType.equals(DecisionType.Criteria)){
-        				item.setScript(itemNode.get("script").getTextValue());        				
-        			}else{
-        				item.setPercent(itemNode.get("percent").getIntValue());
-        			}
-        			items.add(item);
-        		}
-        		decisionNode.setItems(items);
-        		node=decisionNode;
-        		break;
-        	case End:
-        		node=new EndNode();
-        		break;
-        	case Fork:
-        		node=new ForkNode();
-        		break;
-        	case Join:
-        		node=new JoinNode();
-        		break;
-        	case Rule:
-        		RuleNode ruleNode=new RuleNode();
-        		ruleNode.setFile(childNode.get("file").getTextValue());
-        		JsonNode versionNode=childNode.get("version");
-        		if(versionNode!=null){
-        			ruleNode.setVersion(versionNode.getTextValue());
-        		}
-        		node=ruleNode;
-        		break;
-        	case RulePackage:
-        		RulePackageNode packageNode=new RulePackageNode();
-        		packageNode.setPackageId(childNode.get("packageId").getTextValue());
-        		if(childNode.get("project")!=null){
-        			packageNode.setPackageId(childNode.get("project").getTextValue());        			
-        		}
-        		node=packageNode;
-        		break;
-        	case Start:
-        		node=new StartNode();
-        		break;
-        	}
-        	String name=childNode.get("name").getTextValue();
-        	node.setName(name);
-        	JsonNode eventNode=childNode.get("eventBean");
-        	if(eventNode!=null){
-        		node.setEventBean(eventNode.getTextValue());
-        	}
-        	JsonNode connectionsNode=childNode.get("connections");
-        	if(connectionsNode!=null){
-        		List<Connection> connections=new ArrayList<Connection>();
-        		Iterator<JsonNode> iter=connectionsNode.getElements();
-        		while(iter.hasNext()){
-        			JsonNode connNode=iter.next();
-        			Connection conn=mapper.readValue(connNode,Connection.class);
-        			connections.add(conn);
-        		}
-        		for(Connection conn:connections){
-        			conn.buildDeserialize();
-        		}
-        		node.setConnections(connections);
-        	}
-        	JsonNode knowledgePackageWrapperNode=childNode.get("knowledgePackageWrapper");
-        	if(knowledgePackageWrapperNode!=null){
-        		KnowledgePackageWrapper wrapper=mapper.readValue(knowledgePackageWrapperNode, KnowledgePackageWrapper.class);
-        		wrapper.buildDeserialize();
-        		BindingNode bindingNode=(BindingNode)node;
-        		bindingNode.setKnowledgePackageWrapper(wrapper);
-        	}
-        	flowNodes.add(node);
+    public FlowNodeJsonDeserializer() {
+    }
+
+    public List<FlowNode> deserialize(JsonParser var1, DeserializationContext var2) throws IOException, JsonProcessingException {
+        ObjectMapper var3 = (ObjectMapper)var1.getCodec();
+        JsonNode var4 = var3.readTree(var1);
+        ArrayList var5 = new ArrayList();
+        Iterator var6 = var4.getElements();
+
+        while(true) {
+            JsonNode var7;
+            JsonNode var8;
+            do {
+                if (!var6.hasNext()) {
+                    return var5;
+                }
+
+                var7 = (JsonNode)var6.next();
+                var8 = var7.get("type");
+            } while(var8 == null);
+
+            Object var9 = null;
+            FlowNodeType var10 = FlowNodeType.valueOf(var8.getTextValue());
+            JsonNode var12;
+            JsonNode var14;
+            switch(var10) {
+                case Action:
+                    ActionNode var11 = new ActionNode();
+                    var12 = var7.get("actionBean");
+                    if (var12 != null) {
+                        var11.setActionBean(var12.getTextValue());
+                    }
+
+                    var9 = var11;
+                    break;
+                case Script:
+                    ScriptNode var13 = new ScriptNode();
+                    var14 = var7.get("script");
+                    if (var14 != null) {
+                        var13.setScript(var14.getTextValue());
+                    }
+
+                    var9 = var13;
+                    break;
+                case Decision:
+                    DecisionNode var15 = new DecisionNode();
+                    DecisionType var16 = DecisionType.valueOf(var7.get("decisionType").getTextValue());
+                    var15.setDecisionType(var16);
+                    JsonNode var17 = var7.get("items");
+                    Iterator var18 = var17.getElements();
+                    ArrayList var19 = new ArrayList();
+
+                    DecisionItem var24;
+                    for(; var18.hasNext(); var19.add(var24)) {
+                        JsonNode var34 = (JsonNode)var18.next();
+                        var24 = new DecisionItem();
+                        var24.setTo(var34.get("to").getTextValue());
+                        if (!var16.equals(DecisionType.Criteria)) {
+                            var24.setPercent(var34.get("percent").getIntValue());
+                        }
+                    }
+
+                    var15.setItems(var19);
+                    var9 = var15;
+                    break;
+                case End:
+                    var9 = new EndNode();
+                    break;
+                case Fork:
+                    ForkNode var20 = new ForkNode();
+                    if (var7.get("multipleThread") != null) {
+                        var20.setMultipleThread(var7.get("multipleThread").getTextValue());
+                    }
+
+                    var9 = var20;
+                    break;
+                case Join:
+                    var9 = new JoinNode();
+                    break;
+                case Rule:
+                    RuleNode var21 = new RuleNode();
+                    var21.setFile(var7.get("file").getTextValue());
+                    JsonNode var22 = var7.get("version");
+                    if (var22 != null) {
+                        var21.setVersion(var22.getTextValue());
+                    }
+
+                    var9 = var21;
+                    break;
+                case RulePackage:
+                    RulePackageNode var23 = new RulePackageNode();
+                    var23.setPackageId(var7.get("packageId").getTextValue());
+                    if (var7.get("project") != null) {
+                        var23.setPackageId(var7.get("project").getTextValue());
+                    }
+
+                    var9 = var23;
+                    break;
+                case Start:
+                    var9 = new StartNode();
+            }
+
+            String var25 = var7.get("name").getTextValue();
+            ((FlowNode)var9).setName(var25);
+            var12 = var7.get("eventBean");
+            if (var12 != null) {
+                ((FlowNode)var9).setEventBean(var12.getTextValue());
+            }
+
+            JsonNode var26 = var7.get("connections");
+            if (var26 != null) {
+                ArrayList var27 = new ArrayList();
+                Iterator var28 = var26.getElements();
+
+                Connection var33;
+                while(var28.hasNext()) {
+                    JsonNode var30 = (JsonNode)var28.next();
+                    var33 = (Connection)var3.readValue(var30, Connection.class);
+                    var27.add(var33);
+                }
+
+                Iterator var31 = var27.iterator();
+
+                while(var31.hasNext()) {
+                    var33 = (Connection)var31.next();
+                    var33.buildDeserialize();
+                }
+
+                ((FlowNode)var9).setConnections(var27);
+            }
+
+            var14 = var7.get("knowledgePackageWrapper");
+            if (var14 != null) {
+                KnowledgePackageWrapper var29 = (KnowledgePackageWrapper)var3.readValue(var14, KnowledgePackageWrapper.class);
+                var29.buildDeserialize();
+                BindingNode var32 = (BindingNode)var9;
+                var32.setKnowledgePackageWrapper(var29);
+            }
+
+            var5.add(var9);
         }
-        return flowNodes;
-	}
+    }
 }

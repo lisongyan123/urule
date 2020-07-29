@@ -10,7 +10,7 @@
   <dependencies>
   	<dependency>
   		<groupId>com.bstek.urule</groupId>
-		<artifactId>urule-core-pro</artifactId>
+		<artifactId>urule-core</artifactId>
 		<version>3.0.0-RC2</version>
   	</dependency>
   	<dependency>

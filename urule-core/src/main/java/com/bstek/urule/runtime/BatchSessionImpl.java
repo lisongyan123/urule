@@ -1,84 +1,79 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime;
 
+import com.bstek.urule.exception.RuleException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.bstek.urule.exception.RuleException;
-
-/**
- * @author Jacky.gao
- * @since 2015年9月29日
- */
 public class BatchSessionImpl implements BatchSession {
-	private ExecutorService executorService;
-	private int batchSize;
-	private List<Business> businessList=new ArrayList<Business>();
-	private KnowledgePackage knowledgePackage;
-	private KnowledgePackage[] knowledgePackages;
-	
-	public BatchSessionImpl(KnowledgePackage knowledgePackage,int threadSize,int batchSize) {
-		this.executorService=Executors.newFixedThreadPool(threadSize);
-		this.knowledgePackage=knowledgePackage;
-		this.batchSize=batchSize;
-	}
-	public BatchSessionImpl(KnowledgePackage[] knowledgePackages,int threadSize,int batchSize) {
-		this.executorService=Executors.newFixedThreadPool(threadSize);
-		this.knowledgePackages=knowledgePackages;
-		this.batchSize=batchSize;
-	}
-	@Override
-	public void addBusiness(Business business) {
-		if(businessList!=null){
-			if(businessList.size()>=batchSize){
-				doBusinesses();
-				businessList=new ArrayList<Business>();
-			}
-		}else{
-			businessList=new ArrayList<Business>();
-		}
-		businessList.add(business);
-	}
-	private void doBusinesses() {
-		BatchThread thread=null;
-		if(knowledgePackage!=null){
-			thread=new BatchThread(knowledgePackage,businessList);
-		}else if(knowledgePackages!=null){
-			thread=new BatchThread(knowledgePackages,businessList);			
-		}else{
-			throw new RuleException("KnowledgePackage can not be null.");
-		}
-		executorService.execute(thread);
-		businessList=null;
-	}
-	@Override
-	public void waitForCompletion() {
-		if(businessList!=null && businessList.size()>0){
-			doBusinesses();
-		}
-		executorService.shutdown();
-		try{
-			while(!executorService.awaitTermination(300, TimeUnit.MILLISECONDS)){}
-		}catch(InterruptedException ex){
-			ex.printStackTrace();
-			throw new RuleException(ex);
-		}
-	}
+    private ExecutorService a;
+    private int b;
+    private List<Business> c = new ArrayList();
+    private KnowledgePackage d;
+    private KnowledgePackage[] e;
+
+    public BatchSessionImpl(KnowledgePackage var1, int var2, int var3) {
+        this.a = Executors.newFixedThreadPool(var2);
+        this.d = var1;
+        this.b = var3;
+    }
+
+    public BatchSessionImpl(KnowledgePackage[] var1, int var2, int var3) {
+        this.a = Executors.newFixedThreadPool(var2);
+        this.e = var1;
+        this.b = var3;
+    }
+
+    public void addBusiness(Business var1) {
+        if (this.c != null) {
+            if (this.c.size() >= this.b) {
+                this.a();
+                this.c = new ArrayList();
+            }
+        } else {
+            this.c = new ArrayList();
+        }
+
+        this.c.add(var1);
+    }
+
+    private void a() {
+        BatchThread var1 = null;
+        if (this.d != null) {
+            var1 = new BatchThread(this.d, this.c);
+        } else {
+            if (this.e == null) {
+                throw new RuleException("KnowledgePackage can not be null.");
+            }
+
+            var1 = new BatchThread(this.e, this.c);
+        }
+
+        this.a.execute(var1);
+        this.c = null;
+    }
+
+    public void waitForCompletion() {
+        if (this.c != null && this.c.size() > 0) {
+            this.a();
+        }
+
+        this.a.shutdown();
+
+        try {
+            while(!this.a.awaitTermination(300L, TimeUnit.MILLISECONDS)) {
+            }
+
+        } catch (InterruptedException var2) {
+            var2.printStackTrace();
+            throw new RuleException(var2);
+        }
+    }
 }

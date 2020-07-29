@@ -1,32 +1,14 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.decisiontree;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
-
 import com.bstek.urule.Configure;
-import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.action.Action;
 import com.bstek.urule.builder.RulesRebuilder;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.decisiontree.ActionTreeNode;
 import com.bstek.urule.model.decisiontree.ConditionTreeNode;
 import com.bstek.urule.model.decisiontree.DecisionTree;
@@ -41,148 +23,185 @@ import com.bstek.urule.model.rule.lhs.Left;
 import com.bstek.urule.model.rule.lhs.LeftPart;
 import com.bstek.urule.model.rule.lhs.VariableLeftPart;
 import com.bstek.urule.parse.Parser;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年2月26日
- */
 public class DecisionTreeParser implements Parser<DecisionTree> {
-	private VariableTreeNodeParser variableTreeNodeParser;
-	private RulesRebuilder rulesRebuilder;
-	@Override
-	public DecisionTree parse(Element element) {
-		DecisionTree tree=new DecisionTree();
-		
-		String salience=element.attributeValue("salience");
-		if(StringUtils.isNotEmpty(salience)){
-			tree.setSalience(Integer.valueOf(salience));
-		}
-		String effectiveDate=element.attributeValue("effective-date");
-		SimpleDateFormat sd=new SimpleDateFormat(Configure.getDateFormat());
-		if(StringUtils.isNotEmpty(effectiveDate)){
-			try {
-				tree.setEffectiveDate(sd.parse(effectiveDate));
-			} catch (ParseException e) {
-				throw new RuleException(e);
-			}
-		}
-		String expiresDate=element.attributeValue("expires-date");
-		if(StringUtils.isNotEmpty(expiresDate)){
-			try {
-				tree.setExpiresDate(sd.parse(expiresDate));
-			} catch (ParseException e) {
-				throw new RuleException(e);
-			}
-		}
-		String enabled=element.attributeValue("enabled");
-		if(StringUtils.isNotEmpty(enabled)){
-			tree.setEnabled(Boolean.valueOf(enabled));
-		}
-		
-		String debug=element.attributeValue("debug");
-		if(StringUtils.isNotEmpty(debug)){
-			tree.setDebug(Boolean.valueOf(debug));
-		}
-		
-		List<Library> libs=new ArrayList<Library>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			String name=ele.getName();
-			if(variableTreeNodeParser.support(name)){
-				tree.setVariableTreeNode(variableTreeNodeParser.parse(ele));
-			}if(name.equals("import-variable-library")){
-				libs.add(new Library(ele.attributeValue("path"),null,LibraryType.Variable));
-			}else if(name.equals("import-constant-library")){
-				libs.add(new Library(ele.attributeValue("path"),null,LibraryType.Constant));
-			}else if(name.equals("import-action-library")){
-				libs.add(new Library(ele.attributeValue("path"),null,LibraryType.Action));
-			}else if(name.equals("import-parameter-library")){
-				libs.add(new Library(ele.attributeValue("path"),null,LibraryType.Parameter));
-			}else if(name.equals("remark")){
-				tree.setRemark(ele.getText());
-			}
-		}
-		tree.setLibraries(libs);
-		ResourceLibrary resourceLibrary = rulesRebuilder.getResourceLibraryBuilder().buildResourceLibrary(libs);
-		rebuildTreeNode(resourceLibrary,tree.getVariableTreeNode());
-		return tree;
-	}
-	
-	private void rebuildTreeNode(ResourceLibrary resourceLibrary,TreeNode treeNode){
-		if(treeNode==null)return;
-		if(treeNode instanceof VariableTreeNode){
-			VariableTreeNode varNode=(VariableTreeNode)treeNode;
-			Left left=varNode.getLeft();
-			if(left!=null){
-				LeftPart part=left.getLeftPart();
-				if(part!=null && part instanceof VariableLeftPart){
-					VariableLeftPart varPart=(VariableLeftPart)part;
-					String category=varPart.getVariableCategory();
-					String name=varPart.getVariableName();
-					if(StringUtils.isNotBlank(category) && StringUtils.isNotBlank(name)){
-						Variable var=rulesRebuilder.getVariableByName(resourceLibrary.getVariableCategories(), category, name, null);
-						varPart.setDatatype(var.getType());
-						varPart.setVariableLabel(var.getLabel());
-					}
-				}
-			}
-			List<ConditionTreeNode> nodes=varNode.getConditionTreeNodes();
-			if(nodes!=null){
-				for(ConditionTreeNode node:nodes){
-					rebuildTreeNode(resourceLibrary, node);
-				}				
-			}
-		}else if(treeNode instanceof ConditionTreeNode){
-			ConditionTreeNode node=(ConditionTreeNode)treeNode;
-			Value value=node.getValue();
-			if(value!=null){
-				rulesRebuilder.rebuildValue(value, resourceLibrary, null, false);
-			}
-			List<ActionTreeNode> actionNodes=node.getActionTreeNodes();
-			if(actionNodes!=null){
-				for(ActionTreeNode actionNode:actionNodes){
-					rebuildTreeNode(resourceLibrary, actionNode);
-				}
-			}
-			List<ConditionTreeNode> conditionNodes=node.getConditionTreeNodes();
-			if(conditionNodes!=null){				
-				for(ConditionTreeNode conditionNode:conditionNodes){
-					rebuildTreeNode(resourceLibrary, conditionNode);
-				}
-			}
-			List<VariableTreeNode> varNodes=node.getVariableTreeNodes();
-			if(varNodes!=null){
-				for(VariableTreeNode varNode:varNodes){
-					rebuildTreeNode(resourceLibrary, varNode);
-				}
-			}
-		}else if(treeNode instanceof ActionTreeNode){
-			ActionTreeNode actionNode=(ActionTreeNode)treeNode;
-			List<Action> actions=actionNode.getActions();
-			if(actions!=null){
-				for(Action action:actions){
-					if(action==null){
-						continue;
-					}
-					rulesRebuilder.rebuildAction(action, resourceLibrary, null, false);
-				}
-			}
-		}
-	}
-	
-	public void setVariableTreeNodeParser(
-			VariableTreeNodeParser variableTreeNodeParser) {
-		this.variableTreeNodeParser = variableTreeNodeParser;
-	}
-	@Override
-	public boolean support(String name) {
-		return name.equals("decision-tree");
-	}
-	
-	public void setRulesRebuilder(RulesRebuilder rulesRebuilder) {
-		this.rulesRebuilder = rulesRebuilder;
-	}
+    private VariableTreeNodeParser a;
+    private RulesRebuilder b;
+
+    public DecisionTreeParser() {
+    }
+
+    public DecisionTree parse(Element var1) {
+        DecisionTree var2 = new DecisionTree();
+        String var3 = var1.attributeValue("salience");
+        if (StringUtils.isNotEmpty(var3)) {
+            var2.setSalience(Integer.valueOf(var3));
+        }
+
+        String var4 = var1.attributeValue("effective-date");
+        SimpleDateFormat var5 = new SimpleDateFormat(Configure.getDateFormat());
+        if (StringUtils.isNotEmpty(var4)) {
+            try {
+                var2.setEffectiveDate(var5.parse(var4));
+            } catch (ParseException var16) {
+                throw new RuleException(var16);
+            }
+        }
+
+        String var6 = var1.attributeValue("expires-date");
+        if (StringUtils.isNotEmpty(var6)) {
+            try {
+                var2.setExpiresDate(var5.parse(var6));
+            } catch (ParseException var15) {
+                throw new RuleException(var15);
+            }
+        }
+
+        String var7 = var1.attributeValue("enabled");
+        if (StringUtils.isNotEmpty(var7)) {
+            var2.setEnabled(Boolean.valueOf(var7));
+        }
+
+        String var8 = var1.attributeValue("debug");
+        if (StringUtils.isNotEmpty(var8)) {
+            var2.setDebug(Boolean.valueOf(var8));
+        }
+
+        ArrayList var9 = new ArrayList();
+        Iterator var10 = var1.elements().iterator();
+
+        while(var10.hasNext()) {
+            Object var11 = var10.next();
+            if (var11 != null && var11 instanceof Element) {
+                Element var12 = (Element)var11;
+                String var13 = var12.getName();
+                if (this.a.support(var13)) {
+                    var2.setVariableTreeNode(this.a.parse(var12));
+                }
+
+                if (var13.equals("import-variable-library")) {
+                    var9.add(new Library(var12.attributeValue("path"), (String)null, LibraryType.Variable));
+                } else if (var13.equals("quick-test-data")) {
+                    String var14 = var12.getTextTrim();
+                    var2.setQuickTestData(var14);
+                } else if (var13.equals("import-constant-library")) {
+                    var9.add(new Library(var12.attributeValue("path"), (String)null, LibraryType.Constant));
+                } else if (var13.equals("import-action-library")) {
+                    var9.add(new Library(var12.attributeValue("path"), (String)null, LibraryType.Action));
+                } else if (var13.equals("import-parameter-library")) {
+                    var9.add(new Library(var12.attributeValue("path"), (String)null, LibraryType.Parameter));
+                } else if (var13.equals("remark")) {
+                    var2.setRemark(var12.getText());
+                }
+            }
+        }
+
+        var2.setLibraries(var9);
+        ResourceLibrary var17 = this.b.getResourceLibraryBuilder().buildResourceLibrary(var9);
+        this.a(var17, var2.getVariableTreeNode());
+        return var2;
+    }
+
+    private void a(ResourceLibrary var1, TreeNode var2) {
+        if (var2 != null) {
+            List var14;
+            Iterator var16;
+            if (var2 instanceof VariableTreeNode) {
+                VariableTreeNode var3 = (VariableTreeNode)var2;
+                Left var4 = var3.getLeft();
+                if (var4 != null) {
+                    LeftPart var5 = var4.getLeftPart();
+                    if (var5 != null && var5 instanceof VariableLeftPart) {
+                        VariableLeftPart var6 = (VariableLeftPart)var5;
+                        String var7 = var6.getVariableCategory();
+                        String var8 = var6.getVariableName();
+                        if (StringUtils.isNotBlank(var7) && StringUtils.isNotBlank(var8) && StringUtils.isBlank(var6.getKeyLabel())) {
+                            Variable var9 = this.b.getVariableByName(var1.getVariableCategories(), var7, var8);
+                            var6.setDatatype(var9.getType());
+                            var6.setVariableLabel(var9.getLabel());
+                        }
+                    }
+                }
+
+                var14 = var3.getConditionTreeNodes();
+                if (var14 != null) {
+                    var16 = var14.iterator();
+
+                    while(var16.hasNext()) {
+                        ConditionTreeNode var18 = (ConditionTreeNode)var16.next();
+                        this.a(var1, var18);
+                    }
+                }
+            } else if (var2 instanceof ConditionTreeNode) {
+                ConditionTreeNode var10 = (ConditionTreeNode)var2;
+                Value var12 = var10.getValue();
+                if (var12 != null) {
+                    this.b.rebuildValue(var12, var1, false);
+                }
+
+                var14 = var10.getActionTreeNodes();
+                if (var14 != null) {
+                    var16 = var14.iterator();
+
+                    while(var16.hasNext()) {
+                        ActionTreeNode var20 = (ActionTreeNode)var16.next();
+                        this.a(var1, var20);
+                    }
+                }
+
+                List var17 = var10.getConditionTreeNodes();
+                if (var17 != null) {
+                    Iterator var21 = var17.iterator();
+
+                    while(var21.hasNext()) {
+                        ConditionTreeNode var23 = (ConditionTreeNode)var21.next();
+                        this.a(var1, var23);
+                    }
+                }
+
+                List var22 = var10.getVariableTreeNodes();
+                if (var22 != null) {
+                    Iterator var24 = var22.iterator();
+
+                    while(var24.hasNext()) {
+                        VariableTreeNode var25 = (VariableTreeNode)var24.next();
+                        this.a(var1, var25);
+                    }
+                }
+            } else if (var2 instanceof ActionTreeNode) {
+                ActionTreeNode var11 = (ActionTreeNode)var2;
+                List var13 = var11.getActions();
+                if (var13 != null) {
+                    Iterator var15 = var13.iterator();
+
+                    while(var15.hasNext()) {
+                        Action var19 = (Action)var15.next();
+                        if (var19 != null) {
+                            this.b.rebuildAction(var19, var1, false);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void setVariableTreeNodeParser(VariableTreeNodeParser var1) {
+        this.a = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("decision-tree");
+    }
+
+    public void setRulesRebuilder(RulesRebuilder var1) {
+        this.b = var1;
+    }
 }

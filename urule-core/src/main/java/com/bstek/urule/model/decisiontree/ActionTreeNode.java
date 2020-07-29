@@ -1,36 +1,24 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.decisiontree;
 
+import com.bstek.urule.action.Action;
 import java.util.List;
 
-import com.bstek.urule.action.Action;
+public class ActionTreeNode extends TreeNode {
+    private List<Action> actions;
 
-/**
- * @author Jacky.gao
- * @since 2016年2月26日
- */
-public class ActionTreeNode extends TreeNode{
-	private List<Action> actions;
+    public ActionTreeNode() {
+    }
 
-	public List<Action> getActions() {
-		return actions;
-	}
+    public List<Action> getActions() {
+        return this.actions;
+    }
 
-	public void setActions(List<Action> actions) {
-		this.actions = actions;
-	}
+    public void setActions(List<Action> var1) {
+        this.actions = var1;
+    }
 }

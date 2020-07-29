@@ -1,89 +1,93 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.runtime.assertor;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
+package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.Utils;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
 public class EqualsAssertor implements Assertor {
-	@SuppressWarnings("unchecked")
-	public boolean eval(Object left, Object right,Datatype datatype) {
-		if(left==null && right==null){
-			return true;
-		}else if(left==null || right==null){
-			return false;
-		}
-		BigDecimal b1=null;
-		BigDecimal b2=null;
-		switch(datatype){
-		case String:
-			return left.toString().equals(right.toString());
-		case Boolean:
-			return left.toString().equals(right.toString());
-		case Date:
-			Date ld=(Date)datatype.convert(left);
-			Date rd=(Date)datatype.convert(right);
-			Calendar leftCalendar=Calendar.getInstance();
-			leftCalendar.setTime(ld);
-			Calendar rightCalendar=Calendar.getInstance();
-			rightCalendar.setTime(rd);
-			return leftCalendar.compareTo(rightCalendar)==0;
-		case Double:
-			b1=Utils.toBigDecimal(left);
-			b2=Utils.toBigDecimal(right);
-			return b1.compareTo(b2)==0;
-		case Float:
-			b1=Utils.toBigDecimal(left);
-			b2=Utils.toBigDecimal(right);
-			return b1.compareTo(b2)==0;
-		case Integer:
-			b1=Utils.toBigDecimal(left);
-			b2=Utils.toBigDecimal(right);
-			return b1.compareTo(b2)==0;
-		case Long:
-			b1=Utils.toBigDecimal(left);
-			b2=Utils.toBigDecimal(right);
-			return b1.compareTo(b2)==0;
-		case BigDecimal:
-			b1=Utils.toBigDecimal(left);
-			b2=Utils.toBigDecimal(right);
-			return b1.compareTo(b2)==0;
-		case Enum:
-			Enum<?> e1=(Enum<?>)left;
-			if(right instanceof Enum){
-				Enum<?> e2=(Enum<?>)right;
-				return e1.equals(e2);
-			}else{
-				Enum<?> e2=Enum.valueOf(e1.getClass(), right.toString());
-				return e1.equals(e2);
-			}
-		default :
-			return right.toString().equals(left.toString());
-		}
-	}
-	public boolean support(Op op) {
-		return op.equals(Op.Equals);
-	}
+    public EqualsAssertor() {
+    }
+
+    public boolean eval(Object var1, Object var2, Datatype var3) {
+        if (var1 == null && var2 == null) {
+            return true;
+        } else if (var1 != null && var2 != null) {
+            BigDecimal var4 = null;
+            BigDecimal var5 = null;
+            switch(var3) {
+                case String:
+                    if (var2 instanceof String) {
+                        return var1.toString().equals(var2.toString());
+                    } else {
+                        if (var2 instanceof BigDecimal) {
+                            try {
+                                var4 = Utils.toBigDecimal(var1);
+                                var5 = Utils.toBigDecimal(var2);
+                                return var4.compareTo(var5) == 0;
+                            } catch (Exception var12) {
+                                return var1.toString().equals(var2.toString());
+                            }
+                        }
+
+                        return var1.toString().equals(var2.toString());
+                    }
+                case Boolean:
+                    return var1.toString().equals(var2.toString());
+                case Date:
+                    Date var6 = (Date)var3.convert(var1);
+                    Date var7 = (Date)var3.convert(var2);
+                    Calendar var8 = Calendar.getInstance();
+                    var8.setTime(var6);
+                    Calendar var9 = Calendar.getInstance();
+                    var9.setTime(var7);
+                    return var8.compareTo(var9) == 0;
+                case Double:
+                    var4 = Utils.toBigDecimal(var1);
+                    var5 = Utils.toBigDecimal(var2);
+                    return var4.compareTo(var5) == 0;
+                case Float:
+                    var4 = Utils.toBigDecimal(var1);
+                    var5 = Utils.toBigDecimal(var2);
+                    return var4.compareTo(var5) == 0;
+                case Integer:
+                    var4 = Utils.toBigDecimal(var1);
+                    var5 = Utils.toBigDecimal(var2);
+                    return var4.compareTo(var5) == 0;
+                case Long:
+                    var4 = Utils.toBigDecimal(var1);
+                    var5 = Utils.toBigDecimal(var2);
+                    return var4.compareTo(var5) == 0;
+                case BigDecimal:
+                    var4 = Utils.toBigDecimal(var1);
+                    var5 = Utils.toBigDecimal(var2);
+                    return var4.compareTo(var5) == 0;
+                case Enum:
+                    Enum var10 = (Enum)var1;
+                    Enum var11;
+                    if (var2 instanceof Enum) {
+                        var11 = (Enum)var2;
+                        return var10.equals(var11);
+                    }
+
+                    var11 = Enum.valueOf(var10.getClass(), var2.toString());
+                    return var10.equals(var11);
+                default:
+                    return var2.toString().equals(var1.toString());
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public Op supportOp() {
+        return Op.Equals;
+    }
 }

@@ -1,54 +1,77 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月30日
- */
 public class RuleSet {
-	private String remark;
-	private List<Library> libraries;
-	private List<Rule> rules;
-	
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	public List<Library> getLibraries() {
-		return libraries;
-	}
-	public void setLibraries(List<Library> libraries) {
-		this.libraries = libraries;
-	}
-	public void addLibrary(Library library) {
-		if(this.libraries==null){
-			this.libraries=new ArrayList<Library>();
-		}
-		this.libraries.add(library);
-	}
-	public List<Rule> getRules() {
-		return rules;
-	}
-	public void setRules(List<Rule> rules) {
-		this.rules = rules;
-	}
+    private boolean alone;
+    private boolean debug;
+    private String remark;
+    private String quickTestData;
+    private List<Library> libraries;
+    private List<Rule> rules;
+
+    public RuleSet() {
+    }
+
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String var1) {
+        this.remark = var1;
+    }
+
+    public boolean isAlone() {
+        return this.alone;
+    }
+
+    public void setAlone(boolean var1) {
+        this.alone = var1;
+    }
+
+    public String getQuickTestData() {
+        return this.quickTestData;
+    }
+
+    public void setQuickTestData(String var1) {
+        this.quickTestData = var1;
+    }
+
+    public List<Library> getLibraries() {
+        return this.libraries;
+    }
+
+    public void setLibraries(List<Library> var1) {
+        this.libraries = var1;
+    }
+
+    public void addLibrary(Library var1) {
+        if (this.libraries == null) {
+            this.libraries = new ArrayList();
+        }
+
+        this.libraries.add(var1);
+    }
+
+    public List<Rule> getRules() {
+        return this.rules;
+    }
+
+    public void setRules(List<Rule> var1) {
+        this.rules = var1;
+    }
+
+    public boolean isDebug() {
+        return this.debug;
+    }
+
+    public void setDebug(boolean var1) {
+        this.debug = var1;
+    }
 }

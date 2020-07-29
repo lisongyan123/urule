@@ -1,100 +1,84 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.action;
 
-import java.util.List;
-import java.util.Map;
-
-import com.bstek.urule.RuleException;
 import com.bstek.urule.Utils;
-import com.bstek.urule.debug.MsgType;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.function.FunctionDescriptor;
 import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
 import com.bstek.urule.runtime.rete.Context;
+import java.util.Map;
 
-/**
- * @author Jacky.gao
- * @since 2015年7月31日
- */
-public class ExecuteCommonFunctionAction extends AbstractAction{
-	private String name;
-	private String label;
-	private CommonFunctionParameter parameter;
-	@Override
-	public ActionValue execute(Context context, Object matchedObject,List<Object> allMatchedObjects,Map<String,Object> variableMap) {
-		FunctionDescriptor function=null;
-		if(Utils.getFunctionDescriptorMap().containsKey(name)){
-			function=Utils.findFunctionDescriptor(name);
-		}else if(Utils.getFunctionDescriptorLabelMap().containsKey(label)){
-			function=Utils.getFunctionDescriptorLabelMap().get(label);
-		}
-		if(function==null){
-			throw new RuleException("Function["+name+"] not exist.");
-		}
-		String info=(label==null)?name:label;
-		Value value=null;
-		Object object=null;
-		if(parameter!=null){
-			value=parameter.getObjectParameter();			
-			object=context.getValueCompute().complexValueCompute(value, matchedObject, context, allMatchedObjects,variableMap);
-		}
-		String property=null;
-		if(function.getArgument()!=null && function.getArgument().isNeedProperty()){
-			property=parameter.getProperty();
-		}
-		Object result=function.doFunction(object, property,context.getWorkingMemory());
-		if(debug && Utils.isDebug()){
-			info=info+(object==null ? "" : object);
-			String msg="***执行函数："+info;
-			context.debugMsg(msg, MsgType.ExecuteFunction, debug);
-		}
-		if(result!=null){
-			return new ActionValueImpl(name,result);					
-		}else{
-			return null;
-		}
-	}
+public class ExecuteCommonFunctionAction extends AbstractAction {
+    private String a;
+    private String b;
+    private CommonFunctionParameter c;
 
-	@Override
-	public ActionType getActionType() {
-		return ActionType.ExecuteCommonFunction;
-	}
+    public ExecuteCommonFunctionAction() {
+    }
 
-	public String getName() {
-		return name;
-	}
+    public ActionValue execute(Context var1, Map<String, Object> var2) {
+        FunctionDescriptor var3 = null;
+        if (Utils.getFunctionDescriptorMap().containsKey(this.a)) {
+            var3 = Utils.findFunctionDescriptor(this.a);
+        } else if (Utils.getFunctionDescriptorLabelMap().containsKey(this.b)) {
+            var3 = (FunctionDescriptor)Utils.getFunctionDescriptorLabelMap().get(this.b);
+        }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        if (var3 == null) {
+            throw new RuleException("Function[" + this.a + "] not exist.");
+        } else {
+            String var4 = this.b == null ? this.a : this.b;
+            Value var5 = null;
+            Object var6 = null;
+            if (this.c != null) {
+                var5 = this.c.getObjectParameter();
+                var6 = var1.getValueCompute().complexValueCompute(var5, var1, var2);
+            }
 
-	public String getLabel() {
-		return label;
-	}
+            String var7 = null;
+            if (var3.getArgument() != null && var3.getArgument().isNeedProperty()) {
+                var7 = this.c.getProperty();
+            }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+            if (this.debug) {
+                var1.getLogger().logExecuteFunction(var4, var6);
+            }
 
-	public CommonFunctionParameter getParameter() {
-		return parameter;
-	}
+            Object var8 = var3.doFunction(var6, var7, var1.getWorkingMemory());
+            return var8 == null ? null : new ActionValueImpl(this.a, var8);
+        }
+    }
 
-	public void setParameter(CommonFunctionParameter parameter) {
-		this.parameter = parameter;
-	}
+    public ActionType getActionType() {
+        return ActionType.ExecuteCommonFunction;
+    }
+
+    public String getName() {
+        return this.a;
+    }
+
+    public void setName(String var1) {
+        this.a = var1;
+    }
+
+    public String getLabel() {
+        return this.b;
+    }
+
+    public void setLabel(String var1) {
+        this.b = var1;
+    }
+
+    public CommonFunctionParameter getParameter() {
+        return this.c;
+    }
+
+    public void setParameter(CommonFunctionParameter var1) {
+        this.c = var1;
+    }
 }

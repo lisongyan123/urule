@@ -1,71 +1,76 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.rete;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.Map;
+package com.bstek.urule.model.rete;
 
 import com.bstek.urule.runtime.rete.Activity;
 import com.bstek.urule.runtime.rete.ObjectTypeActivity;
+import java.util.Iterator;
+import java.util.Map;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
-public class ObjectTypeNode extends BaseReteNode{
-	public static final String NON_CLASS="*";
-	private String objectTypeClass;
-	private NodeType nodeType=NodeType.objectType;
-	public ObjectTypeNode() {
-		super(0);
-	}
-	public ObjectTypeNode(String objectTypeClass,int id) {
-		super(id);
-		this.objectTypeClass = objectTypeClass;
-	}
-	@Override
-	public NodeType getNodeType() {
-		return nodeType;
-	}
-	public boolean support(Object object){
-		return support(object.getClass().getName());
-	}
-	public boolean support(String className){
-		return objectTypeClass.equals(className);
-	}
-	public String getObjectTypeClass() {
-		return objectTypeClass;
-	}
-	public void setObjectTypeClass(String objectTypeClass) {
-		this.objectTypeClass = objectTypeClass;
-	}
-	@Override
-	public Activity newActivity(Map<Object,Object> context) {
-		Class<?> targetClass=null;
-		ObjectTypeActivity activity=null;
-		try {
-			if(!objectTypeClass.equals(ObjectTypeNode.NON_CLASS)){
-				targetClass = Class.forName(objectTypeClass);	
-			}
-			activity=new ObjectTypeActivity(targetClass);
-		} catch (ClassNotFoundException e) {
-			activity=new ObjectTypeActivity(objectTypeClass);
-		}
-		for(Line line:lines){
-			activity.addPath(line.newPath(context));
-		}
-		return activity;
-	}
+public class ObjectTypeNode extends BaseReteNode {
+    public static final String NON_CLASS = "*";
+    public static final String NONE_CONDITION = "__*__";
+    private String objectTypeClass;
+    private NodeType nodeType;
+
+    public ObjectTypeNode() {
+        super(0);
+        this.nodeType = NodeType.objectType;
+    }
+
+    public ObjectTypeNode(String var1, int var2) {
+        super(var2);
+        this.nodeType = NodeType.objectType;
+        this.objectTypeClass = var1;
+    }
+
+    public NodeType getNodeType() {
+        return this.nodeType;
+    }
+
+    public boolean support(Object var1) {
+        return this.support(var1.getClass().getName());
+    }
+
+    public boolean support(String var1) {
+        return this.objectTypeClass.equals(var1);
+    }
+
+    public String getObjectTypeClass() {
+        return this.objectTypeClass;
+    }
+
+    public void setObjectTypeClass(String var1) {
+        this.objectTypeClass = var1;
+    }
+
+    public Activity newActivity(Map<Object, Object> var1) {
+        Class var2 = null;
+        ObjectTypeActivity var3 = null;
+        if (this.objectTypeClass.equals("__*__")) {
+            var3 = new ObjectTypeActivity(this.objectTypeClass);
+        } else {
+            try {
+                if (!this.objectTypeClass.equals("*")) {
+                    var2 = Class.forName(this.objectTypeClass);
+                }
+
+                var3 = new ObjectTypeActivity(var2);
+            } catch (ClassNotFoundException var6) {
+                var3 = new ObjectTypeActivity(this.objectTypeClass);
+            }
+        }
+
+        Iterator var4 = this.lines.iterator();
+
+        while(var4.hasNext()) {
+            Line var5 = (Line)var4.next();
+            var3.addPath(var5.newPath(var1));
+        }
+
+        return var3;
+    }
 }

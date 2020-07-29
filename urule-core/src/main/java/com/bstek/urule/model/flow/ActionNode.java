@@ -1,53 +1,44 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
 
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.FlowInstance;
 
-
-/**
- * @author Jacky.gao
- * @since 2015年2月28日
- */
 public class ActionNode extends FlowNode {
-	private String actionBean;
-	private FlowNodeType type=FlowNodeType.Action;
-	public ActionNode() {
-	}
-	public ActionNode(String name) {
-		super(name);
-	}
-	@Override
-	public void enterNode(FlowContext context,FlowInstance instance) {
-		instance.setCurrentNode(this);
-		executeNodeEvent(EventType.enter,context,instance);
-		FlowAction action=(FlowAction)context.getApplicationContext().getBean(actionBean);
-		action.execute(this,context,instance);
-		executeNodeEvent(EventType.leave,context,instance);
-		leave(null, context, instance);
-	}
-	@Override
-	public FlowNodeType getType() {
-		return type;
-	}
-	public String getActionBean() {
-		return actionBean;
-	}
-	public void setActionBean(String actionBean) {
-		this.actionBean = actionBean;
-	}
+    private String actionBean;
+    private FlowNodeType type;
+
+    public ActionNode() {
+        this.type = FlowNodeType.Action;
+    }
+
+    public ActionNode(String var1) {
+        super(var1);
+        this.type = FlowNodeType.Action;
+    }
+
+    public void enterNode(FlowContext var1, FlowInstance var2) {
+        var2.setCurrentNode(this);
+        this.executeNodeEvent(EventType.enter, var1, var2);
+        FlowAction var3 = (FlowAction)var1.getApplicationContext().getBean(this.actionBean);
+        var3.execute(this, var1, var2);
+        this.executeNodeEvent(EventType.leave, var1, var2);
+        this.leave((String)null, var1, var2);
+    }
+
+    public FlowNodeType getType() {
+        return this.type;
+    }
+
+    public String getActionBean() {
+        return this.actionBean;
+    }
+
+    public void setActionBean(String var1) {
+        this.actionBean = var1;
+    }
 }

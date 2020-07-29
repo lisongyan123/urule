@@ -1,24 +1,9 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.decisiontree;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dom4j.Element;
 
 import com.bstek.urule.model.decisiontree.ActionTreeNode;
 import com.bstek.urule.model.decisiontree.ConditionTreeNode;
@@ -27,72 +12,78 @@ import com.bstek.urule.model.decisiontree.VariableTreeNode;
 import com.bstek.urule.model.rule.Op;
 import com.bstek.urule.parse.Parser;
 import com.bstek.urule.parse.ValueParser;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年2月26日
- */
 public class ConditionTreeNodeParser implements Parser<ConditionTreeNode> {
-	private ValueParser valueParser;
-	private VariableTreeNodeParser variableTreeNodeParser;
-	private ActionTreeNodeParser actionTreeNodeParser;
-	@Override
-	public ConditionTreeNode parse(Element element) {
-		ConditionTreeNode node=new ConditionTreeNode();
-		node.setNodeType(TreeNodeType.condition);
-		node.setOp(Op.valueOf(element.attributeValue("op")));
-		List<ConditionTreeNode> conditionTreeNodes=new ArrayList<ConditionTreeNode>();
-		List<ActionTreeNode> actionTreeNodes=new ArrayList<ActionTreeNode>();
-		List<VariableTreeNode> variableTreeNodes=new ArrayList<VariableTreeNode>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			String name=ele.getName();
-			if(valueParser.support(name)){
-				node.setValue(valueParser.parse(ele));
-			}else if(support(name)){
-				ConditionTreeNode cn=parse(ele);
-				cn.setParentNode(node);
-				conditionTreeNodes.add(cn);
-			}else if(variableTreeNodeParser.support(name)){
-				VariableTreeNode vn=variableTreeNodeParser.parse(ele);
-				vn.setParentNode(node);
-				variableTreeNodes.add(vn);
-			}else if(actionTreeNodeParser.support(name)){
-				ActionTreeNode an=actionTreeNodeParser.parse(ele);
-				an.setParentNode(node);
-				actionTreeNodes.add(an);
-			}
-		}
-		if(conditionTreeNodes.size()>0){
-			node.setConditionTreeNodes(conditionTreeNodes);
-		}
-		if(actionTreeNodes.size()>0){
-			node.setActionTreeNodes(actionTreeNodes);
-		}
-		if(variableTreeNodes.size()>0){
-			node.setVariableTreeNodes(variableTreeNodes);
-		}
-		return node;
-	}
-	
-	public void setValueParser(ValueParser valueParser) {
-		this.valueParser = valueParser;
-	}
-	
-	public void setActionTreeNodeParser(
-			ActionTreeNodeParser actionTreeNodeParser) {
-		this.actionTreeNodeParser = actionTreeNodeParser;
-	}
-	public void setVariableTreeNodeParser(
-			VariableTreeNodeParser variableTreeNodeParser) {
-		this.variableTreeNodeParser = variableTreeNodeParser;
-	}
-	
-	@Override
-	public boolean support(String name) {
-		return name.equals("condition-tree-node");
-	}
+    private ValueParser a;
+    private VariableTreeNodeParser b;
+    private ActionTreeNodeParser c;
+
+    public ConditionTreeNodeParser() {
+    }
+
+    public ConditionTreeNode parse(Element var1) {
+        ConditionTreeNode var2 = new ConditionTreeNode();
+        var2.setNodeType(TreeNodeType.condition);
+        var2.setOp(Op.valueOf(var1.attributeValue("op")));
+        ArrayList var3 = new ArrayList();
+        ArrayList var4 = new ArrayList();
+        ArrayList var5 = new ArrayList();
+        Iterator var6 = var1.elements().iterator();
+
+        while(var6.hasNext()) {
+            Object var7 = var6.next();
+            if (var7 != null && var7 instanceof Element) {
+                Element var8 = (Element)var7;
+                String var9 = var8.getName();
+                if (this.a.support(var9)) {
+                    var2.setValue(this.a.parse(var8));
+                } else if (this.support(var9)) {
+                    ConditionTreeNode var10 = this.parse(var8);
+                    var10.setParentNode(var2);
+                    var3.add(var10);
+                } else if (this.b.support(var9)) {
+                    VariableTreeNode var11 = this.b.parse(var8);
+                    var11.setParentNode(var2);
+                    var5.add(var11);
+                } else if (this.c.support(var9)) {
+                    ActionTreeNode var12 = this.c.parse(var8);
+                    var12.setParentNode(var2);
+                    var4.add(var12);
+                }
+            }
+        }
+
+        if (var3.size() > 0) {
+            var2.setConditionTreeNodes(var3);
+        }
+
+        if (var4.size() > 0) {
+            var2.setActionTreeNodes(var4);
+        }
+
+        if (var5.size() > 0) {
+            var2.setVariableTreeNodes(var5);
+        }
+
+        return var2;
+    }
+
+    public void setValueParser(ValueParser var1) {
+        this.a = var1;
+    }
+
+    public void setActionTreeNodeParser(ActionTreeNodeParser var1) {
+        this.c = var1;
+    }
+
+    public void setVariableTreeNodeParser(VariableTreeNodeParser var1) {
+        this.b = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("condition-tree-node");
+    }
 }

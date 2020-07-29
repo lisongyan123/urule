@@ -1,71 +1,67 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.action.Action;
 import com.bstek.urule.action.VariableAssignAction;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.lhs.LeftType;
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
+import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.Element;
+
 public class VariableAssignActionParser extends ActionParser {
-	public Action parse(Element element) {
-		VariableAssignAction action=new VariableAssignAction();
-		String referenceName=element.attributeValue("reference-name");
-		if(StringUtils.isNotEmpty(referenceName)){
-			action.setReferenceName(referenceName);
-		}
-		String variable=element.attributeValue("var");
-		if(StringUtils.isEmpty(variable)){
-			variable=element.attributeValue("property-name");
-		}
-		action.setVariableName(variable);
-		String variableLabel=element.attributeValue("var-label");
-		if(StringUtils.isEmpty(variableLabel)){
-			variableLabel=element.attributeValue("property-label");
-		}
-		action.setVariableLabel(variableLabel);
-		String variableCategory=element.attributeValue("var-category");
-		action.setVariableCategory(variableCategory);
-		String datatype=element.attributeValue("datatype");
-		if(StringUtils.isNotEmpty(datatype)){
-			action.setDatatype(Datatype.valueOf(datatype));
-		}
-		String type=element.attributeValue("type");
-		if(StringUtils.isNotEmpty(type)){
-			action.setType(LeftType.valueOf(type));
-		}
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(valueParser.support(ele.getName())){
-				action.setValue(valueParser.parse(ele));
-				break;
-			}
-		}
-		return action;
-	}
-	public boolean support(String name) {
-		return name.equals("var-assign");
-	}
+    public VariableAssignActionParser() {
+    }
+
+    public Action parse(Element var1) {
+        VariableAssignAction var2 = new VariableAssignAction();
+        String var3 = var1.attributeValue("var");
+        if (StringUtils.isEmpty(var3)) {
+            var3 = var1.attributeValue("property-name");
+        }
+
+        var2.setVariableName(var3);
+        String var4 = var1.attributeValue("var-label");
+        if (StringUtils.isEmpty(var4)) {
+            var4 = var1.attributeValue("property-label");
+        }
+
+        var2.setVariableLabel(var4);
+        String var5 = var1.attributeValue("var-category");
+        var2.setVariableCategory(var5);
+        String var6 = var1.attributeValue("datatype");
+        if (StringUtils.isNotEmpty(var6)) {
+            var2.setDatatype(Datatype.valueOf(var6));
+        }
+
+        String var7 = var1.attributeValue("type");
+        if (StringUtils.isNotEmpty(var7)) {
+            var2.setType(LeftType.valueOf(var7));
+        }
+
+        var2.setKeyLabel(var1.attributeValue("key-label"));
+        var2.setKeyName(var1.attributeValue("key-name"));
+        Iterator var8 = var1.elements().iterator();
+
+        while(var8.hasNext()) {
+            Object var9 = var8.next();
+            if (var9 != null && var9 instanceof Element) {
+                Element var10 = (Element)var9;
+                if (this.valueParser.support(var10.getName())) {
+                    var2.setValue(this.valueParser.parse(var10));
+                    break;
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("var-assign");
+    }
 }

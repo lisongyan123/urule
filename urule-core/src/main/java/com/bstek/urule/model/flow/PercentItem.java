@@ -1,43 +1,48 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
-/**
- * @author Jacky.gao
- * @since 2015年5月27日
- */
+
 public class PercentItem {
-	private String name;
-	private long percent;
-	private long total;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public long getPercent() {
-		return percent;
-	}
-	public void setPercent(long percent) {
-		this.percent = percent;
-	}
-	public long getTotal() {
-		return total;
-	}
-	public void setTotal(long total) {
-		this.total = total;
-	}
+    private String name;
+    private long percent;
+    private long total;
+    private DecisionItem item;
+
+    public PercentItem() {
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public long getPercent() {
+        return this.percent;
+    }
+
+    public void setPercent(long var1) {
+        this.percent = var1;
+    }
+
+    public long getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(long var1) {
+        this.total = var1;
+    }
+
+    public DecisionItem getItem() {
+        return this.item;
+    }
+
+    public void setItem(DecisionItem var1) {
+        this.item = var1;
+    }
 }

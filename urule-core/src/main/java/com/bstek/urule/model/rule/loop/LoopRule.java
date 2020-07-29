@@ -1,193 +1,233 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule.loop;
 
+import com.bstek.urule.action.Action;
+import com.bstek.urule.model.GeneralEntity;
+import com.bstek.urule.model.rule.Rule;
+import com.bstek.urule.runtime.FactManager;
+import com.bstek.urule.runtime.KnowledgePackageWrapper;
+import com.bstek.urule.runtime.KnowledgeSession;
+import com.bstek.urule.runtime.rete.Context;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+public class LoopRule extends Rule {
+    private LoopStart loopStart;
+    private LoopEnd loopEnd;
+    private LoopTargetType loopTargetType;
+    private LoopTarget loopTarget;
+    private List<LoopRuleUnit> units;
+    private KnowledgePackageWrapper knowledgePackageWrapper;
+    private Logger log;
 
-import com.bstek.urule.action.Action;
-import com.bstek.urule.action.ActionValue;
-import com.bstek.urule.model.GeneralEntity;
-import com.bstek.urule.model.rule.Rule;
-import com.bstek.urule.runtime.KnowledgePackageWrapper;
-import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.KnowledgeSessionFactory;
-import com.bstek.urule.runtime.builtinaction.LoopAction;
-import com.bstek.urule.runtime.response.RuleExecutionResponse;
-import com.bstek.urule.runtime.rete.Context;
+    public LoopRule() {
+        this.loopTargetType = LoopTargetType.list;
+        this.log = Logger.getGlobal();
+        this.setLoopRule(true);
+    }
 
-/**
- * @author Jacky.gao
- * @since 2016年5月31日
- */
-public class LoopRule extends Rule{
-	private LoopStart loopStart;
-	private LoopEnd loopEnd;
-	private LoopTarget loopTarget;
-	private KnowledgePackageWrapper knowledgePackageWrapper;
-	private Log log=LogFactory.getLog(getClass());
-	public LoopRule() {
-		this.setLoopRule(true);
-	}
-	
-	public List<ActionValue> execute(Context context,Object matchedObject,List<Object> allMatchedObjects,Map<String,Object> variableMap){
-		Object loopTargetObj=context.getValueCompute().complexValueCompute(loopTarget.getValue(), matchedObject, context, allMatchedObjects,variableMap);
-		if(loopTargetObj==null){
-			log.warn("Loop rule ["+getName()+"] target value is null,cannot be executed.");
-			return null;
-		}
-		
-		List<ActionValue> values=new ArrayList<ActionValue>();
-		KnowledgeSession parentSession=(KnowledgeSession)context.getWorkingMemory();
-		List<Object> facts=parentSession.getAllFacts();
-		Map<String,Object> parameters=parentSession.getParameters();
-		
-		if(loopStart!=null){			
-			List<Action> startActions=loopStart.getActions();
-			if(startActions!=null){
-				for(Action action:startActions){
-					if(this.getDebug()!=null){
-						action.setDebug(this.getDebug());
-					}
-					ActionValue value=action.execute(context, matchedObject, allMatchedObjects,variableMap);
-					if(value!=null){
-						values.add(value);
-					}
-				}
-			}
-		}
+    public void execute(Context var1, Map<String, Object> var2) {
+        Object var3 = this.buildLoopTarget(var1, var2);
+        if (var3 == null) {
+            this.log.warning("Loop rule [" + this.getName() + "] target value is null,cannot be executed.");
+        } else {
+            KnowledgeSession var4 = (KnowledgeSession)var1.getWorkingMemory();
+            Map var5 = var4.getParameters();
+            if (this.loopStart != null) {
+                this.doActions(this.loopStart.getActions(), var1, var2, true);
+            }
 
-		KnowledgeSession session=KnowledgeSessionFactory.newKnowledgeSession(knowledgePackageWrapper.getKnowledgePackage(),context.getDebugMessageItems());
-		if(loopTargetObj instanceof Collection){
-			Collection<?> collections=(Collection<?>)loopTargetObj;
-			String loopClazz=null;
-			for(Object object:collections){
-				if(loopClazz==null){
-					if(object instanceof GeneralEntity){
-						loopClazz=((GeneralEntity)object).getTargetClass();
-					}else{
-						loopClazz=object.getClass().getName();
-					}
-				}
-				for(Object fact:facts){
-					String clazz=null;
-					if(fact instanceof GeneralEntity){
-						clazz=((GeneralEntity)fact).getTargetClass();
-					}else{
-						clazz=fact.getClass().getName();
-					}
-					if(!loopClazz.equals(clazz)){
-						session.insert(fact);						
-					}
-				}
-				session.insert(object);
-				RuleExecutionResponse response=session.fireRules(parameters);
-				List<ActionValue> list=response.getActionValues();
-				boolean needBreak=false;
-				if(list!=null){
-					for(ActionValue av:list){
-						if(av.getActionId().equals(LoopAction.BREAK_LOOP_ACTION_ID)){
-							needBreak=true;
-						}else{
-							values.add(av);
-						}
-					}
-				}
-				parameters=new HashMap<String,Object>();
-				parameters.putAll(session.getParameters());
-				if(needBreak){
-					break;
-				}
-			}
-		}else if(loopTargetObj instanceof Object[]){
-			Object[] objs=(Object[])loopTargetObj;
-			for(Object object:objs){
-				for(Object fact:facts){
-					session.insert(fact);
-				}
-				session.insert(object);
-				RuleExecutionResponse response=session.fireRules();
-				List<ActionValue> list=response.getActionValues();
-				boolean needBreak=false;
-				if(list!=null){
-					for(ActionValue av:list){
-						if(av.getActionId().equals(LoopAction.BREAK_LOOP_ACTION_ID)){
-							needBreak=true;
-						}else{
-							values.add(av);
-						}
-					}
-				}
-				parameters=new HashMap<String,Object>();
-				parameters.putAll(session.getParameters());
-				if(needBreak){
-					break;
-				}
-			}
-		}else{
-			throw new RuntimeException("Loop rule target variable must be Collection or Object array type.");
-		}
-		parentSession.getParameters().putAll(parameters);
-		if(loopEnd!=null){			
-			List<Action> endActions=loopEnd.getActions();
-			if(endActions!=null){
-				for(Action action:endActions){
-					if(this.getDebug()!=null){
-						action.setDebug(this.getDebug());
-					}
-					ActionValue value=action.execute(context, matchedObject, allMatchedObjects,variableMap);
-					if(value!=null){
-						values.add(value);
-					}
-				}
-			}
-		}
-		
-		return values;
-	}
-		
-	public LoopStart getLoopStart() {
-		return loopStart;
-	}
-	public void setLoopStart(LoopStart loopStart) {
-		this.loopStart = loopStart;
-	}
-	public LoopEnd getLoopEnd() {
-		return loopEnd;
-	}
-	public void setLoopEnd(LoopEnd loopEnd) {
-		this.loopEnd = loopEnd;
-	}
-	public LoopTarget getLoopTarget() {
-		return loopTarget;
-	}
-	public void setLoopTarget(LoopTarget loopTarget) {
-		this.loopTarget = loopTarget;
-	}
-	public KnowledgePackageWrapper getKnowledgePackageWrapper() {
-		return knowledgePackageWrapper;
-	}
-	public void setKnowledgePackageWrapper(
-			KnowledgePackageWrapper knowledgePackageWrapper) {
-		this.knowledgePackageWrapper = knowledgePackageWrapper;
-	}
+            boolean var6 = true;
+            KnowledgeSession var7 = KnowledgeSessionFactory.newKnowledgeSession(this.knowledgePackageWrapper, var1, var4);
+            List var8 = var4.getFactList();
+            if (var3 instanceof Collection) {
+                Collection var9 = (Collection)var3;
+
+                for(Iterator var10 = var9.iterator(); var10.hasNext(); var6 = false) {
+                    Object var11 = var10.next();
+                    var5 = this.doLoop(var7, var5, var11, var8, var6);
+                    if (this.breakLoop(var5)) {
+                        break;
+                    }
+                }
+            } else if (var3 instanceof Object[]) {
+                Object[] var14 = (Object[])((Object[])var3);
+                Object[] var15 = var14;
+                int var16 = var14.length;
+
+                for(int var12 = 0; var12 < var16; ++var12) {
+                    Object var13 = var15[var12];
+                    var5 = this.doLoop(var7, var5, var13, var8, var6);
+                    if (this.breakLoop(var5)) {
+                        break;
+                    }
+
+                    var6 = false;
+                }
+            }
+
+            var4.getParameters().putAll(var5);
+            if (this.loopEnd != null) {
+                this.doActions(this.loopEnd.getActions(), var1, var2, false);
+            }
+
+        }
+    }
+
+    private Map<String, Object> doLoop(KnowledgeSession var1, Map<String, Object> var2, Object var3, List<Object> var4, boolean var5) {
+        FactManager var6 = var1.getFactManager();
+        String var7 = this.getClass(var3);
+        if (var5) {
+            var6.clean();
+        }
+
+        Iterator var8 = var4.iterator();
+
+        while(var8.hasNext()) {
+            Object var9 = var8.next();
+            String var10 = this.getClass(var9);
+            if (!var10.equals(HashMap.class.getName()) && !var10.equals(var7)) {
+                var6.insertLoopFact(var9);
+            }
+        }
+
+        var6.insertLoopFact(var3);
+        var1.fireRules(var2);
+        Map var12 = var1.getParameters();
+        HashMap var11 = new HashMap();
+        var11.putAll(var12);
+        return var11;
+    }
+
+    private boolean breakLoop(Map<String, Object> var1) {
+        boolean var2 = false;
+        if (var1.containsKey("_loop_rule_break_tag__")) {
+            var1.remove("_loop_rule_break_tag__");
+            var2 = true;
+        }
+
+        return var2;
+    }
+
+    private void doActions(List<Action> var1, Context var2, Map<String, Object> var3, boolean var4) {
+        if (var1 != null && var1.size() != 0) {
+            if (var4) {
+                var2.addTipMsg("执行【" + this.getName() + "】开始前动作");
+                var2.getLogger().logMessage("==执行循环规则规则【" + this.getName() + "】的开始前动作==");
+            } else {
+                var2.addTipMsg("执行【" + this.getName() + "】结束后动作");
+                var2.getLogger().logMessage("==执行循环规则规则【" + this.getName() + "】的结束后动作==");
+            }
+
+            Action var6;
+            for(Iterator var5 = var1.iterator(); var5.hasNext(); var6.execute(var2, var3)) {
+                var6 = (Action)var5.next();
+                if (this.getDebug() != null) {
+                    var6.setDebug(this.getDebug());
+                }
+            }
+
+            var2.cleanTipMsg();
+        }
+    }
+
+    private Object buildLoopTarget(Context var1, Map<String, Object> var2) {
+        Object var3 = var1.getValueCompute().complexValueCompute(this.loopTarget.getValue(), var1, var2);
+        if (this.loopTargetType.equals(LoopTargetType.list)) {
+            if (var3 instanceof Collection) {
+                ArrayList var11 = new ArrayList();
+                Collection var12 = (Collection)var3;
+                var11.addAll(var12);
+                return var11;
+            } else if (!(var3 instanceof Object[])) {
+                throw new RuntimeException("循环对象必须是一个Collection类型的集合对象或一个数组对象，当前对象为：" + var3 + ".");
+            } else {
+                return var3;
+            }
+        } else {
+            KnowledgeSession var4 = (KnowledgeSession)var1.getWorkingMemory();
+            List var5 = var4.getFactList();
+            String var6 = this.getClass(var3);
+            ArrayList var7 = new ArrayList();
+            Iterator var8 = var5.iterator();
+
+            while(var8.hasNext()) {
+                Object var9 = var8.next();
+                String var10 = this.getClass(var9);
+                if (var10.equals(var6)) {
+                    var7.add(var9);
+                }
+            }
+
+            return var7;
+        }
+    }
+
+    private String getClass(Object var1) {
+        String var2 = null;
+        if (var1 instanceof GeneralEntity) {
+            var2 = ((GeneralEntity)var1).getTargetClass();
+        } else {
+            var2 = var1.getClass().getName();
+        }
+
+        return var2;
+    }
+
+    public List<LoopRuleUnit> getUnits() {
+        return this.units;
+    }
+
+    public void setUnits(List<LoopRuleUnit> var1) {
+        this.units = var1;
+    }
+
+    public LoopStart getLoopStart() {
+        return this.loopStart;
+    }
+
+    public void setLoopStart(LoopStart var1) {
+        this.loopStart = var1;
+    }
+
+    public LoopEnd getLoopEnd() {
+        return this.loopEnd;
+    }
+
+    public void setLoopEnd(LoopEnd var1) {
+        this.loopEnd = var1;
+    }
+
+    public LoopTargetType getLoopTargetType() {
+        return this.loopTargetType;
+    }
+
+    public void setLoopTargetType(LoopTargetType var1) {
+        this.loopTargetType = var1;
+    }
+
+    public LoopTarget getLoopTarget() {
+        return this.loopTarget;
+    }
+
+    public void setLoopTarget(LoopTarget var1) {
+        this.loopTarget = var1;
+    }
+
+    public KnowledgePackageWrapper getKnowledgePackageWrapper() {
+        return this.knowledgePackageWrapper;
+    }
+
+    public void setKnowledgePackageWrapper(KnowledgePackageWrapper var1) {
+        this.knowledgePackageWrapper = var1;
+    }
 }

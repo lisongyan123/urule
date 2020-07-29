@@ -1,56 +1,125 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.bstek.urule.PropertyConfigurer;
+import com.bstek.urule.model.flow.ins.BranchCounter;
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.FlowInstance;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang.StringUtils;
 
-/**
- * @author Jacky.gao
- * @since 2015年4月20日
- */
 public class ForkNode extends FlowNode {
-	private FlowNodeType type=FlowNodeType.Fork;
-	public ForkNode() {
-	}
-	public ForkNode(String name) {
-		super(name);
-	}
-	@Override
-	public FlowNodeType getType() {
-		return type;
-	}
-	@Override
-	public void enterNode(FlowContext context,FlowInstance instance) {
-		instance.setCurrentNode(this);
-		executeNodeEvent(EventType.enter, context, instance);
-		List<Connection> forkConnections=new ArrayList<Connection>();
-		for(Connection connection:connections){
-			if(connection.evaluate(context)){
-				forkConnections.add(connection);
-			}
-		}
-		executeNodeEvent(EventType.leave, context, instance);
-		int childCount=forkConnections.size();
-		for(Connection connection:forkConnections){
-			FlowInstance newChildInstance=instance.newChildInstance(childCount);
-			connection.execute(context, newChildInstance);
-		}
-	}
+    private String multipleThread;
+    private FlowNodeType type;
+
+    public ForkNode() {
+        this.type = FlowNodeType.Fork;
+    }
+
+    public ForkNode(String var1) {
+        super(var1);
+        this.type = FlowNodeType.Fork;
+    }
+
+    public FlowNodeType getType() {
+        return this.type;
+    }
+
+    public void enterNode(final FlowContext var1, final FlowInstance var2) {
+        var2.setCurrentNode(this);
+        this.executeNodeEvent(EventType.enter, var1, var2);
+        ArrayList var3 = new ArrayList();
+        Iterator var4 = this.connections.iterator();
+
+        while(var4.hasNext()) {
+            Connection var5 = (Connection)var4.next();
+            if (var5.evaluate(var1)) {
+                var3.add(var5);
+            }
+        }
+
+        this.executeNodeEvent(EventType.leave, var1, var2);
+        final BranchCounter var12 = new BranchCounter();
+        final int var13 = var3.size();
+        final boolean var6 = this.forkNodeMultiThreadSupport();
+        final ConcurrentHashMap var7 = new ConcurrentHashMap();
+
+        for(int var8 = 0; var8 < var13; ++var8) {
+            final Connection var9 = (Connection)var3.get(var8);
+            if (!var6) {
+                FlowInstance var10 = var2.newChildInstance(var12, var13);
+                var10.addVariable("fork_node_multi_thread_support_", var6);
+                var9.execute(var1, var10);
+            } else {
+                String var14;
+                if (var8 == var13 - 1) {
+                    var14 = Thread.currentThread().getName();
+                    if (var14.startsWith("fork_node_sub_thread_")) {
+                        Thread.currentThread().setName("Sub_Fork_Main_Thread_" + UUID.randomUUID().toString());
+                    }
+
+                    FlowInstance var11 = var2.newChildInstance(var12, var13);
+                    var11.addVariable("fork_node_multi_thread_support_", var6);
+                    var11.addVariable("fork_node_exception_map_", var7);
+                    var9.execute(var1, var11);
+                } else {
+                    var14 = "fork_node_sub_thread_" + (var9.getName() == null ? "" : var9.getName() + "_") + this.getName() + var8 + "_" + UUID.randomUUID().toString();
+                    Thread var15 = new Thread() {
+                        public void run() {
+                            try {
+                                FlowInstance var1x = var2.newChildInstance(var12, var13);
+                                var1x.addVariable("fork_node_multi_thread_support_", var6);
+                                var1x.addVariable("fork_node_exception_map_", var7);
+                                var9.execute(var1, var1x);
+                            } catch (Exception var2x) {
+                                var7.put(this, var2x);
+                            }
+
+                        }
+                    };
+                    var7.put(var15, 1);
+                    var15.setName(var14);
+                    var15.setDaemon(true);
+                    var15.start();
+                }
+            }
+        }
+
+    }
+
+    private boolean forkNodeMultiThreadSupport() {
+        String var1 = PropertyConfigurer.getProperty("urule.flowForkMultiThread");
+        boolean var2 = false;
+        if (StringUtils.isNotBlank(var1)) {
+            var2 = Boolean.valueOf(var1);
+        }
+
+        boolean var3 = false;
+        if (!StringUtils.isBlank(this.multipleThread) && !this.multipleThread.equals("default")) {
+            if (this.multipleThread.equals("yes")) {
+                var3 = true;
+            } else {
+                var3 = false;
+            }
+        } else {
+            var3 = var2;
+        }
+
+        return var3;
+    }
+
+    public String getMultipleThread() {
+        return this.multipleThread;
+    }
+
+    public void setMultipleThread(String var1) {
+        this.multipleThread = var1;
+    }
 }

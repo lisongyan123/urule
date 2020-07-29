@@ -1,22 +1,9 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse.scorecard;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
+package com.bstek.urule.parse.scorecard;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.scorecard.CardCell;
@@ -24,50 +11,58 @@ import com.bstek.urule.model.scorecard.CellType;
 import com.bstek.urule.parse.Parser;
 import com.bstek.urule.parse.ValueParser;
 import com.bstek.urule.parse.table.JointParser;
+import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年9月22日
- */
 public class CardCellParser implements Parser<CardCell> {
-	private ValueParser valueParser;
-	private JointParser jointParser;
-	@Override
-	public CardCell parse(Element element) {
-		CardCell cell=new CardCell();
-		cell.setType(CellType.valueOf(element.attributeValue("type")));
-		cell.setCol(Integer.valueOf(element.attributeValue("col")));
-		cell.setRow(Integer.valueOf(element.attributeValue("row")));
-		String datatype=element.attributeValue("datatype");
-		if(StringUtils.isNotBlank(datatype)){
-			cell.setDatatype(Datatype.valueOf(datatype));
-		}
-		cell.setVariableName(element.attributeValue("var"));
-		cell.setVariableLabel(element.attributeValue("var-label"));
-		cell.setWeight(element.attributeValue("weight"));
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(valueParser.support(ele.getName())){
-				cell.setValue(valueParser.parse(ele));
-			}else if(jointParser.support(ele.getName())){
-				cell.setJoint(jointParser.parse(ele));
-			}
-		}
-		return cell;
-	}
-	
-	public void setJointParser(JointParser jointParser) {
-		this.jointParser = jointParser;
-	}
-	public void setValueParser(ValueParser valueParser) {
-		this.valueParser = valueParser;
-	}
-	
-	@Override
-	public boolean support(String name) {
-		return name.equals("card-cell");
-	}
+    private ValueParser a;
+    private JointParser b;
+
+    public CardCellParser() {
+    }
+
+    public CardCell parse(Element var1) {
+        CardCell var2 = new CardCell();
+        var2.setType(CellType.valueOf(var1.attributeValue("type")));
+        var2.setCol(Integer.valueOf(var1.attributeValue("col")));
+        var2.setRow(Integer.valueOf(var1.attributeValue("row")));
+        String var3 = var1.attributeValue("datatype");
+        if (StringUtils.isNotBlank(var3)) {
+            var2.setDatatype(Datatype.valueOf(var3));
+        }
+
+        var2.setVariableName(var1.attributeValue("var"));
+        var2.setVariableLabel(var1.attributeValue("var-label"));
+        var2.setKeyLabel(var1.attributeValue("key-label"));
+        var2.setKeyName(var1.attributeValue("key-name"));
+        var2.setWeight(var1.attributeValue("weight"));
+        Iterator var4 = var1.elements().iterator();
+
+        while(var4.hasNext()) {
+            Object var5 = var4.next();
+            if (var5 != null && var5 instanceof Element) {
+                Element var6 = (Element)var5;
+                if (this.a.support(var6.getName())) {
+                    var2.setValue(this.a.parse(var6));
+                } else if (this.b.support(var6.getName())) {
+                    var2.setJoint(this.b.parse(var6));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public void setJointParser(JointParser var1) {
+        this.b = var1;
+    }
+
+    public void setValueParser(ValueParser var1) {
+        this.a = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("card-cell");
+    }
 }

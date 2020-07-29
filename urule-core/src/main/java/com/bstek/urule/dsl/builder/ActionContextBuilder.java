@@ -1,148 +1,127 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.dsl.builder;
 
-import java.util.Collection;
-
+import com.bstek.urule.action.*;
+import com.bstek.urule.dsl.RuleParserParser.*;
+import com.bstek.urule.exception.RuleException;
+import com.bstek.urule.model.function.FunctionDescriptor;
+import com.bstek.urule.model.rule.AbstractValue;
+import com.bstek.urule.model.rule.Parameter;
+import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.bstek.urule.exception.RuleException;
-import com.bstek.urule.action.Action;
-import com.bstek.urule.action.ConsolePrintAction;
-import com.bstek.urule.action.ExecuteCommonFunctionAction;
-import com.bstek.urule.action.ExecuteMethodAction;
-import com.bstek.urule.action.VariableAssignAction;
-import com.bstek.urule.dsl.RuleParserParser.ActionContext;
-import com.bstek.urule.dsl.RuleParserParser.ActionParametersContext;
-import com.bstek.urule.dsl.RuleParserParser.AssignActionContext;
-import com.bstek.urule.dsl.RuleParserParser.BeanMethodContext;
-import com.bstek.urule.dsl.RuleParserParser.CommonFunctionContext;
-import com.bstek.urule.dsl.RuleParserParser.ComplexValueContext;
-import com.bstek.urule.dsl.RuleParserParser.MethodInvokeContext;
-import com.bstek.urule.dsl.RuleParserParser.NamedVariableContext;
-import com.bstek.urule.dsl.RuleParserParser.OutActionContext;
-import com.bstek.urule.dsl.RuleParserParser.ParameterContext;
-import com.bstek.urule.dsl.RuleParserParser.PropertyContext;
-import com.bstek.urule.model.function.FunctionDescriptor;
-import com.bstek.urule.model.library.variable.VariableCategory;
-import com.bstek.urule.model.rule.Parameter;
-import com.bstek.urule.model.rule.Value;
-import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
-import com.bstek.urule.model.rule.lhs.LeftType;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * @author Jacky.gao
- * @since 2015年2月15日
- */
-public class ActionContextBuilder extends AbstractContextBuilder implements ApplicationContextAware{
-	private Collection<FunctionDescriptor> functionDescriptors;
-	@Override
-	public Action build(ParserRuleContext context) {
-		ActionContext ctx=(ActionContext)context;
-		if(ctx.outAction()!=null){
-			return buildConsolePrintAction(ctx.outAction());
-		}else if(ctx.assignAction()!=null){
-			return buildVariableAssignAction(ctx.assignAction());
-		}else if(ctx.methodInvoke()!=null){
-			return buildExecuteMethodAction(ctx.methodInvoke());
-		}else if(ctx.commonFunction()!=null){
-			return buildExecuteCommonFunctionAction(ctx.commonFunction());
-		}
-		return null;
-	}
-	
-	private ExecuteCommonFunctionAction buildExecuteCommonFunctionAction(CommonFunctionContext context){
-		ExecuteCommonFunctionAction action=new ExecuteCommonFunctionAction();
-		String nameorlabel=context.Identifier().getText();
-		for(FunctionDescriptor fun:functionDescriptors){
-			if(nameorlabel.equals(fun.getName())){
-				action.setName(fun.getName());
-				action.setLabel(fun.getLabel());
-				break;
-			}else if(nameorlabel.equals(fun.getLabel())){
-				action.setName(fun.getName());
-				action.setLabel(fun.getLabel());
-				break;
-			}
-		}
-		if(action.getName()==null){
-			throw new RuleException("Function["+nameorlabel+"] not exist.");
-		}
-		ComplexValueContext value=context.complexValue();
-		CommonFunctionParameter param=new CommonFunctionParameter();
-		param.setObjectParameter(BuildUtils.buildValue(value));
-		PropertyContext propertyContext=context.property();
-		if(propertyContext!=null){
-			param.setProperty(propertyContext.getText());
-		}
-		action.setParameter(param);
-		return action;
-	}
-		
-	private ExecuteMethodAction buildExecuteMethodAction(MethodInvokeContext context){
-		ExecuteMethodAction action=new ExecuteMethodAction();
-		BeanMethodContext methodContext=context.beanMethod();
-		action.setBeanLabel(methodContext.getChild(0).getText());
-		action.setMethodLabel(methodContext.getChild(2).getText());
-		ActionParametersContext parametersContext=context.actionParameters();
-		if(parametersContext!=null){
-			for(ComplexValueContext ctx:parametersContext.complexValue()){
-				Parameter parameter=new Parameter();
-				parameter.setValue(BuildUtils.buildValue(ctx));
-				action.addParameter(parameter);
-			}
-		}
-		return action;
-	}
-	
-	private VariableAssignAction buildVariableAssignAction(AssignActionContext context){
-		VariableAssignAction action=new VariableAssignAction();
-		ParameterContext parameterContext=context.parameter();
-		NamedVariableContext namedVariableContext=context.namedVariable();
-		if(namedVariableContext!=null){
-			action.setReferenceName(namedVariableContext.namedVariableCategory().getText());
-			action.setVariableLabel(namedVariableContext.property().getText());
-			action.setType(LeftType.NamedReference);
-		}else if(parameterContext==null){
-			action.setVariableCategory(context.variable().variableCategory().getText());
-			action.setVariableLabel(context.variable().property().getText());			
-		}else{
-			action.setVariableCategory(VariableCategory.PARAM_CATEGORY);
-			action.setVariableLabel(parameterContext.Identifier().getText());
-		}
-		action.setValue(BuildUtils.buildValue(context.complexValue()));
-		return action;
-	}
-	
-	private ConsolePrintAction buildConsolePrintAction(OutActionContext context){
-		ConsolePrintAction action=new ConsolePrintAction();
-		Value value=BuildUtils.buildValue(context.complexValue());
-		action.setValue(value);
-		return action;
-	}
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		functionDescriptors=applicationContext.getBeansOfType(FunctionDescriptor.class).values();
-	}
-	@Override
-	public boolean support(ParserRuleContext context) {
-		return context instanceof ActionContext;
-	}
+public class ActionContextBuilder extends AbstractContextBuilder implements ApplicationContextAware {
+    private Collection<FunctionDescriptor> a;
+
+    public ActionContextBuilder() {
+    }
+
+    public Action build(ParserRuleContext var1) {
+        ActionContext var2 = (ActionContext)var1;
+        if (var2.outAction() != null) {
+            return this.a(var2.outAction());
+        } else if (var2.assignAction() != null) {
+            return this.a(var2.assignAction());
+        } else if (var2.methodInvoke() != null) {
+            return this.a(var2.methodInvoke());
+        } else {
+            return var2.commonFunction() != null ? this.a(var2.commonFunction()) : null;
+        }
+    }
+
+    private ExecuteCommonFunctionAction a(CommonFunctionContext var1) {
+        ExecuteCommonFunctionAction var2 = new ExecuteCommonFunctionAction();
+        String var3 = var1.Identifier().getText();
+        Iterator var4 = this.a.iterator();
+
+        while(var4.hasNext()) {
+            FunctionDescriptor var5 = (FunctionDescriptor)var4.next();
+            if (var3.equals(var5.getName())) {
+                var2.setName(var5.getName());
+                var2.setLabel(var5.getLabel());
+                break;
+            }
+
+            if (var3.equals(var5.getLabel())) {
+                var2.setName(var5.getName());
+                var2.setLabel(var5.getLabel());
+                break;
+            }
+        }
+
+        if (var2.getName() == null) {
+            throw new RuleException("Function[" + var3 + "] not exist.");
+        } else {
+            ComplexValueContext var8 = var1.complexValue();
+            CommonFunctionParameter var7 = new CommonFunctionParameter();
+            var7.setObjectParameter(BuildUtils.buildValue(var8));
+            PropertyContext var6 = var1.property();
+            if (var6 != null) {
+                var7.setProperty(var6.getText());
+            }
+
+            var2.setParameter(var7);
+            return var2;
+        }
+    }
+
+    private ExecuteMethodAction a(MethodInvokeContext var1) {
+        ExecuteMethodAction var2 = new ExecuteMethodAction();
+        BeanMethodContext var3 = var1.beanMethod();
+        var2.setBeanLabel(var3.getChild(0).getText());
+        var2.setMethodLabel(var3.getChild(2).getText());
+        ActionParametersContext var4 = var1.actionParameters();
+        if (var4 != null) {
+            Iterator var5 = var4.complexValue().iterator();
+
+            while(var5.hasNext()) {
+                ComplexValueContext var6 = (ComplexValueContext)var5.next();
+                Parameter var7 = new Parameter();
+                var7.setValue(BuildUtils.buildValue(var6));
+                var2.addParameter(var7);
+            }
+        }
+
+        return var2;
+    }
+
+    private VariableAssignAction a(AssignActionContext var1) {
+        VariableAssignAction var2 = new VariableAssignAction();
+        ParameterContext var3 = var1.parameter();
+        if (var3 == null) {
+            var2.setVariableCategory(var1.variable().variableCategory().getText());
+            var2.setVariableLabel(var1.variable().property().getText());
+        } else {
+            var2.setVariableCategory("参数");
+            var2.setVariableLabel(var3.Identifier().getText());
+        }
+
+        var2.setValue(BuildUtils.buildValue(var1.complexValue()));
+        return var2;
+    }
+
+    private ConsolePrintAction a(OutActionContext var1) {
+        ConsolePrintAction var2 = new ConsolePrintAction();
+        AbstractValue var3 = BuildUtils.buildValue(var1.complexValue());
+        var2.setValue(var3);
+        return var2;
+    }
+
+    public void setApplicationContext(ApplicationContext var1) throws BeansException {
+        this.a = var1.getBeansOfType(FunctionDescriptor.class).values();
+    }
+
+    public boolean support(ParserRuleContext var1) {
+        return var1 instanceof ActionContext;
+    }
 }

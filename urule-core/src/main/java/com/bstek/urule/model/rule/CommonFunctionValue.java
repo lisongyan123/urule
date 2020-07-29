@@ -1,68 +1,65 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
 
+import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
+public class CommonFunctionValue extends AbstractValue {
+    @JsonIgnore
+    private String id;
+    private String name;
+    private String label;
+    private CommonFunctionParameter parameter;
+    private ValueType valueType;
 
-/**
- * @author Jacky.gao
- * @since 2015年7月28日
- */
-public class CommonFunctionValue extends AbstractValue{
-	@JsonIgnore
-	private String id;
-	private String name;
-	private String label;
-	private CommonFunctionParameter parameter;
-	private ValueType valueType=ValueType.CommonFunction;
-	@Override
-	public String getId() {
-		if(id==null){
-			id= "[函数]"+label+"("+parameter.getId()+")";
-			if(arithmetic!=null){
-				id=id+arithmetic.getId();
-			}
-		}
-		return id;
-	}
-	@Override
-	public ValueType getValueType() {
-		return valueType;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getLabel() {
-		return label;
-	}
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	public void setValueType(ValueType valueType) {
-		this.valueType = valueType;
-	}
-	public CommonFunctionParameter getParameter() {
-		return parameter;
-	}
-	public void setParameter(CommonFunctionParameter parameter) {
-		this.parameter = parameter;
-	}
+    public CommonFunctionValue() {
+        this.valueType = ValueType.CommonFunction;
+    }
+
+    public String getId() {
+        if (this.id == null) {
+            this.id = "[函数]" + this.label + "(" + this.parameter.getId() + ")";
+            if (this.arithmetic != null) {
+                this.id = this.id + this.arithmetic.getId();
+            }
+        }
+
+        return this.id;
+    }
+
+    public ValueType getValueType() {
+        return this.valueType;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public String getLabel() {
+        return this.label;
+    }
+
+    public void setLabel(String var1) {
+        this.label = var1;
+    }
+
+    public void setValueType(ValueType var1) {
+        this.valueType = var1;
+    }
+
+    public CommonFunctionParameter getParameter() {
+        return this.parameter;
+    }
+
+    public void setParameter(CommonFunctionParameter var1) {
+        this.parameter = var1;
+    }
 }

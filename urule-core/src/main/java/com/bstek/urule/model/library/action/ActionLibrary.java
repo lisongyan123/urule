@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -23,19 +23,19 @@ import java.util.List;
  * @since 2014年12月29日
  */
 public class ActionLibrary {
-	private List<SpringBean> springBeans;
-	public List<SpringBean> getSpringBeans() {
-		return springBeans;
-	}
-	
-	public void setSpringBeans(List<SpringBean> springBeans) {
-		this.springBeans = springBeans;
-	}
+    private List<SpringBean> springBeans;
+    public List<SpringBean> getSpringBeans() {
+        return springBeans;
+    }
 
-	public void addSpringBean(SpringBean springBean) {
-		if(this.springBeans==null){
-			this.springBeans=new ArrayList<SpringBean>();
-		}
-		this.springBeans.add(springBean);
-	}
+    public void setSpringBeans(List<SpringBean> springBeans) {
+        this.springBeans = springBeans;
+    }
+
+    public void addSpringBean(SpringBean springBean) {
+        if(this.springBeans==null){
+            this.springBeans=new ArrayList<SpringBean>();
+        }
+        this.springBeans.add(springBean);
+    }
 }

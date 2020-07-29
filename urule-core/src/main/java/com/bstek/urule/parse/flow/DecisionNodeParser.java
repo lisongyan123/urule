@@ -1,76 +1,106 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.flow;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
 
 import com.bstek.urule.model.flow.DecisionItem;
 import com.bstek.urule.model.flow.DecisionNode;
 import com.bstek.urule.model.flow.DecisionType;
+import com.bstek.urule.model.flow.PercentScope;
+import com.bstek.urule.parse.LhsParser;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class DecisionNodeParser extends FlowNodeParser<DecisionNode> {
-	public DecisionNode parse(Element element) {
-		DecisionNode decision=new DecisionNode(element.attributeValue("name"));
-		decision.setEventBean(element.attributeValue("event-bean"));
-		String decitionType=element.attributeValue("decision-type");
-		if(StringUtils.isNotEmpty(decitionType)){
-			decision.setDecisionType(DecisionType.valueOf(decitionType));
-		}
-		decision.setX(element.attributeValue("x"));
-		decision.setY(element.attributeValue("y"));
-		decision.setWidth(element.attributeValue("width"));
-		decision.setHeight(element.attributeValue("height"));
-		decision.setConnections(parseConnections(element));
-		List<DecisionItem> items=new ArrayList<DecisionItem>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(!ele.getName().equals("item")){
-				continue;
-			}
-			DecisionItem item=parseDecisionItem(ele);
-			items.add(item);
-		}
-		decision.setItems(items);
-		return decision;
-	}
-	
-	private DecisionItem parseDecisionItem(Element element){
-		DecisionItem item=new DecisionItem();
-		item.setTo(element.attributeValue("connection"));
-		String script=element.getStringValue();
-		item.setScript(script);
-		String percent=element.attributeValue("percent");
-		if(StringUtils.isNotEmpty(percent)){
-			item.setPercent(Integer.valueOf(percent));			
-		}
-		return item;
-	}
-	
-	public boolean support(String name) {
-		return name.equals("decision");
-	}
+    private LhsParser a;
+
+    public DecisionNodeParser() {
+    }
+
+    public DecisionNode parse(Element var1) {
+        DecisionNode var2 = new DecisionNode(var1.attributeValue("name"));
+        var2.setEventBean(var1.attributeValue("event-bean"));
+        String var3 = var1.attributeValue("decision-type");
+        if (StringUtils.isNotBlank(var3)) {
+            var2.setDecisionType(DecisionType.valueOf(var3));
+        }
+
+        String var4 = var1.attributeValue("percent-scope");
+        if (StringUtils.isNotBlank(var4)) {
+            var2.setPercentScope(PercentScope.valueOf(var4));
+        }
+
+        if (var2.getPercentScope() == null) {
+            var2.setPercentScope(PercentScope.batch);
+        }
+
+        var2.setX(var1.attributeValue("x"));
+        var2.setY(var1.attributeValue("y"));
+        var2.setWidth(var1.attributeValue("width"));
+        var2.setHeight(var1.attributeValue("height"));
+        var2.setConnections(this.parseConnections(var1));
+        ArrayList var5 = new ArrayList();
+        Iterator var6 = var1.elements().iterator();
+
+        while(var6.hasNext()) {
+            Object var7 = var6.next();
+            if (var7 != null && var7 instanceof Element) {
+                Element var8 = (Element)var7;
+                if (var8.getName().equals("item")) {
+                    DecisionItem var9 = this.a(var8);
+                    var5.add(var9);
+                }
+            }
+        }
+
+        var2.setItems(var5);
+        return var2;
+    }
+
+    private DecisionItem a(Element var1) {
+        DecisionItem var2 = new DecisionItem();
+        var2.setTo(var1.attributeValue("connection"));
+        String var3 = var1.attributeValue("percent");
+        if (StringUtils.isNotEmpty(var3)) {
+            var2.setPercent(Integer.valueOf(var3));
+        }
+
+        String var4 = var1.attributeValue("condition-type");
+        if (var4 == null) {
+            var4 = "script";
+        }
+
+        var2.setConditionType(var4);
+        if (var4.equals("script")) {
+            String var5 = var1.getStringValue();
+            var2.setScript(var5);
+        } else {
+            Iterator var8 = var1.elements().iterator();
+
+            while(var8.hasNext()) {
+                Object var6 = var8.next();
+                if (var6 != null && var6 instanceof Element) {
+                    Element var7 = (Element)var6;
+                    if (this.a.support(var7.getName())) {
+                        var2.setLhs(this.a.parse(var7));
+                        var2.setLhsXml(var7.asXML());
+                    }
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("decision");
+    }
+
+    public void setLhsParser(LhsParser var1) {
+        this.a = var1;
+    }
 }

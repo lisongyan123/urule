@@ -1,70 +1,65 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.table;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.ArrayList;
-import java.util.List;
+package com.bstek.urule.model.table;
 
 import com.bstek.urule.model.rule.lhs.And;
 import com.bstek.urule.model.rule.lhs.Junction;
 import com.bstek.urule.model.rule.lhs.Or;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月19日
- */
 public class Joint {
-	private List<Condition> conditions;
-	private List<Joint> joints;
-	private JointType type;
-	public Junction getJunction(){
-		if(type.equals(JointType.and)){
-			return new And();
-		}else{
-			return new Or();
-		}
-	}
-	public List<Condition> getConditions() {
-		return conditions;
-	}
-	public void setConditions(List<Condition> conditions) {
-		this.conditions = conditions;
-	}
-	public void addJoint(Joint joint){
-		if(joints==null){
-			joints=new ArrayList<Joint>();
-		}
-		joints.add(joint);
-	}
-	public void addCondition(Condition condition){
-		if(conditions==null){
-			conditions=new ArrayList<Condition>();
-		}
-		conditions.add(condition);
-	}
-	public List<Joint> getJoints() {
-		return joints;
-	}
-	public void setJoints(List<Joint> joints) {
-		this.joints = joints;
-	}
-	public JointType getType() {
-		return type;
-	}
-	public void setType(JointType type) {
-		this.type = type;
-	}
+    private List<Condition> conditions;
+    private List<Joint> joints;
+    private JointType type;
+
+    public Joint() {
+    }
+
+    public Junction getJunction() {
+        return (Junction)(this.type.equals(JointType.and) ? new And() : new Or());
+    }
+
+    public List<Condition> getConditions() {
+        return this.conditions;
+    }
+
+    public void setConditions(List<Condition> var1) {
+        this.conditions = var1;
+    }
+
+    public void addJoint(Joint var1) {
+        if (this.joints == null) {
+            this.joints = new ArrayList();
+        }
+
+        this.joints.add(var1);
+    }
+
+    public void addCondition(Condition var1) {
+        if (this.conditions == null) {
+            this.conditions = new ArrayList();
+        }
+
+        this.conditions.add(var1);
+    }
+
+    public List<Joint> getJoints() {
+        return this.joints;
+    }
+
+    public void setJoints(List<Joint> var1) {
+        this.joints = var1;
+    }
+
+    public JointType getType() {
+        return this.type;
+    }
+
+    public void setType(JointType var1) {
+        this.type = var1;
+    }
 }

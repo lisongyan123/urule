@@ -1,29 +1,22 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.service;
 
+import com.bstek.urule.builder.KnowledgeBase;
+import com.bstek.urule.runtime.KnowledgePackage;
 import java.io.IOException;
 
-import com.bstek.urule.runtime.KnowledgePackage;
-
-/**
- * @author Jacky.gao
- * @since 2015年3月20日
- */
 public interface KnowledgePackageService {
-	public static final String BEAN_ID="urule.knowledgePackageService";
-	KnowledgePackage buildKnowledgePackage(String packageInfo) throws IOException;
+    String BEAN_ID = "urule.knowledgePackageService";
+
+    KnowledgePackage buildKnowledgePackage(String var1) throws IOException;
+
+    KnowledgeBase buildKnowledgeBase(String var1) throws IOException;
+
+    KnowledgePackage verifyKnowledgePackage(String var1, long var2) throws IOException;
+
+    KnowledgePackage getDeployActiveKnowledgePackage(String var1) throws IOException;
 }

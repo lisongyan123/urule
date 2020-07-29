@@ -1,51 +1,41 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.cache;
 
 import com.bstek.urule.runtime.KnowledgePackage;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月28日
- */
 public class MemoryKnowledgeCache implements KnowledgeCache {
+    private Map<String, KnowledgePackage> a = new ConcurrentHashMap();
 
-    private Map<String, KnowledgePackage> map = new ConcurrentHashMap<String, KnowledgePackage>();
-
-    @Override
-    public KnowledgePackage getKnowledge(String packageId) {
-        if (packageId.startsWith("/")) {
-            packageId = packageId.substring(1, packageId.length());
-        }
-        return map.get(packageId);
+    public MemoryKnowledgeCache() {
     }
 
-    @Override
-    public void putKnowledge(String packageId, KnowledgePackage knowledgePackage) {
-        if (packageId.startsWith("/")) {
-            packageId = packageId.substring(1, packageId.length());
+    public KnowledgePackage getKnowledge(String var1) {
+        if (var1.startsWith("/")) {
+            var1 = var1.substring(1, var1.length());
         }
-        map.put(packageId, knowledgePackage);
+
+        return (KnowledgePackage)this.a.get(var1);
     }
 
-    @Override
-    public void removeKnowledge(String packageId) {
-        map.remove(packageId);
+    public void putKnowledge(String var1, KnowledgePackage var2) {
+        if (var1.startsWith("/")) {
+            var1 = var1.substring(1, var1.length());
+        }
+
+        this.a.put(var1, var2);
+    }
+
+    public void removeKnowledge(String var1) {
+        this.a.remove(var1);
+    }
+
+    public void clean() {
+        this.a.clear();
     }
 }

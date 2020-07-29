@@ -1,84 +1,81 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.library.action.ActionLibrary;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
 import com.bstek.urule.model.library.action.SpringBean;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class ActionLibraryParser implements Parser<ActionLibrary> {
-	public ActionLibrary parse(Element element) {
-		ActionLibrary lib=new ActionLibrary();
-		for(Object obj:element.elements()){
-			if(obj==null){
-				continue;
-			}
-			if(!(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("spring-bean")){
-				lib.addSpringBean(parseSpringBean(ele));
-			}
-		}
-		return lib;
-	}
-	private SpringBean parseSpringBean(Element element){
-		SpringBean bean=new SpringBean();
-		bean.setId(element.attributeValue("id"));
-		bean.setName(element.attributeValue("name"));
-		for(Object obj:element.elements()){
-			if(obj==null){
-				continue;
-			}
-			if(!(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			Method method=new Method();
-			method.setMethodName(ele.attributeValue("method-name"));
-			method.setName(ele.attributeValue("name"));
-			for(Object o:ele.elements()){
-				if(o==null){
-					continue;
-				}
-				if(!(o instanceof Element)){
-					continue;
-				}
-				Element e=(Element)o;
-				if(e.getName().equals("parameter")){
-					Parameter parameter=new Parameter();
-					parameter.setName(e.attributeValue("name"));
-					parameter.setType(Datatype.valueOf(e.attributeValue("type")));
-					method.addParameter(parameter);
-				}
-			}
-			bean.addMethod(method);
-		}
-		return bean;
-	}
-	public boolean support(String name) {
-		return name.equals("action-library");
-	}
+    public ActionLibraryParser() {
+    }
+
+    public ActionLibrary parse(Element var1) {
+        ActionLibrary var2 = new ActionLibrary();
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("spring-bean")) {
+                    var2.addSpringBean(this.a(var5));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    private SpringBean a(Element var1) {
+        SpringBean var2 = new SpringBean();
+        var2.setId(var1.attributeValue("id"));
+        var2.setName(var1.attributeValue("name"));
+        Iterator var3 = var1.elements().iterator();
+
+        while(true) {
+            Object var4;
+            do {
+                do {
+                    if (!var3.hasNext()) {
+                        return var2;
+                    }
+
+                    var4 = var3.next();
+                } while(var4 == null);
+            } while(!(var4 instanceof Element));
+
+            Element var5 = (Element)var4;
+            Method var6 = new Method();
+            var6.setMethodName(var5.attributeValue("method-name"));
+            var6.setName(var5.attributeValue("name"));
+            Iterator var7 = var5.elements().iterator();
+
+            while(var7.hasNext()) {
+                Object var8 = var7.next();
+                if (var8 != null && var8 instanceof Element) {
+                    Element var9 = (Element)var8;
+                    if (var9.getName().equals("parameter")) {
+                        Parameter var10 = new Parameter();
+                        var10.setName(var9.attributeValue("name"));
+                        var10.setType(Datatype.valueOf(var9.attributeValue("type")));
+                        var6.addParameter(var10);
+                    }
+                }
+            }
+
+            var2.addMethod(var6);
+        }
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("action-library");
+    }
 }

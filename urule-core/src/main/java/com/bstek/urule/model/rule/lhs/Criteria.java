@@ -1,150 +1,210 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule.lhs;
 
-import java.util.List;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.Utils;
 import com.bstek.urule.action.ActionValue;
 import com.bstek.urule.action.ExecuteMethodAction;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.library.Datatype;
+import com.bstek.urule.model.rule.ComplexArithmetic;
 import com.bstek.urule.model.rule.Op;
-import com.bstek.urule.model.rule.SimpleArithmetic;
 import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.runtime.rete.EvaluationContext;
 import com.bstek.urule.runtime.rete.ValueCompute;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月29日
- */
-public class Criteria extends BaseCriterion implements BaseCriteria{
-	@JsonIgnore
-	private String id;
-	private Op op;
-	private Left left;
-	private Value value;
-	
-	@Override
-	public EvaluateResponse evaluate(EvaluationContext context,Object obj,List<Object> allMatchedObjects){
-		Datatype datatype=null;
-		Object leftResult=null;
-		LeftPart leftPart=left.getLeftPart();
-		String leftId=left.getId();
-		ValueCompute valueCompute=context.getValueCompute();
-		if(context.partValueExist(leftId)){
-			leftResult=context.getPartValue(leftId);
-			if(leftPart instanceof VariableLeftPart){
-				datatype=((VariableLeftPart)leftPart).getDatatype();
-			}
-		}else{
-			Object leftValue=null;
-			if(leftPart instanceof VariableLeftPart){
-				VariableLeftPart varPart=(VariableLeftPart)leftPart;
-				datatype=varPart.getDatatype();
-				if(varPart.getVariableName()==null){
-					throw new RuleException("Criteria left[variableName] can not be null.");
-				}
-				leftValue=Utils.getObjectProperty(obj, varPart.getVariableName());
-			}else{
-				if(leftPart instanceof MethodLeftPart){
-					MethodLeftPart methodPart=(MethodLeftPart)leftPart;
-					ExecuteMethodAction methodAction=new ExecuteMethodAction();
-					methodAction.setBeanId(methodPart.getBeanId());
-					methodAction.setBeanLabel(methodPart.getBeanLabel());
-					methodAction.setMethodLabel(methodPart.getMethodLabel());
-					methodAction.setMethodName(methodPart.getMethodName());
-					methodAction.setParameters(methodPart.getParameters());
-					ActionValue actionValue=methodAction.execute(context, obj,allMatchedObjects,null);
-					if(actionValue==null){
-						leftValue=null;
-					}else{
-						leftValue=actionValue.getValue();
-					}
-				}else if(leftPart instanceof ExistLeftPart){
-					ExistLeftPart existPart=(ExistLeftPart)leftPart;
-					leftValue=existPart.evaluate(context, obj, allMatchedObjects);
-				}else if(leftPart instanceof AllLeftPart){
-					AllLeftPart allPart=(AllLeftPart)leftPart;
-					leftValue=allPart.evaluate(context, obj, allMatchedObjects);
-				}else if(leftPart instanceof CollectLeftPart){
-					CollectLeftPart collectPart=(CollectLeftPart)leftPart;
-					leftValue=collectPart.evaluate(context, obj, allMatchedObjects);
-				}else if(leftPart instanceof CommonFunctionLeftPart){
-					CommonFunctionLeftPart part=(CommonFunctionLeftPart)leftPart;
-					leftValue=part.evaluate(context, obj, allMatchedObjects);
-				}
-			}
-			leftResult=leftValue;
-			SimpleArithmetic arithmetic=left.getArithmetic();
-			if(arithmetic!=null){
-				leftResult=valueCompute.simpleArithmeticCompute(context,leftValue, arithmetic);
-			}
-			context.storePartValue(leftId, leftResult);
-		}
-		EvaluateResponse response=new EvaluateResponse();
-		response.setLeftResult(leftResult);
-		Object right=null;
-		if(value!=null){
-			String valueId=value.getId();
-			if(context.partValueExist(valueId)){
-				right=context.getPartValue(valueId);
-			}else{				
-				right=valueCompute.complexValueCompute(value,obj,context,allMatchedObjects,null);
-				response.setRightResult(right);
-				context.storePartValue(valueId, right);
-			}
-		}
-		if(datatype==null){
-			datatype=Utils.getDatatype(leftResult);
-		}
-		boolean result=context.getAssertorEvaluator().evaluate(leftResult, right, datatype,op);
-		response.setResult(result);
-		return response;
-	}
-	@Override
-	public String getId() {
-		if(id==null){
-			id=left.getId()+"【"+op.toString()+"】";
-			if(value!=null)id+=value.getId();
-		}
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public Op getOp() {
-		return op;
-	}
-	public void setOp(Op op) {
-		this.op = op;
-	}
-	public Left getLeft() {
-		return left;
-	}
-	public void setLeft(Left left) {
-		this.left = left;
-	}
-	public Value getValue() {
-		return value;
-	}
-	public void setValue(Value value) {
-		this.value = value;
-	}
+public class Criteria extends BaseCriterion implements BaseCriteria {
+    private static Logger log = Logger.getGlobal();
+    @JsonIgnore
+    private String id;
+    private Op op;
+    private Left left;
+    private Value value;
+    private String file;
+    private Set<String> necessaryClassList = new HashSet();
+
+    public Criteria() {
+    }
+
+    public EvaluateResponse evaluate(EvaluationContext var1, Map<String, Object> var2) {
+        Datatype var3 = null;
+        Object var4 = null;
+        var1.cleanTipMsg();
+        if (this.file != null) {
+            var1.addTipMsg("计算条件(" + this.file + ")：" + this.getId());
+        } else {
+            var1.addTipMsg("计算条件：" + this.getId());
+        }
+
+        ValueCompute var5 = var1.getValueCompute();
+        LeftPart var6 = this.left.getLeftPart();
+        if (var6 instanceof AccumulateLeftPart) {
+            AccumulateLeftPart var14 = (AccumulateLeftPart)var6;
+            return var14.evaluate(var1, var2);
+        } else {
+            String var7 = this.left.getId();
+            var1.addTipMsg("左值：" + var7);
+            Object var8 = null;
+            Object var11;
+            String var12;
+            if (var6 instanceof VariableLeftPart) {
+                VariableLeftPart var9 = (VariableLeftPart)var6;
+                String var10 = var1.getVariableCategoryClass(var9.getVariableCategory());
+                var11 = var1.getValueCompute().findObject(var10, var2, var1);
+                var3 = var9.getDatatype();
+                if (var9.getVariableName() != null) {
+                    if (var11 != null) {
+                        var12 = var9.getKeyName();
+                        if (StringUtils.isNotBlank(var12)) {
+                            Object var13 = Utils.getObjectProperty(var11, var12);
+                            if (var13 == null) {
+                                throw new RuleException("[参数]中的[" + var9.getKeyLabel() + "]不存在！");
+                            }
+
+                            var8 = Utils.getObjectProperty(var13, var9.getVariableName());
+                        } else {
+                            var8 = Utils.getObjectProperty(var11, var9.getVariableName());
+                        }
+                    } else {
+                        log.warning("Object [" + var10 + "] not exist.");
+                        var8 = var11;
+                    }
+                } else {
+                    var8 = var11;
+                }
+            } else if (var6 instanceof MethodLeftPart) {
+                MethodLeftPart var15 = (MethodLeftPart)var6;
+                ExecuteMethodAction var18 = new ExecuteMethodAction();
+                var18.setBeanId(var15.getBeanId());
+                var18.setBeanLabel(var15.getBeanLabel());
+                var18.setMethodLabel(var15.getMethodLabel());
+                var18.setMethodName(var15.getMethodName());
+                var18.setParameters(var15.getParameters());
+                ActionValue var20 = var18.execute(var1, var2);
+                if (var20 == null) {
+                    var8 = null;
+                } else {
+                    var8 = var20.getValue();
+                }
+            } else if (var6 instanceof CommonFunctionLeftPart) {
+                CommonFunctionLeftPart var16 = (CommonFunctionLeftPart)var6;
+                var8 = var16.evaluate(var1, var2);
+            }
+
+            var4 = var8;
+            ComplexArithmetic var17 = this.left.getArithmetic();
+            if (var17 != null) {
+                var4 = var5.complexArithmeticCompute(var1, var2, var17, var8);
+            }
+
+            EvaluateResponse var19 = new EvaluateResponse();
+            var19.setLeftResult(var4);
+            var11 = null;
+            if (this.value != null) {
+                var12 = this.value.getId();
+                var1.addTipMsg("右值：" + var12);
+                var11 = var5.complexValueCompute(this.value, var1, var2);
+                var19.setRightResult(var11);
+            }
+
+            if (var3 == null) {
+                var3 = Utils.getDatatype(var4);
+            }
+
+            var1.addTipMsg("执行比较：" + this.op.toString());
+            boolean var21 = var1.getAssertorEvaluator().evaluate(var4, var11, var3, this.op);
+            var19.setResult(var21);
+            var1.cleanTipMsg();
+            return var19;
+        }
+    }
+
+    public boolean necessaryClassEval(Set<String> var1) {
+        Iterator var2 = this.necessaryClassList.iterator();
+
+        String var3;
+        do {
+            if (!var2.hasNext()) {
+                return true;
+            }
+
+            var3 = (String)var2.next();
+        } while(var3.equals("*") || var1.contains(var3));
+
+        return false;
+    }
+
+    public void addNecessaryClass(String var1) {
+        this.necessaryClassList.add(var1);
+    }
+
+    public void addNecessaryClasses(List<String> var1) {
+        this.necessaryClassList.addAll(var1);
+    }
+
+    public Set<String> getNecessaryClassList() {
+        return this.necessaryClassList;
+    }
+
+    public String getId() {
+        if (this.id == null) {
+            this.id = this.left.getId();
+            if (this.op != null) {
+                this.id = this.id + "【" + this.op.toString() + "】";
+            }
+
+            if (this.value != null) {
+                this.id = this.id + this.value.getId();
+            }
+        }
+
+        return this.id;
+    }
+
+    public void setId(String var1) {
+        this.id = var1;
+    }
+
+    public String getFile() {
+        return this.file;
+    }
+
+    public void setFile(String var1) {
+        this.file = var1;
+    }
+
+    public Op getOp() {
+        return this.op;
+    }
+
+    public void setOp(Op var1) {
+        this.op = var1;
+    }
+
+    public Left getLeft() {
+        return this.left;
+    }
+
+    public void setLeft(Left var1) {
+        this.left = var1;
+    }
+
+    public Value getValue() {
+        return this.value;
+    }
+
+    public void setValue(Value var1) {
+        this.value = var1;
+    }
 }

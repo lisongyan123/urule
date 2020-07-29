@@ -1,51 +1,45 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.assertor;
-
-import java.util.Collection;
-
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
-public class AssertorEvaluator implements ApplicationContextAware{
-	public static final String BEAN_ID="urule.assertorEvaluator";
-	private Collection<Assertor> assertors;
-	public boolean evaluate(Object left,Object right,Datatype datatype,Op op){
-		Assertor targetAssertor=null;
-		for(Assertor assertor:assertors){
-			if(assertor.support(op)){
-				targetAssertor=assertor;
-				break;
-			}
-		}
-		if(targetAssertor==null){
-			throw new RuleException("Unsupport op:"+op);
-		}
-		return targetAssertor.eval(left, right,datatype);
-	}
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		assertors=applicationContext.getBeansOfType(Assertor.class).values();
-	}
+public class AssertorEvaluator implements ApplicationContextAware {
+    public static final String BEAN_ID = "urule.assertorEvaluator";
+    private Map<Op, Assertor> a = new HashMap();
+
+    public AssertorEvaluator() {
+    }
+
+    public boolean evaluate(Object var1, Object var2, Datatype var3, Op var4) {
+        Assertor var5 = (Assertor)this.a.get(var4);
+        if (var5 == null) {
+            throw new RuleException("Unsupport op:" + var4);
+        } else {
+            return var5.eval(var1, var2, var3);
+        }
+    }
+
+    public void setApplicationContext(ApplicationContext var1) throws BeansException {
+        Collection var2 = var1.getBeansOfType(Assertor.class).values();
+        Iterator var3 = var2.iterator();
+
+        while(var3.hasNext()) {
+            Assertor var4 = (Assertor)var3.next();
+            this.a.put(var4.supportOp(), var4);
+        }
+
+    }
 }

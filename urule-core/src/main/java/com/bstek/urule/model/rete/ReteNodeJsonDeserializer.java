@@ -1,298 +1,281 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rete;
 
+import com.bstek.urule.model.AbstractJsonDeserializer;
+import com.bstek.urule.model.library.Datatype;
+import com.bstek.urule.model.rule.Op;
+import com.bstek.urule.model.rule.Value;
+import com.bstek.urule.model.rule.lhs.AccumulateLeftPart;
+import com.bstek.urule.model.rule.lhs.And;
+import com.bstek.urule.model.rule.lhs.CalculateItem;
+import com.bstek.urule.model.rule.lhs.CalculateType;
+import com.bstek.urule.model.rule.lhs.CommonFunctionLeftPart;
+import com.bstek.urule.model.rule.lhs.ConditionItem;
+import com.bstek.urule.model.rule.lhs.Criteria;
+import com.bstek.urule.model.rule.lhs.FunctionLeftPart;
+import com.bstek.urule.model.rule.lhs.Junction;
+import com.bstek.urule.model.rule.lhs.Left;
+import com.bstek.urule.model.rule.lhs.LeftType;
+import com.bstek.urule.model.rule.lhs.MethodLeftPart;
+import com.bstek.urule.model.rule.lhs.Or;
+import com.bstek.urule.model.rule.lhs.VariableLeftPart;
+import com.bstek.urule.model.rule.loop.LoopTarget;
+import com.bstek.urule.model.rule.loop.LoopTargetType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.map.DeserializationContext;
+import org.codehaus.jackson.node.ArrayNode;
 
-import com.bstek.urule.model.AbstractJsonDeserializer;
-import com.bstek.urule.model.library.Datatype;
-import com.bstek.urule.model.rule.ArithmeticType;
-import com.bstek.urule.model.rule.Op;
-import com.bstek.urule.model.rule.SimpleArithmetic;
-import com.bstek.urule.model.rule.SimpleArithmeticValue;
-import com.bstek.urule.model.rule.Value;
-import com.bstek.urule.model.rule.lhs.AllLeftPart;
-import com.bstek.urule.model.rule.lhs.CollectLeftPart;
-import com.bstek.urule.model.rule.lhs.CollectPurpose;
-import com.bstek.urule.model.rule.lhs.CommonFunctionLeftPart;
-import com.bstek.urule.model.rule.lhs.Criteria;
-import com.bstek.urule.model.rule.lhs.CriteriaUnit;
-import com.bstek.urule.model.rule.lhs.EvalLeftPart;
-import com.bstek.urule.model.rule.lhs.ExistLeftPart;
-import com.bstek.urule.model.rule.lhs.FunctionLeftPart;
-import com.bstek.urule.model.rule.lhs.JunctionType;
-import com.bstek.urule.model.rule.lhs.Left;
-import com.bstek.urule.model.rule.lhs.LeftType;
-import com.bstek.urule.model.rule.lhs.MethodLeftPart;
-import com.bstek.urule.model.rule.lhs.MultiCondition;
-import com.bstek.urule.model.rule.lhs.NamedCriteria;
-import com.bstek.urule.model.rule.lhs.PropertyCriteria;
-import com.bstek.urule.model.rule.lhs.StatisticType;
-import com.bstek.urule.model.rule.lhs.VariableLeftPart;
-
-/**
- * @author Jacky.gao
- * @since 2015年3月6日
- */
 public class ReteNodeJsonDeserializer extends AbstractJsonDeserializer<List<ReteNode>> {
-	@Override
-	public List<ReteNode> deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		ObjectCodec oc = jsonParser.getCodec();
-        JsonNode jsonNode = oc.readTree(jsonParser);
-        List<ReteNode> reteNodes=new ArrayList<ReteNode>();
-        Iterator<JsonNode> childrenNodesIter=jsonNode.getElements();
-        while(childrenNodesIter.hasNext()){
-        	JsonNode childNode=childrenNodesIter.next();
-        	int id=childNode.get("id").getIntValue();
-        	JsonNode nodeTypeNode = childNode.get("nodeType");
-        	if(nodeTypeNode==null){
-        		continue;
-        	}
-        	String nodeTypeText=nodeTypeNode.getTextValue();
-        	NodeType nodeType=NodeType.valueOf(nodeTypeText);
-        	ReteNode reteNode=NodeType.newReteNodeInstance(nodeType);
-        	if(reteNode instanceof ObjectTypeNode){
-        		ObjectTypeNode node=(ObjectTypeNode)reteNode;
-        		node.setObjectTypeClass(childNode.get("objectTypeClass").getTextValue());
-        		node.setId(id);
-        	}else if(reteNode instanceof AndNode){
-        		AndNode node=(AndNode)reteNode;
-        		node.setId(id);
-        		node.setToLineCount(childNode.get("toLineCount").getIntValue());
-        		node.setLines(parseLines(childNode));
-        	}else if(reteNode instanceof OrNode){
-        		OrNode node=(OrNode)reteNode;
-        		node.setId(id);
-        		node.setLines(parseLines(childNode));
-        	}else if(reteNode instanceof CriteriaNode){
-        		CriteriaNode node=(CriteriaNode)reteNode;
-        		node.setId(id);
-        		JsonNode criteriaNode=childNode.get("criteria");
-        		node.setCriteria(parseCriteria(criteriaNode));
-        		node.setLines(parseLines(childNode));
-        	}else if(reteNode instanceof NamedCriteriaNode){
-        		NamedCriteriaNode node=(NamedCriteriaNode)reteNode;
-        		JsonNode criteriaNode=childNode.get("criteria");
-        		node.setCriteria(parseNamedCriteria(criteriaNode));
-        		node.setLines(parseLines(childNode));
-        		node.setId(id);
-        	}else if(reteNode instanceof TerminalNode){
-        		TerminalNode node=(TerminalNode)reteNode;
-        		node.setId(id);
-        		node.setRule(parseRule(jsonParser,childNode));
-        	}
-        	reteNodes.add(reteNode);
+    public ReteNodeJsonDeserializer() {
+    }
+
+    public List<ReteNode> deserialize(JsonParser var1, DeserializationContext var2) throws IOException, JsonProcessingException {
+        ObjectCodec var3 = var1.getCodec();
+        JsonNode var4 = var3.readTree(var1);
+        ArrayList var5 = new ArrayList();
+        Iterator var6 = var4.getElements();
+
+        while(var6.hasNext()) {
+            JsonNode var7 = (JsonNode)var6.next();
+            int var8 = var7.get("id").getIntValue();
+            JsonNode var9 = var7.get("nodeType");
+            if (var9 != null) {
+                String var10 = var9.getTextValue();
+                NodeType var11 = NodeType.valueOf(var10);
+                ReteNode var12 = NodeType.newReteNodeInstance(var11);
+                if (var12 instanceof ObjectTypeNode) {
+                    ObjectTypeNode var13 = (ObjectTypeNode)var12;
+                    var13.setObjectTypeClass(var7.get("objectTypeClass").getTextValue());
+                    var13.setId(var8);
+                } else if (var12 instanceof AndNode) {
+                    AndNode var16 = (AndNode)var12;
+                    var16.setId(var8);
+                    var16.setToLineCount(var7.get("toLineCount").getIntValue());
+                    var16.setLines(this.parseLines(var7));
+                } else if (var12 instanceof OrNode) {
+                    OrNode var17 = (OrNode)var12;
+                    var17.setId(var8);
+                    var17.setLines(this.parseLines(var7));
+                } else if (var12 instanceof CriteriaNode) {
+                    CriteriaNode var18 = (CriteriaNode)var12;
+                    var18.setId(var8);
+                    JsonNode var14 = var7.get("debug");
+                    if (var14 != null) {
+                        var18.setDebug(var14.asBoolean());
+                    }
+
+                    JsonNode var15 = var7.get("criteria");
+                    var18.setCriteria(this.parseCriteria(var15));
+                    var18.setLines(this.parseLines(var7));
+                } else if (var12 instanceof TerminalNode) {
+                    TerminalNode var19 = (TerminalNode)var12;
+                    var19.setId(var8);
+                    var19.setRule(this.parseRule(var1, var7));
+                }
+
+                var5.add(var12);
+            }
         }
-		return reteNodes;
-	}
-	
-	private List<Line> parseLines(JsonNode node){
-		JsonNode lineNodes=node.get("lines");
-		if(lineNodes==null){
-			return null;
-		}
-		List<Line> lines=new ArrayList<Line>();
-		Iterator<JsonNode> iter=lineNodes.iterator();
-		while(iter.hasNext()){
-			JsonNode jsonNode=iter.next();
-			Line line=new Line();
-			line.setFromNodeId(jsonNode.get("fromNodeId").getIntValue());
-			line.setToNodeId(jsonNode.get("toNodeId").getIntValue());
-			lines.add(line);
-		}
-		return lines;
-	}
-	
-	private NamedCriteria parseNamedCriteria(JsonNode jsonNode){
-		NamedCriteria criteria=new NamedCriteria();
-		criteria.setReferenceName(jsonNode.get("referenceName").getTextValue());
-		criteria.setVariableCategory(jsonNode.get("variableCategory").getTextValue());
-		JsonNode unitNode=jsonNode.get("unit");
-		if(unitNode!=null){
-			CriteriaUnit unit = parseCriteriaUnit(unitNode);
-			criteria.setUnit(unit);
-		}
-		return criteria;
-	}
 
-	private CriteriaUnit parseCriteriaUnit(JsonNode unitNode) {
-		CriteriaUnit unit=new CriteriaUnit();
-		JsonNode criteriaNode=unitNode.get("criteria");
-		if(criteriaNode!=null){
-			unit.setCriteria(parseCriteria(criteriaNode));
-		}
-		JsonNode junctionTypeNode=unitNode.get("junctionType");
-		if(junctionTypeNode!=null){
-			unit.setJunctionType(JunctionType.valueOf(junctionTypeNode.getTextValue()));
-		}
-		JsonNode nextUnitNodes=unitNode.get("nextUnits");
-		if(nextUnitNodes!=null){
-			List<CriteriaUnit> nextUnits=new ArrayList<CriteriaUnit>();
-			Iterator<JsonNode> iter=nextUnitNodes.iterator();
-			while(iter.hasNext()){
-				JsonNode nextNode=iter.next();
-				nextUnits.add(parseCriteriaUnit(nextNode));
-			}
-			unit.setNextUnits(nextUnits);
-		}
-		return unit;
-	}
-	
-	
-	private Criteria parseCriteria(JsonNode jsonNode){
-		Criteria criteria=new Criteria();
-		String opText=jsonNode.get("op").getTextValue();
-		Op op=Op.valueOf(opText);
-		criteria.setOp(op);
-		JsonNode leftJsonNode=jsonNode.get("left");
-		Left left=new Left();
-		criteria.setLeft(left);
-		String type=JsonUtils.getJsonValue(leftJsonNode, "type");
-		JsonNode leftPartJsonNode=leftJsonNode.get("leftPart");
-		left.setType(LeftType.valueOf(type));
-		switch(left.getType()){
-		case function:
-			FunctionLeftPart funPart=new FunctionLeftPart();
-			funPart.setName(JsonUtils.getJsonValue(leftPartJsonNode, "name"));
-			funPart.setParameters(JsonUtils.parseParameters(leftPartJsonNode));
-			left.setLeftPart(funPart);
-			break;
-		case method:
-			MethodLeftPart methodPart=new MethodLeftPart();
-			methodPart.setBeanId(JsonUtils.getJsonValue(leftPartJsonNode, "beanId"));
-			methodPart.setBeanLabel(JsonUtils.getJsonValue(leftPartJsonNode, "beanLabel"));
-			methodPart.setMethodLabel(JsonUtils.getJsonValue(leftPartJsonNode, "methodLabel"));
-			methodPart.setMethodName(JsonUtils.getJsonValue(leftPartJsonNode, "methodName"));
-			methodPart.setParameters(JsonUtils.parseParameters(leftPartJsonNode));
-			left.setLeftPart(methodPart);
-			break;
-		case eval:
-			EvalLeftPart evalPart=new EvalLeftPart();
-			evalPart.setExpression(JsonUtils.getJsonValue(leftPartJsonNode, "expression"));
-			left.setLeftPart(evalPart);
-			break;
-		case all:
-			AllLeftPart allLeftPart=new AllLeftPart();
-			String statisticTypeStr=JsonUtils.getJsonValue(leftPartJsonNode, "statisticType");
-			StatisticType statisticType=StatisticType.valueOf(statisticTypeStr);
-			allLeftPart.setStatisticType(statisticType);
-			if(statisticType.equals(StatisticType.percent)){
-				allLeftPart.setPercent(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "percent")));
-			}else if(statisticType.equals(StatisticType.amount)){
-				allLeftPart.setAmount(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "amount")));
-			}
-			allLeftPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
-			allLeftPart.setVariableLabel(JsonUtils.getJsonValue(leftPartJsonNode, "variableLabel"));
-			allLeftPart.setVariableName(JsonUtils.getJsonValue(leftPartJsonNode, "variableName"));
-			JsonNode multiConditionNode=leftPartJsonNode.get("multiCondition");
-			allLeftPart.setMultiCondition(parseMultiCondition(multiConditionNode));
-			left.setLeftPart(allLeftPart);
-			break;
-		case exist:
-			ExistLeftPart existLeftPart=new ExistLeftPart();
-			String existStatisticTypeStr=JsonUtils.getJsonValue(leftPartJsonNode, "statisticType");
-			StatisticType existStatisticType=StatisticType.valueOf(existStatisticTypeStr);
-			existLeftPart.setStatisticType(existStatisticType);
-			if(existStatisticType.equals(StatisticType.percent)){
-				existLeftPart.setPercent(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "percent")));
-			}else if(existStatisticType.equals(StatisticType.amount)){
-				existLeftPart.setAmount(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "amount")));
-			}
-			existLeftPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
-			existLeftPart.setVariableLabel(JsonUtils.getJsonValue(leftPartJsonNode, "variableLabel"));
-			existLeftPart.setVariableName(JsonUtils.getJsonValue(leftPartJsonNode, "variableName"));
-			JsonNode existMultiConditionNode=leftPartJsonNode.get("multiCondition");
-			existLeftPart.setMultiCondition(parseMultiCondition(existMultiConditionNode));
-			left.setLeftPart(existLeftPart);
-			break;
-		case collect:
-			CollectLeftPart collectLeftPart=new CollectLeftPart();
-			collectLeftPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
-			collectLeftPart.setVariableLabel(JsonUtils.getJsonValue(leftPartJsonNode, "variableLabel"));
-			collectLeftPart.setVariableName(JsonUtils.getJsonValue(leftPartJsonNode, "variableName"));
-			collectLeftPart.setProperty(JsonUtils.getJsonValue(leftPartJsonNode, "property"));
-			collectLeftPart.setPurpose(CollectPurpose.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "purpose")));
-			JsonNode collectMultiConditionNode=leftPartJsonNode.get("multiCondition");
-			collectLeftPart.setMultiCondition(parseMultiCondition(collectMultiConditionNode));
-			left.setLeftPart(collectLeftPart);
-			break;
-		case commonfunction:
-			CommonFunctionLeftPart functionPart=new CommonFunctionLeftPart();
-			functionPart.setLabel(JsonUtils.getJsonValue(leftPartJsonNode, "label"));
-			functionPart.setName(JsonUtils.getJsonValue(leftPartJsonNode, "name"));
-			functionPart.setParameter(JsonUtils.parseCommonFunctionParameter(leftPartJsonNode));
-			left.setLeftPart(functionPart);
-			break;			
-		default:
-			VariableLeftPart varPart=new VariableLeftPart();
-			varPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
-			varPart.setVariableLabel(JsonUtils.getJsonValue(leftPartJsonNode, "variableLabel"));
-			varPart.setVariableName(JsonUtils.getJsonValue(leftPartJsonNode, "variableName"));
-			varPart.setDatatype(Datatype.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "datatype")));
-			left.setLeftPart(varPart);
-		}
-		left.setArithmetic(parseSimpleArithmetic(leftJsonNode));
-		Value value=JsonUtils.parseValue(jsonNode);
-		if(value!=null){
-			criteria.setValue(value);
-		}
-		return criteria;
-	}
-	
+        return var5;
+    }
 
-	private MultiCondition parseMultiCondition(JsonNode multiConditionNode) {
-		MultiCondition condition=new MultiCondition();
-		condition.setType(JunctionType.valueOf(JsonUtils.getJsonValue(multiConditionNode, "type")));
-		Iterator<JsonNode> iter=multiConditionNode.get("conditions").getElements();
-		while(iter.hasNext()){
-			JsonNode propertyCriteriaNode=iter.next();
-			PropertyCriteria pc=new PropertyCriteria();
-			pc.setOp(Op.valueOf(JsonUtils.getJsonValue(propertyCriteriaNode, "op")));
-			pc.setProperty(JsonUtils.getJsonValue(propertyCriteriaNode, "property"));
-			pc.setValue(JsonUtils.parseValue(propertyCriteriaNode));
-			condition.addCondition(pc);
-		}
-		return condition;
-	}
-	
-	private SimpleArithmetic parseSimpleArithmetic(JsonNode node){
-		JsonNode arithNode=node.get("arithmetic");
-		if(arithNode==null){
-			return null;
-		}
-		SimpleArithmetic arith=new SimpleArithmetic();
-		arith.setType(ArithmeticType.valueOf(JsonUtils.getJsonValue(arithNode, "type")));
-		arith.setValue(parseSimpleArithmeticValue(arithNode));
-		return arith;
-	}
-	
-	private SimpleArithmeticValue parseSimpleArithmeticValue(JsonNode node){
-		JsonNode valueNode=node.get("value");
-		SimpleArithmeticValue value=new SimpleArithmeticValue();
-		value.setContent(valueNode.get("content").getTextValue());
-		value.setArithmetic(parseSimpleArithmetic(valueNode));
-		return value;
-	}
+    private List<Line> parseLines(JsonNode var1) {
+        JsonNode var2 = var1.get("lines");
+        if (var2 == null) {
+            return null;
+        } else {
+            ArrayList var3 = new ArrayList();
+            Iterator var4 = var2.iterator();
+
+            while(var4.hasNext()) {
+                JsonNode var5 = (JsonNode)var4.next();
+                Line var6 = new Line();
+                var6.setFromNodeId(var5.get("fromNodeId").getIntValue());
+                var6.setToNodeId(var5.get("toNodeId").getIntValue());
+                var3.add(var6);
+            }
+
+            return var3;
+        }
+    }
+
+    private Criteria parseCriteria(JsonNode var1) {
+        Criteria var2 = new Criteria();
+        JsonNode var3 = var1.get("op");
+        String var4;
+        if (var3 != null && var3.getTextValue() != null) {
+            var4 = var3.getTextValue();
+            Op var5 = Op.valueOf(var4);
+            var2.setOp(var5);
+        }
+
+        if (var1.has("file") && var1.get("file") != null) {
+            var4 = var1.get("file").getTextValue();
+            var2.setFile(var4);
+        }
+
+        JsonNode var24 = var1.get("necessaryClassList");
+        String var7;
+        if (var24 != null && var24 instanceof ArrayNode) {
+            ArrayNode var25 = (ArrayNode)var24;
+            Iterator var6 = var25.getElements();
+
+            while(var6.hasNext()) {
+                var7 = ((JsonNode)var6.next()).asText();
+                var2.addNecessaryClass(var7);
+            }
+        }
+
+        JsonNode var26 = var1.get("left");
+        Left var27 = new Left();
+        var2.setLeft(var27);
+        var7 = JsonUtils.getJsonValue(var26, "type");
+        JsonNode var8 = var26.get("leftPart");
+        var27.setType(LeftType.valueOf(var7));
+        switch(var27.getType()) {
+            case function:
+                FunctionLeftPart var9 = new FunctionLeftPart();
+                var9.setName(JsonUtils.getJsonValue(var8, "name"));
+                var9.setParameters(JsonUtils.parseParameters(var8));
+                var27.setLeftPart(var9);
+                break;
+            case method:
+                MethodLeftPart var10 = new MethodLeftPart();
+                var10.setBeanId(JsonUtils.getJsonValue(var8, "beanId"));
+                var10.setBeanLabel(JsonUtils.getJsonValue(var8, "beanLabel"));
+                var10.setMethodLabel(JsonUtils.getJsonValue(var8, "methodLabel"));
+                var10.setMethodName(JsonUtils.getJsonValue(var8, "methodName"));
+                var10.setParameters(JsonUtils.parseParameters(var8));
+                var27.setLeftPart(var10);
+                break;
+            case commonfunction:
+                CommonFunctionLeftPart var11 = new CommonFunctionLeftPart();
+                var11.setLabel(JsonUtils.getJsonValue(var8, "label"));
+                var11.setName(JsonUtils.getJsonValue(var8, "name"));
+                var11.setParameter(JsonUtils.parseCommonFunctionParameter(var8));
+                var27.setLeftPart(var11);
+                break;
+            case operatecollection:
+                AccumulateLeftPart var12 = new AccumulateLeftPart();
+                String var13 = JsonUtils.getJsonValue(var8, "loopTargetType");
+                var12.setLoopTargetType(LoopTargetType.valueOf(var13));
+                var12.setJunction(this.parseJunction(var8));
+                JsonNode var14 = var8.get("loopTarget");
+                LoopTarget var15 = new LoopTarget();
+                var15.setValue(JsonUtils.parseValue(var14));
+                var12.setLoopTarget(var15);
+                JsonNode var16 = var8.get("calculateItems");
+                if (var16 != null) {
+                    ArrayList var17 = new ArrayList();
+
+                    CalculateItem var20;
+                    for(Iterator var18 = var16.iterator(); var18.hasNext(); var17.add(var20)) {
+                        JsonNode var19 = (JsonNode)var18.next();
+                        var20 = new CalculateItem();
+                        var20.setType(CalculateType.valueOf(JsonUtils.getJsonValue(var19, "type")));
+                        Value var21 = JsonUtils.parseValue(var19);
+                        var20.setValue(var21);
+                        boolean var22 = Boolean.valueOf(JsonUtils.getJsonValue(var19, "enableAssignment"));
+                        var20.setEnableAssignment(var22);
+                        if (var22) {
+                            var20.setAssignDatatype(Datatype.valueOf(JsonUtils.getJsonValue(var19, "assignDatatype")));
+                            var20.setAssignTargetType(JsonUtils.getJsonValue(var19, "assignTargetType"));
+                            var20.setAssignVariable(JsonUtils.getJsonValue(var19, "assignVariable"));
+                            var20.setAssignVariableCategory(JsonUtils.getJsonValue(var19, "assignVariableCategory"));
+                            var20.setAssignVariableLabel(JsonUtils.getJsonValue(var19, "assignVariableLabel"));
+                            var20.setKeyLabel(JsonUtils.getJsonValue(var19, "keyLabel"));
+                            var20.setKeyName(JsonUtils.getJsonValue(var19, "keyName"));
+                            var20.setType(CalculateType.valueOf(JsonUtils.getJsonValue(var19, "type")));
+                        }
+                    }
+
+                    var12.setCalculateItems(var17);
+                }
+
+                JsonNode var29 = var8.get("conditionItems");
+                if (var29 != null) {
+                    ArrayList var30 = new ArrayList();
+                    Iterator var32 = var29.iterator();
+
+                    while(var32.hasNext()) {
+                        JsonNode var34 = (JsonNode)var32.next();
+                        ConditionItem var23 = new ConditionItem();
+                        var23.setLeft(JsonUtils.getJsonValue(var34, "left"));
+                        var23.setOp(Op.valueOf(JsonUtils.getJsonValue(var34, "op")));
+                        var23.setValue(JsonUtils.parseValue(var34));
+                        var30.add(var23);
+                    }
+
+                    var12.setConditionItems(var30);
+                }
+
+                var27.setLeftPart(var12);
+                break;
+            default:
+                VariableLeftPart var31 = new VariableLeftPart();
+                var31.setVariableCategory(JsonUtils.getJsonValue(var8, "variableCategory"));
+                var31.setVariableLabel(JsonUtils.getJsonValue(var8, "variableLabel"));
+                var31.setVariableName(JsonUtils.getJsonValue(var8, "variableName"));
+                var31.setKeyLabel(JsonUtils.getJsonValue(var8, "keyLabel"));
+                var31.setKeyName(JsonUtils.getJsonValue(var8, "keyName"));
+                String var33 = JsonUtils.getJsonValue(var8, "datatype");
+                if (StringUtils.isNotBlank(var33)) {
+                    var31.setDatatype(Datatype.valueOf(var33));
+                }
+
+                var27.setLeftPart(var31);
+        }
+
+        var27.setArithmetic(JsonUtils.parseComplexArithmetic(var26));
+        Value var28 = JsonUtils.parseValue(var1);
+        if (var28 != null) {
+            var2.setValue(var28);
+        }
+
+        return var2;
+    }
+
+    private Junction parseJunction(JsonNode var1) {
+        JsonNode var2 = var1.get("junction");
+        if (var2 == null) {
+            return null;
+        } else {
+            String var3 = JsonUtils.getJsonValue(var2, "junctionType");
+            Object var4 = null;
+            if (var3.equals("and")) {
+                var4 = new And();
+            } else if (var3.equals("or")) {
+                var4 = new Or();
+            }
+
+            JsonNode var5 = var2.get("criterions");
+            if (var5 != null) {
+                Iterator var6 = var5.iterator();
+                ArrayList var7 = new ArrayList();
+
+                while(var6.hasNext()) {
+                    JsonNode var8 = (JsonNode)var6.next();
+                    Criteria var9 = this.parseCriteria(var8);
+                    var7.add(var9);
+                }
+
+                ((Junction)var4).setCriterions(var7);
+            }
+
+            return (Junction)var4;
+        }
+    }
 }

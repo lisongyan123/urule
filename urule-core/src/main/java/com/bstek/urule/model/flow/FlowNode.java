@@ -1,140 +1,137 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.context.ApplicationContext;
-
-import com.bstek.urule.debug.MsgType;
 import com.bstek.urule.model.Node;
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.FlowInstance;
 import com.bstek.urule.model.flow.ins.ProcessInstance;
-import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.event.impl.ProcessAfterNodeTriggeredEventImpl;
-import com.bstek.urule.runtime.event.impl.ProcessBeforeNodeTriggeredEventImpl;
-import com.bstek.urule.runtime.response.ExecutionResponseImpl;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.context.ApplicationContext;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月28日
- */
-public abstract class FlowNode implements Node{
-	protected String name;
-	protected String eventBean;
-	protected String x;
-	protected String y;
-	protected String width;
-	protected String height;
+public abstract class FlowNode implements Node {
+    protected String name;
+    protected String eventBean;
+    protected String x;
+    protected String y;
+    protected String width;
+    protected String height;
+    protected List<Connection> connections;
 
-	protected List<Connection> connections;
-	public FlowNode() {
-	}
-	public FlowNode(String name) {
-		this.name=name;
-	}
-	public final void enter(FlowContext context,FlowInstance instance){
-		String msg=">>>进入决策流节点："+name;
-		context.debugMsg(msg, MsgType.RuleFlow, instance.isDebug());
-		((ExecutionResponseImpl)context.getResponse()).addNodeName(name);
-		KnowledgeSession session=(KnowledgeSession)context.getWorkingMemory();
-		session.fireEvent(new ProcessBeforeNodeTriggeredEventImpl(this,instance,session));
-		enterNode(context, instance);
-		session.fireEvent(new ProcessAfterNodeTriggeredEventImpl(this,instance,session));
-	}
-	
-	public abstract void enterNode(FlowContext context,FlowInstance instance);
-	
-	protected void leave(String connectionName,FlowContext context, FlowInstance instance) {
-		for(Connection connection:connections){
-			if(connectionName!=null){
-				String cName=connection.getName();
-				cName= cName==null ? cName : cName.trim();
-				if(connectionName.trim().equals(cName)){
-					connection.execute(context, instance);
-					break;
-				}
-			}else if(connection.evaluate(context)){
-				connection.execute(context, instance);
-				break;
-			}
-		}
-	}
-	
-	protected void executeNodeEvent(EventType type,FlowContext context,ProcessInstance instance){
-		if(StringUtils.isEmpty(eventBean)){
-			return;
-		}
-		ApplicationContext applicationContext=context.getApplicationContext();
-		NodeEvent event=(NodeEvent)applicationContext.getBean(eventBean);
-		if(type.equals(EventType.enter)){
-			event.enter(this, instance, context);
-		}else{
-			event.leave(this, instance, context);
-		}
-	}
-	
-	public abstract FlowNodeType getType();
-	
-	public List<Connection> getConnections() {
-		return connections;
-	}
-	public void setConnections(List<Connection> connections) {
-		this.connections = connections;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEventBean() {
-		return eventBean;
-	}
-	public void setEventBean(String eventBean) {
-		this.eventBean = eventBean;
-	}
-	public String getX() {
-		return x;
-	}
-	public void setX(String x) {
-		this.x = x;
-	}
-	public String getY() {
-		return y;
-	}
-	public void setY(String y) {
-		this.y = y;
-	}
-	public String getWidth() {
-		return width;
-	}
-	public void setWidth(String width) {
-		this.width = width;
-	}
-	public String getHeight() {
-		return height;
-	}
-	public void setHeight(String height) {
-		this.height = height;
-	}
-	
-}
-enum EventType{
-	enter,leave;
+    public FlowNode() {
+    }
+
+    public FlowNode(String var1) {
+        this.name = var1;
+    }
+
+    public final void enter(FlowContext var1, FlowInstance var2) {
+        if (var2.isDebug()) {
+            var1.getLogger().logFlowNode(this, var2.getProcessDefinition().getFile(), true);
+        }
+
+        this.enterNode(var1, var2);
+    }
+
+    public abstract void enterNode(FlowContext var1, FlowInstance var2);
+
+    protected void leave(String var1, FlowContext var2, FlowInstance var3) {
+        if (var3.isDebug()) {
+            var2.getLogger().logFlowNode(this, var3.getProcessDefinition().getFile(), false);
+        }
+
+        Iterator var4 = this.connections.iterator();
+
+        while(var4.hasNext()) {
+            Connection var5 = (Connection)var4.next();
+            if (var1 != null) {
+                String var6 = var5.getName();
+                var6 = var6 == null ? var6 : var6.trim();
+                if (var1.trim().equals(var6)) {
+                    var5.execute(var2, var3);
+                    break;
+                }
+            } else if (var5.evaluate(var2)) {
+                var5.execute(var2, var3);
+                break;
+            }
+        }
+
+    }
+
+    protected void executeNodeEvent(EventType var1, FlowContext var2, ProcessInstance var3) {
+        if (!StringUtils.isEmpty(this.eventBean)) {
+            ApplicationContext var4 = var2.getApplicationContext();
+            NodeEvent var5 = (NodeEvent)var4.getBean(this.eventBean);
+            if (var1.equals(EventType.enter)) {
+                var5.enter(this, var3, var2);
+            } else {
+                var5.leave(this, var3, var2);
+            }
+
+        }
+    }
+
+    public abstract FlowNodeType getType();
+
+    public List<Connection> getConnections() {
+        return this.connections;
+    }
+
+    public void setConnections(List<Connection> var1) {
+        this.connections = var1;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public String getEventBean() {
+        return this.eventBean;
+    }
+
+    public void setEventBean(String var1) {
+        this.eventBean = var1;
+    }
+
+    public String getX() {
+        return this.x;
+    }
+
+    public void setX(String var1) {
+        this.x = var1;
+    }
+
+    public String getY() {
+        return this.y;
+    }
+
+    public void setY(String var1) {
+        this.y = var1;
+    }
+
+    public String getWidth() {
+        return this.width;
+    }
+
+    public void setWidth(String var1) {
+        this.width = var1;
+    }
+
+    public String getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(String var1) {
+        this.height = var1;
+    }
 }

@@ -1,69 +1,97 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
 
 import com.bstek.urule.exception.RuleException;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月25日
- */
 public enum ArithmeticType {
-	Add{
-		@Override
-		public String toString() {
-			return "+";
-		}
-	},
-	Sub{
-		@Override
-		public String toString() {
-			return "-";
-		}
-	},
-	Mul{
-		@Override
-		public String toString() {
-			return "*";
-		}
-	},
-	Div{
-		@Override
-		public String toString() {
-			return "/";
-		}
-	},
-	Mod{
-		@Override
-		public String toString() {
-			return "%";
-		}
-	};
-	public static ArithmeticType parse(String type){
-		if(type.equals("+")){
-			return Add;
-		}else if(type.equals("-")){
-			return Sub;
-		}else if(type.equals("*")){
-			return Mul;
-		}else if(type.equals("/")){
-			return Div;
-		}else if(type.equals("%")){
-			return Mod;
-		}
-		throw new RuleException("Unsupport arithmetic type ["+type+"]");
-	}
+    Add {
+        public String toString() {
+            return "+";
+        }
+    },
+    Sub {
+        public String toString() {
+            return "-";
+        }
+    },
+    Mul {
+        public String toString() {
+            return "*";
+        }
+    },
+    Div {
+        public String toString() {
+            return "/";
+        }
+    },
+    Mod {
+        public String toString() {
+            return "%";
+        }
+    },
+    Gt {
+        public String toString() {
+            return ">";
+        }
+    },
+    Lt {
+        public String toString() {
+            return "<";
+        }
+    },
+    Gte {
+        public String toString() {
+            return "≥";
+        }
+    },
+    Lte {
+        public String toString() {
+            return "≤";
+        }
+    },
+    Eq {
+        public String toString() {
+            return "==";
+        }
+    },
+    NotEq {
+        public String toString() {
+            return "≠";
+        }
+    };
+
+    private ArithmeticType() {
+    }
+
+    public static ArithmeticType parse(String var0) {
+        if (var0.equals("+")) {
+            return Add;
+        } else if (var0.equals("-")) {
+            return Sub;
+        } else if (var0.equals("*")) {
+            return Mul;
+        } else if (var0.equals("/")) {
+            return Div;
+        } else if (var0.equals("%")) {
+            return Mod;
+        } else if (var0.equals(">")) {
+            return Gt;
+        } else if (var0.equals("<")) {
+            return Lt;
+        } else if (var0.equals("≥")) {
+            return Gte;
+        } else if (var0.equals("≤")) {
+            return Lte;
+        } else if (var0.equals("==")) {
+            return Eq;
+        } else if (var0.equals("≠")) {
+            return NotEq;
+        } else {
+            throw new RuleException("Unsupport arithmetic type [" + var0 + "]");
+        }
+    }
 }

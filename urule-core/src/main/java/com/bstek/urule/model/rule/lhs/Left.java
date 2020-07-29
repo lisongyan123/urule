@@ -1,56 +1,55 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule.lhs;
 
-import com.bstek.urule.model.rule.SimpleArithmetic;
+import com.bstek.urule.model.rule.ComplexArithmetic;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月29日
- */
 public class Left {
-	private String id;
-	private LeftPart leftPart;
-	private LeftType type;
-	private SimpleArithmetic arithmetic;
-	public LeftPart getLeftPart() {
-		return leftPart;
-	}
-	public void setLeftPart(LeftPart leftPart) {
-		this.leftPart = leftPart;
-	}
-	public SimpleArithmetic getArithmetic() {
-		return arithmetic;
-	}
-	public void setArithmetic(SimpleArithmetic arithmetic) {
-		this.arithmetic = arithmetic;
-	}
-	public LeftType getType() {
-		return type;
-	}
-	public void setType(LeftType type) {
-		this.type = type;
-	}
-	public String getId(){
-		if(id==null){
-			id=leftPart.getId();
-			if(arithmetic!=null){
-				id=id+arithmetic.getId();
-			}
-		}
-		return id;
-	}
+    @JsonIgnore
+    private String id;
+    private LeftPart leftPart;
+    private LeftType type;
+    private ComplexArithmetic arithmetic;
+
+    public Left() {
+    }
+
+    public LeftPart getLeftPart() {
+        return this.leftPart;
+    }
+
+    public void setLeftPart(LeftPart var1) {
+        this.leftPart = var1;
+    }
+
+    public ComplexArithmetic getArithmetic() {
+        return this.arithmetic;
+    }
+
+    public void setArithmetic(ComplexArithmetic var1) {
+        this.arithmetic = var1;
+    }
+
+    public LeftType getType() {
+        return this.type;
+    }
+
+    public void setType(LeftType var1) {
+        this.type = var1;
+    }
+
+    public String getId() {
+        if (this.id == null) {
+            this.id = this.leftPart.getId();
+            if (this.arithmetic != null) {
+                this.id = this.id + this.arithmetic.getId();
+            }
+        }
+
+        return this.id;
+    }
 }

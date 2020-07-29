@@ -1,64 +1,62 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.action.Action;
 import com.bstek.urule.action.ExecuteCommonFunctionAction;
 import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2015年7月31日
- */
 public class CommonFunctionActionParser extends ActionParser {
-	@Override
-	public Action parse(Element element) {
-		ExecuteCommonFunctionAction action=new ExecuteCommonFunctionAction();
-		action.setLabel(element.attributeValue("function-label"));
-		action.setName(element.attributeValue("function-name"));
-		for(Object obj:element.elements()){
-			if(!(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(!ele.getName().equals("function-parameter")){
-				continue;
-			}
-			CommonFunctionParameter p=new CommonFunctionParameter();
-			p.setName(ele.attributeValue("name"));
-			p.setProperty(ele.attributeValue("property-name"));
-			p.setPropertyLabel(ele.attributeValue("property-label"));
-			for(Object object:ele.elements()){
-				if(!(object instanceof Element)){
-					continue;
-				}
-				Element e=(Element)object;
-				if(!e.getName().equals("value")){
-					continue;
-				}
-				p.setObjectParameter(valueParser.parse(e));
-			}
-			action.setParameter(p);
-		}
-		return action;
-	}
-	@Override
-	public boolean support(String name) {
-		return name.equals("execute-function");
-	}
+    public CommonFunctionActionParser() {
+    }
+
+    public Action parse(Element var1) {
+        ExecuteCommonFunctionAction var2 = new ExecuteCommonFunctionAction();
+        var2.setLabel(var1.attributeValue("function-label"));
+        var2.setName(var1.attributeValue("function-name"));
+        Iterator var3 = var1.elements().iterator();
+
+        while(true) {
+            Element var5;
+            do {
+                Object var4;
+                do {
+                    if (!var3.hasNext()) {
+                        return var2;
+                    }
+
+                    var4 = var3.next();
+                } while(!(var4 instanceof Element));
+
+                var5 = (Element)var4;
+            } while(!var5.getName().equals("function-parameter"));
+
+            CommonFunctionParameter var6 = new CommonFunctionParameter();
+            var6.setName(var5.attributeValue("name"));
+            var6.setProperty(var5.attributeValue("property-name"));
+            var6.setPropertyLabel(var5.attributeValue("property-label"));
+            Iterator var7 = var5.elements().iterator();
+
+            while(var7.hasNext()) {
+                Object var8 = var7.next();
+                if (var8 instanceof Element) {
+                    Element var9 = (Element)var8;
+                    if (var9.getName().equals("value")) {
+                        var6.setObjectParameter(this.valueParser.parse(var9));
+                    }
+                }
+            }
+
+            var2.setParameter(var6);
+        }
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("execute-function");
+    }
 }

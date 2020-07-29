@@ -19,7 +19,6 @@ import com.bstek.urule.model.library.variable.Variable;
 import com.bstek.urule.model.library.variable.VariableCategory;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.assertor.AssertorEvaluator;
 import com.bstek.urule.runtime.log.LogManager;
 import java.io.InputStream;

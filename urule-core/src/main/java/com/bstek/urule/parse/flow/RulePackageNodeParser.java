@@ -1,43 +1,30 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.flow;
 
+import com.bstek.urule.model.flow.RulePackageNode;
 import org.dom4j.Element;
 
-import com.bstek.urule.model.flow.RulePackageNode;
-
-/**
- * @author Jacky.gao
- * @since 2015年4月21日
- */
 public class RulePackageNodeParser extends FlowNodeParser<RulePackageNode> {
-	@Override
-	public RulePackageNode parse(Element element) {
-		RulePackageNode node=new RulePackageNode(element.attributeValue("name"));
-		node.setConnections(parseConnections(element));
-		node.setProject(element.attributeValue("project"));
-		node.setPackageId(element.attributeValue("package-id"));
-		node.setX(element.attributeValue("x"));
-		node.setY(element.attributeValue("y"));
-		node.setWidth(element.attributeValue("width"));
-		node.setHeight(element.attributeValue("height"));
-		return node;
-	}
-	@Override
-	public boolean support(String name) {
-		return name.equals("rule-package");
-	}
+    public RulePackageNodeParser() {
+    }
+
+    public RulePackageNode parse(Element var1) {
+        RulePackageNode var2 = new RulePackageNode(var1.attributeValue("name"));
+        var2.setConnections(this.parseConnections(var1));
+        var2.setProject(var1.attributeValue("project"));
+        var2.setPackageId(var1.attributeValue("package-id"));
+        var2.setX(var1.attributeValue("x"));
+        var2.setY(var1.attributeValue("y"));
+        var2.setWidth(var1.attributeValue("width"));
+        var2.setHeight(var1.attributeValue("height"));
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("rule-package");
+    }
 }

@@ -1,74 +1,63 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.decisiontree;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dom4j.Element;
 
 import com.bstek.urule.model.decisiontree.ConditionTreeNode;
 import com.bstek.urule.model.decisiontree.TreeNodeType;
 import com.bstek.urule.model.decisiontree.VariableTreeNode;
 import com.bstek.urule.parse.LeftParser;
 import com.bstek.urule.parse.Parser;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年2月26日
- */
 public class VariableTreeNodeParser implements Parser<VariableTreeNode> {
-	private LeftParser leftParser;
-	private ConditionTreeNodeParser conditionTreeNodeParser;
-	@Override
-	public VariableTreeNode parse(Element element) {
-		VariableTreeNode node=new VariableTreeNode();
-		node.setNodeType(TreeNodeType.variable);
-		List<ConditionTreeNode> conditionTreeNodes=new ArrayList<ConditionTreeNode>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			String name=ele.getName();
-			if(name.equals("left")){
-				node.setLeft(leftParser.parse(ele));
-			}else if(conditionTreeNodeParser.support(name)){
-				ConditionTreeNode cn=conditionTreeNodeParser.parse(ele);
-				cn.setParentNode(node);
-				conditionTreeNodes.add(cn);
-			}
-		}
-		if(conditionTreeNodes.size()>0){
-			node.setConditionTreeNodes(conditionTreeNodes);
-		}
-		return node;
-	}
-	
-	public void setConditionTreeNodeParser(
-			ConditionTreeNodeParser conditionTreeNodeParser) {
-		this.conditionTreeNodeParser = conditionTreeNodeParser;
-	}
-	
-	public void setLeftParser(LeftParser leftParser) {
-		this.leftParser = leftParser;
-	}
-	
-	@Override
-	public boolean support(String name) {
-		return name.equals("variable-tree-node");
-	}
+    private LeftParser a;
+    private ConditionTreeNodeParser b;
+
+    public VariableTreeNodeParser() {
+    }
+
+    public VariableTreeNode parse(Element var1) {
+        VariableTreeNode var2 = new VariableTreeNode();
+        var2.setNodeType(TreeNodeType.variable);
+        ArrayList var3 = new ArrayList();
+        Iterator var4 = var1.elements().iterator();
+
+        while(var4.hasNext()) {
+            Object var5 = var4.next();
+            if (var5 != null && var5 instanceof Element) {
+                Element var6 = (Element)var5;
+                String var7 = var6.getName();
+                if (var7.equals("left")) {
+                    var2.setLeft(this.a.parse(var6));
+                } else if (this.b.support(var7)) {
+                    ConditionTreeNode var8 = this.b.parse(var6);
+                    var8.setParentNode(var2);
+                    var3.add(var8);
+                }
+            }
+        }
+
+        if (var3.size() > 0) {
+            var2.setConditionTreeNodes(var3);
+        }
+
+        return var2;
+    }
+
+    public void setConditionTreeNodeParser(ConditionTreeNodeParser var1) {
+        this.b = var1;
+    }
+
+    public void setLeftParser(LeftParser var1) {
+        this.a = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("variable-tree-node");
+    }
 }

@@ -1,67 +1,82 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.rete;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月8日
- */
 public abstract class AbstractActivity implements Activity {
-	private List<Path> paths;
-	public List<Path> getPaths() {
-		return paths;
-	}
-	public void addPath(Path path){
-		if(paths==null){
-			paths=new ArrayList<Path>();
-		}
-		this.paths.add(path);
-	}
-	protected List<FactTracker> visitPahs(EvaluationContext context, Object obj,FactTracker tracker,Map<String,Object> variableMap){
-		if(paths==null || paths.size()==0){
-			return null;
-		}
-		List<FactTracker> trackers=null;
-		int size=paths.size();
-		for(Path path:paths){
-			Collection<FactTracker> results=null;
-			Activity activity=path.getTo();
-			path.setPassed(true);
-			if(size>0){
-				Map<String,Object> newVariableMap=new HashMap<String,Object>();
-				newVariableMap.putAll(variableMap);
-				results=activity.enter(context, obj, tracker.newSubFactTracker(),newVariableMap);
-			}else{
-				results=activity.enter(context, obj, tracker,variableMap);				
-			}
-			if(results!=null){
-				if(trackers==null){
-					trackers=new ArrayList<FactTracker>();
-				}
-				trackers.addAll(results);
-			}
-		}
-		return trackers;
-	}
-	public abstract boolean orNodeIsPassed();
-	public abstract void reset();
+    private List<Path> a;
+    protected Set<Integer> tokens = new HashSet();
+
+    public AbstractActivity() {
+    }
+
+    public List<Path> getPaths() {
+        return this.a;
+    }
+
+    public void addPath(Path var1) {
+        if (this.a == null) {
+            this.a = new ArrayList();
+        }
+
+        this.a.add(var1);
+    }
+
+    protected List<FactTracker> visitPahs(EvaluationContext var1, Object var2, FactTracker var3) {
+        ArrayList var4 = new ArrayList();
+        if (this.a != null && this.a.size() != 0) {
+            int var5 = this.a.size();
+            Iterator var6 = this.a.iterator();
+
+            while(var6.hasNext()) {
+                Path var7 = (Path)var6.next();
+                Collection var8 = null;
+                AbstractActivity var9 = (AbstractActivity)var7.getTo();
+                var7.setPassed(true);
+                boolean var10 = var9.orNodeTokensExist(var3.getTokens());
+                if (!var10) {
+                    if (var5 > 1) {
+                        FactTracker var11 = var3.newSubFactTracker();
+                        var11.setCurrentPath(var7);
+                        var8 = var9.enter(var1, var2, var11);
+                    } else {
+                        var3.setCurrentPath(var7);
+                        var8 = var9.enter(var1, var2, var3);
+                    }
+
+                    if (var8 != null) {
+                        var4.addAll(var8);
+                    }
+                }
+            }
+
+            return var4;
+        } else {
+            return var4;
+        }
+    }
+
+    public boolean orNodeTokensExist(Set<Integer> var1) {
+        List var2 = this.getPaths();
+        if (var2 != null && var2.size() == 1) {
+            Path var3 = (Path)var2.get(0);
+            AbstractActivity var4 = (AbstractActivity)var3.getTo();
+            return var4.orNodeTokensExist(var1);
+        } else {
+            return false;
+        }
+    }
+
+    public void reset() {
+        this.tokens.clear();
+    }
 }

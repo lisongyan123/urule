@@ -1,44 +1,31 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.rete.jsondeserializer;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.codehaus.jackson.JsonNode;
+package com.bstek.urule.model.rete.jsondeserializer;
 
 import com.bstek.urule.model.rete.JsonUtils;
 import com.bstek.urule.model.rule.ParameterValue;
 import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.model.rule.ValueType;
+import org.codehaus.jackson.JsonNode;
 
-/**
- * @author Jacky.gao
- * @since 2015年5月26日
- */
 public class ParameterValueDeserializer implements ValueDeserializer {
+    public ParameterValueDeserializer() {
+    }
 
-	@Override
-	public Value deserialize(JsonNode jsonNode) {
-		ParameterValue value=new ParameterValue();
-		value.setArithmetic(JsonUtils.parseComplexArithmetic(jsonNode));
-		value.setVariableLabel(JsonUtils.getJsonValue(jsonNode, "variableLabel"));
-		value.setVariableName(JsonUtils.getJsonValue(jsonNode, "variableName"));
-		return value;
-	}
+    public Value deserialize(JsonNode var1) {
+        ParameterValue var2 = new ParameterValue();
+        var2.setArithmetic(JsonUtils.parseComplexArithmetic(var1));
+        var2.setVariableLabel(JsonUtils.getJsonValue(var1, "variableLabel"));
+        var2.setVariableName(JsonUtils.getJsonValue(var1, "variableName"));
+        var2.setKeyLabel(JsonUtils.getJsonValue(var1, "keyLabel"));
+        var2.setKeyName(JsonUtils.getJsonValue(var1, "keyName"));
+        return var2;
+    }
 
-	@Override
-	public boolean support(ValueType type) {
-		return type.equals(ValueType.Parameter);
-	}
+    public boolean support(ValueType var1) {
+        return var1.equals(ValueType.Parameter);
+    }
 }

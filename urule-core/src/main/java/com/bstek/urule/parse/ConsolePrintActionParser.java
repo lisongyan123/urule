@@ -1,45 +1,38 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.action.Action;
 import com.bstek.urule.action.ConsolePrintAction;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class ConsolePrintActionParser extends ActionParser {
-	public Action parse(Element element) {
-		ConsolePrintAction action=new ConsolePrintAction();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(valueParser.support(ele.getName())){
-				action.setValue(valueParser.parse(ele));
-				break;
-			}
-		}
-		return action;
-	}
-	public boolean support(String name) {
-		return name.equals("console-print");
-	}
+    public ConsolePrintActionParser() {
+    }
+
+    public Action parse(Element var1) {
+        ConsolePrintAction var2 = new ConsolePrintAction();
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (this.valueParser.support(var5.getName())) {
+                    var2.setValue(this.valueParser.parse(var5));
+                    break;
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("console-print");
+    }
 }

@@ -1,69 +1,115 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.table;
 
 import com.bstek.urule.action.Action;
+import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Value;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月19日
- */
 public class Cell {
-	private int row;
-	private int col;
-	private int rowspan;
-	private Joint joint;
-	private Value value;
-	private Action action;
-	public int getRow() {
-		return row;
-	}
-	public void setRow(int row) {
-		this.row = row;
-	}
-	public int getCol() {
-		return col;
-	}
-	public void setCol(int col) {
-		this.col = col;
-	}
-	
-	public int getRowspan() {
-		return rowspan;
-	}
-	public void setRowspan(int rowspan) {
-		this.rowspan = rowspan;
-	}
-	public Joint getJoint() {
-		return joint;
-	}
-	public void setJoint(Joint joint) {
-		this.joint = joint;
-	}
-	public Action getAction() {
-		return action;
-	}
-	public void setAction(Action action) {
-		this.action = action;
-	}
-	public Value getValue() {
-		return value;
-	}
-	public void setValue(Value value) {
-		this.value = value;
-	}
+    private int row;
+    private int col;
+    private int rowspan;
+    private String keyName;
+    private String keyLabel;
+    private String variableLabel;
+    private String variableName;
+    private Datatype datatype;
+    private Joint joint;
+    private Value value;
+    private Action action;
+
+    public Cell() {
+    }
+
+    public String getKeyName() {
+        return this.keyName;
+    }
+
+    public void setKeyName(String var1) {
+        this.keyName = var1;
+    }
+
+    public String getKeyLabel() {
+        return this.keyLabel;
+    }
+
+    public void setKeyLabel(String var1) {
+        this.keyLabel = var1;
+    }
+
+    public int getRow() {
+        return this.row;
+    }
+
+    public void setRow(int var1) {
+        this.row = var1;
+    }
+
+    public int getCol() {
+        return this.col;
+    }
+
+    public void setCol(int var1) {
+        this.col = var1;
+    }
+
+    public int getRowspan() {
+        return this.rowspan;
+    }
+
+    public void setRowspan(int var1) {
+        this.rowspan = var1;
+    }
+
+    public String getVariableLabel() {
+        return this.variableLabel;
+    }
+
+    public void setVariableLabel(String var1) {
+        this.variableLabel = var1;
+    }
+
+    public String getVariableName() {
+        return this.variableName;
+    }
+
+    public void setVariableName(String var1) {
+        this.variableName = var1;
+    }
+
+    public Datatype getDatatype() {
+        return this.datatype;
+    }
+
+    public void setDatatype(Datatype var1) {
+        this.datatype = var1;
+    }
+
+    public Joint getJoint() {
+        return this.joint;
+    }
+
+    public void setJoint(Joint var1) {
+        this.joint = var1;
+    }
+
+    public Action getAction() {
+        return this.action;
+    }
+
+    public void setAction(Action var1) {
+        this.action = var1;
+    }
+
+    public Value getValue() {
+        return this.value;
+    }
+
+    public void setValue(Value var1) {
+        this.value = var1;
+    }
 }

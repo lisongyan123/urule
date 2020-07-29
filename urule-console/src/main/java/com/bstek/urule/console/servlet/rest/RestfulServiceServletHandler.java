@@ -17,7 +17,6 @@ import com.bstek.urule.model.GeneralEntity;
 import com.bstek.urule.model.library.variable.VariableCategory;
 import com.bstek.urule.runtime.KnowledgePackageImpl;
 import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.monitor.MonitorObject;
 import com.bstek.urule.runtime.monitor.MonitorObjectField;
 import com.bstek.urule.runtime.response.ExecutionResponse;

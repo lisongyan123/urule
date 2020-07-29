@@ -1,82 +1,102 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.dsl;
 
+import com.bstek.urule.builder.RulesRebuilder;
+import com.bstek.urule.builder.resource.Resource;
+import com.bstek.urule.dsl.builder.BuildUtils;
+import com.bstek.urule.dsl.builder.ContextBuilder;
+import com.bstek.urule.exception.RuleException;
+import com.bstek.urule.model.rule.AbstractValue;
+import com.bstek.urule.model.rule.RuleSet;
+import com.bstek.urule.model.rule.lhs.Criterion;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.bstek.urule.exception.RuleException;
-import com.bstek.urule.builder.RulesRebuilder;
-import com.bstek.urule.builder.resource.Resource;
-import com.bstek.urule.dsl.builder.ContextBuilder;
-import com.bstek.urule.model.rule.Library;
-import com.bstek.urule.model.rule.Rule;
-import com.bstek.urule.model.rule.RuleSet;
+public class DSLRuleSetBuilder implements ApplicationContextAware {
+    public static final String BEAN_ID = "urule.dslRuleSetBuilder";
+    private Collection<ContextBuilder> a;
+    private RulesRebuilder b;
 
-/**
- * @author Jacky.gao
- * @since 2015年2月16日
- */
-public class DSLRuleSetBuilder implements ApplicationContextAware{
-	public static final String BEAN_ID="urule.dslRuleSetBuilder";
-	private Collection<ContextBuilder> contextBuilders;
-	private RulesRebuilder rulesRebuilder;
-	public RuleSet build(String script) throws IOException{
-		ANTLRInputStream antlrInputStream=new ANTLRInputStream(script);
-		RuleParserLexer lexer=new RuleParserLexer(antlrInputStream);
-		CommonTokenStream tokenStream=new CommonTokenStream(lexer);
-		RuleParserParser parser=new RuleParserParser(tokenStream);
-		ScriptDecisionTableErrorListener errorListener=new ScriptDecisionTableErrorListener();
-		parser.addErrorListener(errorListener);
-		BuildRulesVisitor visitor=new BuildRulesVisitor(contextBuilders,tokenStream);
-		RuleSet ruleSet=visitor.visitRuleSet(parser.ruleSet());
-		rebuildRuleSet(ruleSet);
-		String error=errorListener.getErrorMessage();
-		if(error!=null){
-			throw new RuleException("Script parse error:"+error);
-		}
-		return ruleSet;
-	}
-	
-	private void rebuildRuleSet(RuleSet ruleSet){
-		List<Library> libraries=ruleSet.getLibraries();
-		List<Rule> rules=ruleSet.getRules();
-		rulesRebuilder.rebuildRulesForDSL(libraries, rules);
-	}
-	
-	public void setRulesRebuilder(RulesRebuilder rulesRebuilder) {
-		this.rulesRebuilder = rulesRebuilder;
-	}
+    public DSLRuleSetBuilder() {
+    }
 
+    public RuleSet build(String var1, String var2) throws IOException {
+        ANTLRInputStream var3 = new ANTLRInputStream(var1);
+        RuleParserLexer var4 = new RuleParserLexer(var3);
+        CommonTokenStream var5 = new CommonTokenStream(var4);
+        RuleParserParser var6 = new RuleParserParser(var5);
+        ScriptDecisionTableErrorListener var7 = new ScriptDecisionTableErrorListener();
+        var6.addErrorListener(var7);
+        BuildRulesVisitor var8 = new BuildRulesVisitor(this.a, var5);
+        RuleSet var9 = var8.buildRuleSet(var6.ruleSet(), var2);
+        this.a(var9);
+        String var10 = var7.getErrorMessage();
+        if (var10 != null) {
+            throw new RuleException("Script parse error:" + var10);
+        } else {
+            return var9;
+        }
+    }
 
-	public boolean support(Resource resource){
-		String path=resource.getPath();
-		return path.toLowerCase().endsWith(Constant.UL_SUFFIX);
-	}
+    public Criterion buildCriterion(String var1) throws IOException {
+        ANTLRInputStream var2 = new ANTLRInputStream(var1);
+        RuleParserLexer var3 = new RuleParserLexer(var2);
+        CommonTokenStream var4 = new CommonTokenStream(var3);
+        RuleParserParser var5 = new RuleParserParser(var4);
+        ScriptDecisionTableErrorListener var6 = new ScriptDecisionTableErrorListener();
+        var5.addErrorListener(var6);
+        BuildRulesVisitor var7 = new BuildRulesVisitor(this.a, var4);
+        Criterion var8 = var7.buildCriterion(var5.condition());
+        String var9 = var6.getErrorMessage();
+        if (var9 != null) {
+            throw new RuleException("Script parse error:" + var9);
+        } else {
+            return var8;
+        }
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		contextBuilders=applicationContext.getBeansOfType(ContextBuilder.class).values();
-	}
+    public AbstractValue buildValue(String var1) throws IOException {
+        ANTLRInputStream var2 = new ANTLRInputStream(var1);
+        RuleParserLexer var3 = new RuleParserLexer(var2);
+        CommonTokenStream var4 = new CommonTokenStream(var3);
+        RuleParserParser var5 = new RuleParserParser(var4);
+        ScriptDecisionTableErrorListener var6 = new ScriptDecisionTableErrorListener();
+        var5.addErrorListener(var6);
+        AbstractValue var7 = BuildUtils.buildValue(var5.complexValue());
+        String var8 = var6.getErrorMessage();
+        if (var8 != null) {
+            throw new RuleException("Script parse error:" + var8);
+        } else {
+            return var7;
+        }
+    }
+
+    private void a(RuleSet var1) {
+        List var2 = var1.getLibraries();
+        List var3 = var1.getRules();
+        this.b.rebuildRulesForDSL(var2, var3);
+    }
+
+    public void setRulesRebuilder(RulesRebuilder var1) {
+        this.b = var1;
+    }
+
+    public boolean support(Resource var1) {
+        String var2 = var1.getPath();
+        return var2.toLowerCase().endsWith(".ul");
+    }
+
+    public void setApplicationContext(ApplicationContext var1) throws BeansException {
+        this.a = var1.getBeansOfType(ContextBuilder.class).values();
+    }
 }

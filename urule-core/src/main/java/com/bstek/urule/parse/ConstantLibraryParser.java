@@ -1,74 +1,71 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dom4j.Element;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.library.constant.Constant;
 import com.bstek.urule.model.library.constant.ConstantCategory;
 import com.bstek.urule.model.library.constant.ConstantLibrary;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class ConstantLibraryParser implements Parser<ConstantLibrary> {
-	public static final String BEAN_ID="urule.constantLibraryParser";
-	public ConstantLibrary parse(Element element) {
-		List<ConstantCategory> categories=new ArrayList<ConstantCategory>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("category")){
-				categories.add(parseConstantCategory(ele));
-			}
-		}
-		ConstantLibrary library=new ConstantLibrary();
-		library.setCategories(categories);
-		return library;
-	}
-	private ConstantCategory parseConstantCategory(Element element){
-		ConstantCategory category=new ConstantCategory();
-		category.setName(element.attributeValue("name"));
-		category.setLabel(element.attributeValue("label"));
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("constant")){
-				category.addConstant(parseConstant(ele));
-			}
-		}
-		return category;
-	}
-	private Constant parseConstant(Element element){
-		Constant constant=new Constant();
-		constant.setName(element.attributeValue("name"));
-		constant.setLabel(element.attributeValue("label"));
-		constant.setType(Datatype.valueOf(element.attributeValue("type")));
-		return constant;
-	}
-	public boolean support(String name) {
-		return name.equals("constant-library");
-	}
+    public static final String BEAN_ID = "urule.constantLibraryParser";
+
+    public ConstantLibraryParser() {
+    }
+
+    public ConstantLibrary parse(Element var1) {
+        ArrayList var2 = new ArrayList();
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("category")) {
+                    var2.add(this.a(var5));
+                }
+            }
+        }
+
+        ConstantLibrary var6 = new ConstantLibrary();
+        var6.setCategories(var2);
+        return var6;
+    }
+
+    private ConstantCategory a(Element var1) {
+        ConstantCategory var2 = new ConstantCategory();
+        var2.setName(var1.attributeValue("name"));
+        var2.setLabel(var1.attributeValue("label"));
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("constant")) {
+                    var2.addConstant(this.b(var5));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    private Constant b(Element var1) {
+        Constant var2 = new Constant();
+        var2.setName(var1.attributeValue("name"));
+        var2.setLabel(var1.attributeValue("label"));
+        var2.setType(Datatype.valueOf(var1.attributeValue("type")));
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("constant-library");
+    }
 }

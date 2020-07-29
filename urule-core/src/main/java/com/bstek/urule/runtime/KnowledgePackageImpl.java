@@ -1,167 +1,319 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime;
 
+import com.bstek.urule.model.Node;
+import com.bstek.urule.model.flow.FlowDefinition;
+import com.bstek.urule.model.library.variable.VariableCategory;
+import com.bstek.urule.model.rete.BaseReteNode;
+import com.bstek.urule.model.rete.Line;
+import com.bstek.urule.model.rete.Rete;
+import com.bstek.urule.model.rete.ReteNode;
+import com.bstek.urule.model.rete.ReteUnit;
+import com.bstek.urule.runtime.monitor.MonitorObject;
+import com.bstek.urule.runtime.rete.ReteInstance;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
-import com.bstek.urule.model.Node;
-import com.bstek.urule.model.RuleJsonDeserializer;
-import com.bstek.urule.model.flow.FlowDefinition;
-import com.bstek.urule.model.rete.BaseReteNode;
-import com.bstek.urule.model.rete.Line;
-import com.bstek.urule.model.rete.ObjectTypeNode;
-import com.bstek.urule.model.rete.Rete;
-import com.bstek.urule.model.rete.TerminalNode;
-import com.bstek.urule.model.rule.Other;
-import com.bstek.urule.model.rule.Rhs;
-import com.bstek.urule.model.rule.Rule;
-import com.bstek.urule.runtime.rete.ReteInstance;
-
-/**
- * @author Jacky.gao
- * @since 2015年1月20日
- */
 public class KnowledgePackageImpl implements KnowledgePackage {
-	private Rete rete;
-	private Map<String,String> variableCategoryMap=new HashMap<String,String>();
-	private Map<String,FlowDefinition> flowMap;
-	private Map<String, String> parameters;
-	
-	@JsonDeserialize(using=RuleJsonDeserializer.class)
-	private List<Rule> noLhsRules;
-	
-	@JsonIgnore
-	private Map<Rule,Rule> elseRulesMap=new HashMap<Rule,Rule>();
-	
-	@JsonIgnore
-	private List<Rule> withElseRules=new ArrayList<Rule>();
-	
-	private long timestamp;
-	private String id=UUID.randomUUID().toString();
-	public KnowledgePackageImpl() {
-		timestamp=System.currentTimeMillis();
-	}
-	
-	public void buildWithElseRules(){
-		List<ObjectTypeNode> typeNodes=rete.getObjectTypeNodes();
-		if(typeNodes!=null){
-			for(ObjectTypeNode typeNode:typeNodes){
-				buildReteLinesForElseRules(typeNode.getLines());
-			}			
-		}
-	}
-	
-	private void buildReteLinesForElseRules(List<Line> lines){
-		if(lines==null)return;
-		for(Line line:lines){
-			Node toNode=line.getTo();
-			if(toNode==null)continue;
-			if(toNode instanceof TerminalNode){
-				TerminalNode terminalNode=(TerminalNode)toNode;
-				Rule rule=terminalNode.getRule();
-				if(!withElseRules.contains(rule)){
-					Other other=rule.getOther();
-					if(other!=null && other.getActions()!=null && other.getActions().size()>0){
-						withElseRules.add(rule);
-						
-						Rule elseRule=new Rule();
-						elseRule.setName(rule.getName()+"else");
-						elseRule.setActivationGroup(rule.getActivationGroup());
-						elseRule.setAgendaGroup(rule.getAgendaGroup());
-						elseRule.setAutoFocus(rule.getAutoFocus());
-						elseRule.setEffectiveDate(rule.getEffectiveDate());
-						elseRule.setExpiresDate(rule.getExpiresDate());
-						elseRule.setEnabled(rule.getEnabled());
-						elseRule.setRuleflowGroup(rule.getRuleflowGroup());
-						elseRule.setSalience(rule.getSalience());
-						Rhs rhs=new Rhs();
-						rhs.setActions(other.getActions());
-						elseRule.setRhs(rhs);
+    private String packageInfo;
+    private boolean monitor;
+    private boolean showLog;
+    private boolean showMatchedRuleList;
+    private boolean showNotMatchRuleList;
+    private boolean showFiredFlowNodeList;
+    private List<MonitorObject> inputData;
+    private List<MonitorObject> outputData;
+    private String version;
+    private String versionComment;
+    private Date versionCreateDate;
+    private String versionCreateUser;
+    private Rete rete;
+    private List<Rete> aloneRetes;
+    private Map<String, String> variableCategoryMap = new HashMap();
+    private Map<String, FlowDefinition> flowMap;
+    private Map<String, String> parameters;
+    private long timestamp = System.currentTimeMillis();
+    private String id = UUID.randomUUID().toString();
+    @JsonIgnore
+    private List<VariableCategory> variableCategories;
 
-						elseRulesMap.put(rule, elseRule);
-					}
-				}
-			}else if(toNode instanceof BaseReteNode){
-				BaseReteNode reteNode=(BaseReteNode)toNode;
-				buildReteLinesForElseRules(reteNode.getLines());
-			}
-		}
-	}
-	
-	public Rule getElseRule(Rule rule){
-		return elseRulesMap.get(rule);
-	}
-	
-	public String getId() {
-		return id;
-	}
-	
-	public Rete getRete() {
-		return rete;
-	}
-	public void setRete(Rete rete) {
-		this.rete = rete;
-	}
-	public long getTimestamp() {
-		return timestamp;
-	}
-	public void resetTimestamp() {
-		timestamp=System.currentTimeMillis();
-	}
-	public Map<String, String> getVariableCateogoryMap() {
-		return variableCategoryMap;
-	}
-	public void setNoLhsRules(List<Rule> noLhsRules) {
-		this.noLhsRules = noLhsRules;
-	}
-	@Override
-	public List<Rule> getNoLhsRules() {
-		return noLhsRules;
-	}
-	
-	@Override
-	public List<Rule> getWithElseRules() {
-		return this.withElseRules;
-	}
-	
-	
-	public void setVariableCategoryMap(Map<String, String> variableCategoryMap) {
-		this.variableCategoryMap = variableCategoryMap;
-	}
-	public Map<String, FlowDefinition> getFlowMap() {
-		return flowMap;
-	}
-	public void setFlowMap(Map<String, FlowDefinition> flowMap) {
-		this.flowMap = flowMap;
-	}
-	public ReteInstance newReteInstance() {
-		return rete.newReteInstance();
-	}
-	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
-	}
-	@Override
-	public Map<String, String> getParameters() {
-		return this.parameters;
-	}
+    public KnowledgePackageImpl() {
+    }
+
+    public void initForActiveVersion() {
+        this.initSingleReteForActiveVersion(this.rete);
+        if (this.flowMap != null) {
+            Iterator var1 = this.flowMap.values().iterator();
+
+            while(var1.hasNext()) {
+                FlowDefinition var2 = (FlowDefinition)var1.next();
+                var2.initForActiveVersion();
+            }
+
+            if (this.aloneRetes != null) {
+                var1 = this.aloneRetes.iterator();
+
+                while(var1.hasNext()) {
+                    Rete var3 = (Rete)var1.next();
+                    this.initSingleReteForActiveVersion(var3);
+                }
+
+            }
+        }
+    }
+
+    private void initSingleReteForActiveVersion(Rete var1) {
+        this.initReteForActiveVersion(var1);
+        this.initReteUnitsForActiveVersion(var1.getMutexGroupRetesMap());
+        this.initReteUnitsForActiveVersion(var1.getPendedGroupRetesMap());
+    }
+
+    private void initReteUnitsForActiveVersion(Map<String, List<ReteUnit>> var1) {
+        if (var1 != null) {
+            Iterator var2 = var1.values().iterator();
+
+            while(var2.hasNext()) {
+                List var3 = (List)var2.next();
+                Iterator var4 = var3.iterator();
+
+                while(var4.hasNext()) {
+                    ReteUnit var5 = (ReteUnit)var4.next();
+                    Rete var6 = var5.getRete();
+                    this.initReteForActiveVersion(var6);
+                }
+            }
+
+        }
+    }
+
+    private void initReteForActiveVersion(Rete var1) {
+        List var2 = var1.getObjectTypeNodes();
+        Iterator var3 = var2.iterator();
+
+        while(var3.hasNext()) {
+            BaseReteNode var4 = (BaseReteNode)var3.next();
+            this.buildChildrenNodes(var4);
+        }
+
+        if (this.flowMap != null) {
+            var3 = this.flowMap.values().iterator();
+
+            while(var3.hasNext()) {
+                FlowDefinition var5 = (FlowDefinition)var3.next();
+                var5.initForActiveVersion();
+            }
+
+        }
+    }
+
+    private void buildChildrenNodes(BaseReteNode var1) {
+        List var2 = var1.getLines();
+        if (var2 != null) {
+            Iterator var3 = var2.iterator();
+
+            while(var3.hasNext()) {
+                Line var4 = (Line)var3.next();
+                Node var5 = var4.getTo();
+                if (var5 instanceof ReteNode) {
+                    var1.getChildrenNodes().add((ReteNode)var5);
+                }
+
+                if (var5 instanceof BaseReteNode) {
+                    BaseReteNode var6 = (BaseReteNode)var5;
+                    this.buildChildrenNodes(var6);
+                }
+            }
+
+        }
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public Rete getRete() {
+        return this.rete;
+    }
+
+    public void setRete(Rete var1) {
+        this.rete = var1;
+    }
+
+    public List<Rete> getAloneRetes() {
+        return this.aloneRetes;
+    }
+
+    public void setAloneRetes(List<Rete> var1) {
+        this.aloneRetes = var1;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    public void setTimestamp(long var1) {
+        this.timestamp = var1;
+    }
+
+    public void resetTimestamp() {
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public String getPackageInfo() {
+        return this.packageInfo;
+    }
+
+    public void setPackageInfo(String var1) {
+        this.packageInfo = var1;
+    }
+
+    public void setMonitor(boolean var1) {
+        this.monitor = var1;
+    }
+
+    public boolean isMonitor() {
+        return this.monitor;
+    }
+
+    public boolean isShowLog() {
+        return this.showLog;
+    }
+
+    public void setShowLog(boolean var1) {
+        this.showLog = var1;
+    }
+
+    public boolean isShowMatchedRuleList() {
+        return this.showMatchedRuleList;
+    }
+
+    public void setShowMatchedRuleList(boolean var1) {
+        this.showMatchedRuleList = var1;
+    }
+
+    public boolean isShowNotMatchRuleList() {
+        return this.showNotMatchRuleList;
+    }
+
+    public void setShowNotMatchRuleList(boolean var1) {
+        this.showNotMatchRuleList = var1;
+    }
+
+    public boolean isShowFiredFlowNodeList() {
+        return this.showFiredFlowNodeList;
+    }
+
+    public void setShowFiredFlowNodeList(boolean var1) {
+        this.showFiredFlowNodeList = var1;
+    }
+
+    public List<MonitorObject> getInputData() {
+        return this.inputData;
+    }
+
+    public void setInputData(List<MonitorObject> var1) {
+        this.inputData = var1;
+    }
+
+    public List<MonitorObject> getOutputData() {
+        return this.outputData;
+    }
+
+    public void setOutputData(List<MonitorObject> var1) {
+        this.outputData = var1;
+    }
+
+    public String getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(String var1) {
+        this.version = var1;
+    }
+
+    public String getVersionComment() {
+        return this.versionComment;
+    }
+
+    public void setVersionComment(String var1) {
+        this.versionComment = var1;
+    }
+
+    public Date getVersionCreateDate() {
+        return this.versionCreateDate;
+    }
+
+    public void setVersionCreateDate(Date var1) {
+        this.versionCreateDate = var1;
+    }
+
+    public String getVersionCreateUser() {
+        return this.versionCreateUser;
+    }
+
+    public void setVersionCreateUser(String var1) {
+        this.versionCreateUser = var1;
+    }
+
+    public Map<String, String> getVariableCateogoryMap() {
+        return this.variableCategoryMap;
+    }
+
+    public void setVariableCategoryMap(Map<String, String> var1) {
+        this.variableCategoryMap = var1;
+    }
+
+    public Map<String, FlowDefinition> getFlowMap() {
+        return this.flowMap;
+    }
+
+    public void setFlowMap(Map<String, FlowDefinition> var1) {
+        this.flowMap = var1;
+    }
+
+    public ReteInstance newReteInstance() {
+        return this.rete.newReteInstance();
+    }
+
+    public List<ReteInstance> newAloneReteInstances() {
+        ArrayList var1 = new ArrayList();
+        if (this.aloneRetes == null) {
+            return var1;
+        } else {
+            Iterator var2 = this.aloneRetes.iterator();
+
+            while(var2.hasNext()) {
+                Rete var3 = (Rete)var2.next();
+                var1.add(var3.newReteInstance());
+            }
+
+            return var1;
+        }
+    }
+
+    public void setParameters(Map<String, String> var1) {
+        this.parameters = var1;
+    }
+
+    public void setVariableCategories(List<VariableCategory> var1) {
+        this.variableCategories = var1;
+    }
+
+    public List<VariableCategory> getVariableCategories() {
+        return this.variableCategories;
+    }
+
+    public Map<String, String> getParameters() {
+        return this.parameters;
+    }
 }

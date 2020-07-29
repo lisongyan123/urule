@@ -1,56 +1,52 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.model.rule.ArithmeticType;
 import com.bstek.urule.model.rule.ComplexArithmetic;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class ComplexArithmeticParser implements Parser<ComplexArithmetic> {
-	private ValueParser valueParser;
-	private ParenParser parenParser;
-	public ComplexArithmetic parse(Element element) {
-		ComplexArithmetic arithmetic=new ComplexArithmetic();
-		ArithmeticType arithmeticType=ArithmeticType.valueOf(element.attributeValue("type"));
-		arithmetic.setType(arithmeticType);
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(valueParser.support(ele.getName())){
-				arithmetic.setValue(valueParser.parse(ele));
-			}else if(parenParser.support(ele.getName())){
-				arithmetic.setValue(parenParser.parse(ele));
-			}
-		}
-		return arithmetic;
-	}
-	public void setValueParser(ValueParser valueParser) {
-		this.valueParser = valueParser;
-	}
-	public void setParenParser(ParenParser parenParser) {
-		this.parenParser = parenParser;
-	}
-	public boolean support(String name) {
-		return name.equals("complex-arith");
-	}
+    private ValueParser a;
+    private ParenParser b;
+
+    public ComplexArithmeticParser() {
+    }
+
+    public ComplexArithmetic parse(Element var1) {
+        ComplexArithmetic var2 = new ComplexArithmetic();
+        ArithmeticType var3 = ArithmeticType.valueOf(var1.attributeValue("type"));
+        var2.setType(var3);
+        Iterator var4 = var1.elements().iterator();
+
+        while(var4.hasNext()) {
+            Object var5 = var4.next();
+            if (var5 != null && var5 instanceof Element) {
+                Element var6 = (Element)var5;
+                if (this.a.support(var6.getName())) {
+                    var2.setValue(this.a.parse(var6));
+                } else if (this.b.support(var6.getName())) {
+                    var2.setValue(this.b.parse(var6));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public void setValueParser(ValueParser var1) {
+        this.a = var1;
+    }
+
+    public void setParenParser(ParenParser var1) {
+        this.b = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("complex-arith");
+    }
 }

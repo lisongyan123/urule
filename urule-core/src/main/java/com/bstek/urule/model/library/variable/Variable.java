@@ -1,60 +1,68 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.library.variable;
 
 import com.bstek.urule.model.library.Datatype;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class Variable {
-	private String name;
-	private String label;
-	private Datatype type;
-	private String defaultValue;
-	private Act act;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getLabel() {
-		return label;
-	}
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	public Datatype getType() {
-		return type;
-	}
-	public void setType(Datatype type) {
-		this.type = type;
-	}
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-	public Act getAct() {
-		return act;
-	}
-	public void setAct(Act act) {
-		this.act = act;
-	}
+    private String name;
+    private String label;
+    private Datatype type;
+    private String dataType;
+    private String defaultValue;
+    private Act act;
+
+    public Variable() {
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String var1) {
+        this.name = var1;
+    }
+
+    public String getLabel() {
+        return this.label;
+    }
+
+    public void setLabel(String var1) {
+        this.label = var1;
+    }
+
+    public Datatype getType() {
+        return this.type;
+    }
+
+    public void setType(Datatype var1) {
+        this.type = var1;
+    }
+
+    public String getDataType() {
+        return this.dataType;
+    }
+
+    public void setDataType(String var1) {
+        this.dataType = var1;
+    }
+
+    public String getDefaultValue() {
+        return this.defaultValue;
+    }
+
+    public void setDefaultValue(String var1) {
+        this.defaultValue = var1;
+    }
+
+    public Act getAct() {
+        return this.act;
+    }
+
+    public void setAct(Act var1) {
+        this.act = var1;
+    }
 }

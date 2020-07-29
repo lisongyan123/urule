@@ -1,51 +1,44 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.model.rule.ArithmeticType;
 import com.bstek.urule.model.rule.SimpleArithmetic;
 import com.bstek.urule.model.rule.SimpleArithmeticValue;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class SimpleArithmeticParser implements Parser<SimpleArithmetic> {
-	public SimpleArithmetic parse(Element element) {
-		SimpleArithmetic arithmetic=new SimpleArithmetic();
-		ArithmeticType arithmeticType=ArithmeticType.valueOf(element.attributeValue("type"));
-		arithmetic.setType(arithmeticType);
-		SimpleArithmeticValue value=new SimpleArithmeticValue();
-		value.setContent(element.attributeValue("value"));
-		arithmetic.setValue(value);
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(this.support(ele.getName())){
-				value.setArithmetic(this.parse(ele));
-				break;
-			}
-		}
-		return arithmetic;
-	}
-	public boolean support(String name) {
-		return name.equals("simple-arith");
-	}
+    public SimpleArithmeticParser() {
+    }
+
+    public SimpleArithmetic parse(Element var1) {
+        SimpleArithmetic var2 = new SimpleArithmetic();
+        ArithmeticType var3 = ArithmeticType.valueOf(var1.attributeValue("type"));
+        var2.setType(var3);
+        SimpleArithmeticValue var4 = new SimpleArithmeticValue();
+        var4.setContent(var1.attributeValue("value"));
+        var2.setValue(var4);
+        Iterator var5 = var1.elements().iterator();
+
+        while(var5.hasNext()) {
+            Object var6 = var5.next();
+            if (var6 != null && var6 instanceof Element) {
+                Element var7 = (Element)var6;
+                if (this.support(var7.getName())) {
+                    var4.setArithmetic(this.parse(var7));
+                    break;
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("simple-arith");
+    }
 }

@@ -1,64 +1,61 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
 import com.bstek.urule.model.library.action.SpringBean;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class SpringBeanParser implements Parser<SpringBean> {
-	public SpringBean parse(Element element) {
-		SpringBean bean=new SpringBean();
-		bean.setId(element.attributeValue("id"));
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("method")){
-				Method method=parseMethod(ele);
-				bean.addMethod(method);
-			}
-		}
-		return bean;
-	}
-	private Method parseMethod(Element element){
-		Method method=new Method();
-		method.setName(element.attributeValue("name"));
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("parameter")){
-				Parameter parameter=new Parameter();
-				parameter.setType(Datatype.valueOf(ele.attributeValue("type")));
-				method.addParameter(parameter);
-			}
-		}
-		return method;
-	}
-	public boolean support(String name) {
-		return name.equals("spring-bean");
-	}
+    public SpringBeanParser() {
+    }
+
+    public SpringBean parse(Element var1) {
+        SpringBean var2 = new SpringBean();
+        var2.setId(var1.attributeValue("id"));
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("method")) {
+                    Method var6 = this.a(var5);
+                    var2.addMethod(var6);
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    private Method a(Element var1) {
+        Method var2 = new Method();
+        var2.setName(var1.attributeValue("name"));
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("parameter")) {
+                    Parameter var6 = new Parameter();
+                    var6.setType(Datatype.valueOf(var5.attributeValue("type")));
+                    var2.addParameter(var6);
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("spring-bean");
+    }
 }

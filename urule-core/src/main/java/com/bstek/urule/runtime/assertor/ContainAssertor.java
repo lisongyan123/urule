@@ -1,52 +1,41 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.runtime.assertor;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.Collection;
+package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import java.util.Collection;
 
-/**
- * @author Jacky.gao
- * @since 2017年12月21日
- */
 public class ContainAssertor implements Assertor {
-	public boolean eval(Object left, Object right,Datatype datatype) {
-		if(left==null || right==null){
-			return false;
-		}
-		if(left instanceof String){
-			return left.toString().contains(right.toString());
-		}
-		if(left instanceof Collection){
-			Collection<?> list=(Collection<?>)left;
-			if(right instanceof Collection){
-				Collection<?> rightList=(Collection<?>)right;
-				return list.containsAll(rightList);
-			}else{
-				return list.contains(right);				
-			}
-		}
-		String leftStr=left.toString();
-		String rightStr=right.toString();
-		return leftStr.contains(rightStr);
-	}
+    public ContainAssertor() {
+    }
 
-	public boolean support(Op op) {
-		return op.equals(Op.Contain);
-	}
+    public boolean eval(Object var1, Object var2, Datatype var3) {
+        if (var1 != null && var2 != null) {
+            if (var1 instanceof String) {
+                return var1.toString().contains(var2.toString());
+            } else if (var1 instanceof Collection) {
+                Collection var7 = (Collection)var1;
+                if (var2 instanceof Collection) {
+                    Collection var6 = (Collection)var2;
+                    return var7.containsAll(var6);
+                } else {
+                    return var7.contains(var2);
+                }
+            } else {
+                String var4 = var1.toString();
+                String var5 = var2.toString();
+                return var4.contains(var5);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public Op supportOp() {
+        return Op.Contain;
+    }
 }

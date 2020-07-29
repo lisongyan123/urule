@@ -1,52 +1,47 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.parse;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.dom4j.Element;
+package com.bstek.urule.parse;
 
 import com.bstek.urule.model.library.variable.CategoryType;
 import com.bstek.urule.model.library.variable.VariableCategory;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class VariableCategoryParser implements Parser<VariableCategory> {
-	private VariableParser variableParser;
-	public VariableCategory parse(Element element) {
-		VariableCategory category=new VariableCategory();
-		category.setName(element.attributeValue("name"));
-		category.setClazz(element.attributeValue("clazz"));
-		category.setType(CategoryType.valueOf(element.attributeValue("type")));
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			String name=ele.getName();
-			if(variableParser.support(name)){
-				category.addVariable(variableParser.parse(ele));
-			}
-		}
-		return category;
-	}
-	public boolean support(String name) {
-		return name.equals("category");
-	}
-	public void setVariableParser(VariableParser variableParser) {
-		this.variableParser = variableParser;
-	}
+    private VariableParser a;
+
+    public VariableCategoryParser() {
+    }
+
+    public VariableCategory parse(Element var1) {
+        VariableCategory var2 = new VariableCategory();
+        var2.setName(var1.attributeValue("name"));
+        var2.setClazz(var1.attributeValue("clazz"));
+        var2.setType(CategoryType.valueOf(var1.attributeValue("type")));
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                String var6 = var5.getName();
+                if (this.a.support(var6)) {
+                    var2.addVariable(this.a.parse(var5));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("category");
+    }
+
+    public void setVariableParser(VariableParser var1) {
+        this.a = var1;
+    }
 }

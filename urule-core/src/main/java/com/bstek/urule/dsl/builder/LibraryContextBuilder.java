@@ -1,54 +1,41 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.dsl.builder;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-
-import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.dsl.RuleParserParser.ResourceContext;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.LibraryType;
+import org.antlr.v4.runtime.ParserRuleContext;
 
-/**
- * @author Jacky.gao
- * @since 2015年2月15日
- */
 public class LibraryContextBuilder extends AbstractContextBuilder {
+    public LibraryContextBuilder() {
+    }
 
-	@Override
-	public Library build(ParserRuleContext context) {
-		ResourceContext ctx=(ResourceContext)context;
-		if(ctx.importActionLibrary()!=null){
-			String path=BuildUtils.getSTRINGContent(ctx.importActionLibrary().STRING());
-			return new Library(path,null,LibraryType.Action);
-		}else if(ctx.importConstantLibrary()!=null){
-			String path=BuildUtils.getSTRINGContent(ctx.importConstantLibrary().STRING());
-			return new Library(path,null,LibraryType.Constant);
-		}else if(ctx.importVariableLibrary()!=null){
-			String path=BuildUtils.getSTRINGContent(ctx.importVariableLibrary().STRING());
-			return new Library(path,null,LibraryType.Variable);
-		}else if(ctx.importParameterLibrary()!=null){
-			String path=BuildUtils.getSTRINGContent(ctx.importParameterLibrary().STRING());
-			return new Library(path,null,LibraryType.Parameter);
-		}
-		throw new RuleException("Unsupport context "+ctx.getClass().getName()+"");
-	}
+    public Library build(ParserRuleContext var1) {
+        ResourceContext var2 = (ResourceContext)var1;
+        String var3;
+        if (var2.importActionLibrary() != null) {
+            var3 = BuildUtils.getSTRINGContent(var2.importActionLibrary().STRING());
+            return new Library(var3, (String)null, LibraryType.Action);
+        } else if (var2.importConstantLibrary() != null) {
+            var3 = BuildUtils.getSTRINGContent(var2.importConstantLibrary().STRING());
+            return new Library(var3, (String)null, LibraryType.Constant);
+        } else if (var2.importVariableLibrary() != null) {
+            var3 = BuildUtils.getSTRINGContent(var2.importVariableLibrary().STRING());
+            return new Library(var3, (String)null, LibraryType.Variable);
+        } else if (var2.importParameterLibrary() != null) {
+            var3 = BuildUtils.getSTRINGContent(var2.importParameterLibrary().STRING());
+            return new Library(var3, (String)null, LibraryType.Parameter);
+        } else {
+            throw new RuleException("Unsupport context " + var2.getClass().getName() + "");
+        }
+    }
 
-	@Override
-	public boolean support(ParserRuleContext context) {
-		return context instanceof ResourceContext;
-	}
+    public boolean support(ParserRuleContext var1) {
+        return var1 instanceof ResourceContext;
+    }
 }

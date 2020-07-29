@@ -1,42 +1,30 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.runtime.assertor;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
 public class MatchAssertor implements Assertor {
-	public boolean eval(Object left, Object right,Datatype datatype) {
-		if(left==null || right==null){
-			return false;
-		}
-		Pattern pattern=Pattern.compile(right.toString());
-		Matcher matcher=pattern.matcher(left.toString());
-		return matcher.matches();
-	}
+    public MatchAssertor() {
+    }
 
-	public boolean support(Op op) {
-		return op.equals(Op.Match);
-	}
+    public boolean eval(Object var1, Object var2, Datatype var3) {
+        if (var1 != null && var2 != null) {
+            Pattern var4 = Pattern.compile(var2.toString());
+            Matcher var5 = var4.matcher(var1.toString());
+            return var5.matches();
+        } else {
+            return false;
+        }
+    }
 
+    public Op supportOp() {
+        return Op.Match;
+    }
 }

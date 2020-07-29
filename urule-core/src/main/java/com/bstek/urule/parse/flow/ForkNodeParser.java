@@ -1,40 +1,30 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.flow;
 
+import com.bstek.urule.model.flow.ForkNode;
 import org.dom4j.Element;
 
-import com.bstek.urule.model.flow.ForkNode;
-
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
 public class ForkNodeParser extends FlowNodeParser<ForkNode> {
-	public ForkNode parse(Element element) {
-		ForkNode fork=new ForkNode(element.attributeValue("name"));
-		fork.setConnections(parseConnections(element));
-		fork.setEventBean(element.attributeValue("event-bean"));
-		fork.setX(element.attributeValue("x"));
-		fork.setY(element.attributeValue("y"));
-		fork.setWidth(element.attributeValue("width"));
-		fork.setHeight(element.attributeValue("height"));
-		return fork;
-	}
-	public boolean support(String name) {
-		return name.equals("fork");
-	}
+    public ForkNodeParser() {
+    }
+
+    public ForkNode parse(Element var1) {
+        ForkNode var2 = new ForkNode(var1.attributeValue("name"));
+        var2.setMultipleThread(var1.attributeValue("multiple-thread"));
+        var2.setConnections(this.parseConnections(var1));
+        var2.setEventBean(var1.attributeValue("event-bean"));
+        var2.setX(var1.attributeValue("x"));
+        var2.setY(var1.attributeValue("y"));
+        var2.setWidth(var1.attributeValue("width"));
+        var2.setHeight(var1.attributeValue("height"));
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("fork");
+    }
 }

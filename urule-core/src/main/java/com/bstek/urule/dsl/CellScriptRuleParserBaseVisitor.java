@@ -1,90 +1,79 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.dsl;
-
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.bstek.urule.dsl.RuleParserParser.DecisionTableCellConditionContext;
 import com.bstek.urule.dsl.RuleParserParser.MultiCellConditionsContext;
 import com.bstek.urule.dsl.RuleParserParser.ParenCellConditionsContext;
 import com.bstek.urule.dsl.RuleParserParser.SingleCellConditionContext;
+import java.util.Iterator;
+import java.util.List;
+import org.antlr.v4.runtime.tree.ParseTree;
 
-/**
- * @author Jacky.gao
- * @since 2015年5月6日
- */
 public class CellScriptRuleParserBaseVisitor extends RuleParserBaseVisitor<String> {
-	private String propertyName;
-	public CellScriptRuleParserBaseVisitor(String propertyName) {
-		this.propertyName=propertyName;
-	}
-	
-	@Override
-	public String visitSingleCellCondition(SingleCellConditionContext ctx) {
-		StringBuffer sb=new StringBuffer();
-		sb.append(propertyName);
-		sb.append(" ");
-		String op=ctx.op().getText();
-		sb.append(op);
-		sb.append(" ");
-		if(ctx.complexValue()!=null){
-			sb.append(ctx.complexValue().getText());
-		}else{
-			sb.append(ctx.nullValue().getText());
-		}
-		sb.append(" ");
-		return sb.toString();
-	}
-	
-	@Override
-	public String visitMultiCellConditions(MultiCellConditionsContext ctx) {
-		StringBuffer sb=new StringBuffer();
-		List<ParseTree> children=ctx.children;
-		for(ParseTree child:children){
-			sb.append(" ");
-			buildChildren(sb, child);
-		}
-		return sb.toString();
-	}
+    private String a;
 
-	@Override
-	public String visitParenCellConditions(ParenCellConditionsContext ctx) {
-		StringBuffer sb=new StringBuffer();
-		sb.append(" ");
-		sb.append(ctx.leftParen().getText());
-		DecisionTableCellConditionContext context=ctx.decisionTableCellCondition();
-		buildChildren(sb,context);
-		sb.append(ctx.rightParen().getText());
-		return sb.toString();
-	}
-	
-	private void buildChildren(StringBuffer sb, ParseTree child) {
-		if(child instanceof SingleCellConditionContext){
-			SingleCellConditionContext singleCellConditionContext=(SingleCellConditionContext)child;
-			sb.append(visitSingleCellCondition(singleCellConditionContext));
-		}else if(child instanceof ParenCellConditionsContext){
-			ParenCellConditionsContext parenCellConditionsContext=(ParenCellConditionsContext)child;
-			sb.append(visitParenCellConditions(parenCellConditionsContext));
-		}else if(child instanceof MultiCellConditionsContext){
-			MultiCellConditionsContext multiCellConditionsContext=(MultiCellConditionsContext)child;
-			sb.append(visitMultiCellConditions(multiCellConditionsContext));
-		}else{
-			sb.append(child.getText());
-		}
-	}
+    public CellScriptRuleParserBaseVisitor(String var1) {
+        this.a = var1;
+    }
+
+    public String visitSingleCellCondition(SingleCellConditionContext var1) {
+        StringBuffer var2 = new StringBuffer();
+        var2.append(this.a);
+        var2.append(" ");
+        String var3 = var1.op().getText();
+        var2.append(var3);
+        var2.append(" ");
+        if (var1.complexValue() != null) {
+            var2.append(var1.complexValue().getText());
+        } else {
+            var2.append(var1.nullValue().getText());
+        }
+
+        var2.append(" ");
+        return var2.toString();
+    }
+
+    public String visitMultiCellConditions(MultiCellConditionsContext var1) {
+        StringBuffer var2 = new StringBuffer();
+        List var3 = var1.children;
+        Iterator var4 = var3.iterator();
+
+        while(var4.hasNext()) {
+            ParseTree var5 = (ParseTree)var4.next();
+            var2.append(" ");
+            this.a(var2, var5);
+        }
+
+        return var2.toString();
+    }
+
+    public String visitParenCellConditions(ParenCellConditionsContext var1) {
+        StringBuffer var2 = new StringBuffer();
+        var2.append(" ");
+        var2.append(var1.leftParen().getText());
+        DecisionTableCellConditionContext var3 = var1.decisionTableCellCondition();
+        this.a(var2, var3);
+        var2.append(var1.rightParen().getText());
+        return var2.toString();
+    }
+
+    private void a(StringBuffer var1, ParseTree var2) {
+        if (var2 instanceof SingleCellConditionContext) {
+            SingleCellConditionContext var3 = (SingleCellConditionContext)var2;
+            var1.append(this.visitSingleCellCondition(var3));
+        } else if (var2 instanceof ParenCellConditionsContext) {
+            ParenCellConditionsContext var4 = (ParenCellConditionsContext)var2;
+            var1.append(this.visitParenCellConditions(var4));
+        } else if (var2 instanceof MultiCellConditionsContext) {
+            MultiCellConditionsContext var5 = (MultiCellConditionsContext)var2;
+            var1.append(this.visitMultiCellConditions(var5));
+        } else {
+            var1.append(var2.getText());
+        }
+
+    }
 }

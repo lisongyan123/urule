@@ -1,67 +1,60 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.flow;
 
+import com.bstek.urule.model.flow.Connection;
+import com.bstek.urule.parse.CriterionParser;
+import com.bstek.urule.parse.Parser;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.bstek.urule.model.flow.Connection;
-import com.bstek.urule.parse.CriterionParser;
-import com.bstek.urule.parse.Parser;
+public abstract class FlowNodeParser<T> implements Parser<T>, ApplicationContextAware {
+    protected Collection<CriterionParser> criterionParsers;
 
-/**
- * @author Jacky.gao
- * @since 2014年12月23日
- */
-public abstract class FlowNodeParser<T> implements ApplicationContextAware,Parser<T> {
-	protected Collection<CriterionParser> criterionParsers;
-	protected List<Connection> parseConnections(Element element){
-		List<Connection> connections=new ArrayList<Connection>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(!ele.getName().equals("connection")){
-				continue;
-			}
-			connections.add(buildConnection(ele));
-		}
-		return connections;
-	}
-	private Connection buildConnection(Element element){
-		Connection conn=new Connection();
-		conn.setName(element.attributeValue("name"));
-		conn.setToName(element.attributeValue("to"));
-		conn.setG(element.attributeValue("g"));
-		String script=element.getStringValue();
-		if(StringUtils.isNotEmpty(script)){
-			conn.setScript(script);
-		}
-		return conn;
-	}
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		criterionParsers=applicationContext.getBeansOfType(CriterionParser.class).values();
-	}
+    public FlowNodeParser() {
+    }
+
+    protected List<Connection> parseConnections(Element var1) {
+        ArrayList var2 = new ArrayList();
+        Iterator var3 = var1.elements().iterator();
+
+        while(var3.hasNext()) {
+            Object var4 = var3.next();
+            if (var4 != null && var4 instanceof Element) {
+                Element var5 = (Element)var4;
+                if (var5.getName().equals("connection")) {
+                    var2.add(this.a(var5));
+                }
+            }
+        }
+
+        return var2;
+    }
+
+    private Connection a(Element var1) {
+        Connection var2 = new Connection();
+        var2.setName(var1.attributeValue("name"));
+        var2.setToName(var1.attributeValue("to"));
+        var2.setG(var1.attributeValue("g"));
+        String var3 = var1.getStringValue();
+        if (StringUtils.isNotEmpty(var3)) {
+            var2.setScript(var3);
+        }
+
+        return var2;
+    }
+
+    public void setApplicationContext(ApplicationContext var1) throws BeansException {
+        this.criterionParsers = var1.getBeansOfType(CriterionParser.class).values();
+    }
 }

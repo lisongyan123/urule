@@ -1,59 +1,61 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dom4j.Element;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Parameter;
 import com.bstek.urule.model.rule.Value;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2015年2月28日
- */
-public abstract  class AbstractParser<T> implements Parser<T> {
-	protected List<Parameter> parseParameters(Element element,ValueParser valueParser) {
-		List<Parameter> parameters=new ArrayList<Parameter>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("parameter")){
-				Parameter parameter=new Parameter();
-				parameter.setName(ele.attributeValue("name"));
-				parameter.setType(Datatype.valueOf(ele.attributeValue("type")));
-				for(Object o:ele.elements()){
-					if(o==null || !(o instanceof Element)){
-						continue;
-					}
-					Element e=(Element)o;
-					if(valueParser.support(e.getName())){
-						Value value=valueParser.parse(e);
-						parameter.setValue(value);
-						break;
-					}
-				}
-				parameters.add(parameter);
-			}
-		}
-		return parameters;
-	}
+public abstract class AbstractParser<T> implements Parser<T> {
+    public AbstractParser() {
+    }
+
+    protected List<Parameter> parseParameters(Element var1, ValueParser var2) {
+        ArrayList var3 = new ArrayList();
+        Iterator var4 = var1.elements().iterator();
+
+        while(true) {
+            Element var6;
+            do {
+                Object var5;
+                do {
+                    do {
+                        if (!var4.hasNext()) {
+                            return var3;
+                        }
+
+                        var5 = var4.next();
+                    } while(var5 == null);
+                } while(!(var5 instanceof Element));
+
+                var6 = (Element)var5;
+            } while(!var6.getName().equals("parameter"));
+
+            Parameter var7 = new Parameter();
+            var7.setName(var6.attributeValue("name"));
+            var7.setType(Datatype.valueOf(var6.attributeValue("type")));
+            Iterator var8 = var6.elements().iterator();
+
+            while(var8.hasNext()) {
+                Object var9 = var8.next();
+                if (var9 != null && var9 instanceof Element) {
+                    Element var10 = (Element)var9;
+                    if (var2.support(var10.getName())) {
+                        Value var11 = var2.parse(var10);
+                        var7.setValue(var11);
+                        break;
+                    }
+                }
+            }
+
+            var3.add(var7);
+        }
+    }
 }

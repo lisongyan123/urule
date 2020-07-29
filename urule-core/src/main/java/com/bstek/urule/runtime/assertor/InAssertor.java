@@ -1,102 +1,127 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.runtime.assertor;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.Collection;
+package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
 public class InAssertor implements Assertor {
-	public boolean eval(Object left, Object right,Datatype datatype) {
-		if(left==null || right==null){
-			return false;
-		}
-		if(right instanceof Collection){
-			Collection<?> coll=(Collection<?>)right;
-			if(left instanceof Collection){
-				Collection<?> leftColl=(Collection<?>)left;
-				boolean match=false;
-				for(Object leftObj:leftColl){
-					for(Object obj:coll){
-						if(obj.toString().equals(leftObj.toString())){
-							match=true;
-							break;
-						}else{
-							match=false;							
-						}
-					}
-				}
-				return match;
-			}else{
-				String[] leftStrings=left.toString().split(",");
-				boolean match=false;
-				for(String str:leftStrings){
-					for(Object obj:coll){
-						if(obj.toString().equals(str)){
-							match=true;
-							break;
-						}else{
-							match=false;							
-						}
-					}					
-				}
-				return match;
-			}
-		}else if(right instanceof String){
-			String str=(String)right;
-			String[] array=str.split(",");
-			if(left instanceof Collection){
-				Collection<?> leftColl=(Collection<?>)left;
-				boolean match=false;
-				for(Object leftObj:leftColl){
-					for(String rightStr:array){
-						if(leftObj.toString().equals(rightStr)){
-							match=true;
-							break;
-						}else{
-							match=false;							
-						}
-					}
-				}
-				return match;
-			}else{
-				String[] leftStrings=left.toString().split(",");
-				boolean match=false;
-				for(String leftStr:leftStrings){
-					for(String righStr:array){
-						if(righStr.equals(leftStr)){
-							match=true;
-							break;
-						}else{
-							match=false;							
-						}
-					}				
-				}
-				return match;
-			}
-		}
-		return false;
-	}
-	
-	public boolean support(Op op) {
-		return op.equals(Op.In);
-	}
+    public InAssertor() {
+    }
+
+    public boolean eval(Object var1, Object var2, Datatype var3) {
+        if (var1 != null && var2 != null) {
+            String[] var5;
+            int var9;
+            if (var2 instanceof Collection) {
+                Collection var16 = (Collection)var2;
+                boolean var19;
+                if (var1 instanceof Collection) {
+                    Collection var17 = (Collection)var1;
+                    var19 = false;
+                    Iterator var24 = var17.iterator();
+
+                    while(true) {
+                        while(var24.hasNext()) {
+                            Object var23 = var24.next();
+
+                            for(Iterator var26 = var16.iterator(); var26.hasNext(); var19 = false) {
+                                Object var30 = var26.next();
+                                if (var30.toString().equals(var23.toString())) {
+                                    var19 = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        return var19;
+                    }
+                } else {
+                    var5 = var1.toString().split(",");
+                    var19 = false;
+                    String[] var22 = var5;
+                    int var21 = var5.length;
+
+                    for(var9 = 0; var9 < var21; ++var9) {
+                        String var28 = var22[var9];
+
+                        for(Iterator var31 = var16.iterator(); var31.hasNext(); var19 = false) {
+                            Object var33 = var31.next();
+                            if (var33.toString().equals(var28)) {
+                                var19 = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    return var19;
+                }
+            } else if (!(var2 instanceof String)) {
+                return false;
+            } else {
+                String var4 = (String)var2;
+                var5 = var4.split(",");
+                boolean var7;
+                if (var1 instanceof Collection) {
+                    Collection var18 = (Collection)var1;
+                    var7 = false;
+                    Iterator var20 = var18.iterator();
+
+                    while(true) {
+                        while(var20.hasNext()) {
+                            Object var25 = var20.next();
+                            String[] var27 = var5;
+                            int var29 = var5.length;
+
+                            for(int var32 = 0; var32 < var29; ++var32) {
+                                String var34 = var27[var32];
+                                if (var25.toString().equals(var34)) {
+                                    var7 = true;
+                                    break;
+                                }
+
+                                var7 = false;
+                            }
+                        }
+
+                        return var7;
+                    }
+                } else {
+                    String[] var6 = var1.toString().split(",");
+                    var7 = false;
+                    String[] var8 = var6;
+                    var9 = var6.length;
+
+                    for(int var10 = 0; var10 < var9; ++var10) {
+                        String var11 = var8[var10];
+                        String[] var12 = var5;
+                        int var13 = var5.length;
+
+                        for(int var14 = 0; var14 < var13; ++var14) {
+                            String var15 = var12[var14];
+                            if (var15.equals(var11)) {
+                                var7 = true;
+                                break;
+                            }
+
+                            var7 = false;
+                        }
+                    }
+
+                    return var7;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public Op supportOp() {
+        return Op.In;
+    }
 }

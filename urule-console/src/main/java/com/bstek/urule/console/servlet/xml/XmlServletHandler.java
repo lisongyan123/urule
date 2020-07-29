@@ -16,7 +16,6 @@ import com.bstek.urule.parse.deserializer.DecisionTableDeserializer;
 import com.bstek.urule.parse.deserializer.DecisionTreeDeserializer;
 import com.bstek.urule.parse.deserializer.Deserializer;
 import com.bstek.urule.parse.deserializer.ParameterLibraryDeserializer;
-import com.bstek.urule.parse.deserializer.RuleSetDeserializer;
 import com.bstek.urule.parse.deserializer.ScriptDecisionTableDeserializer;
 import com.bstek.urule.parse.deserializer.VariableLibraryDeserializer;
 import com.bstek.urule.runtime.BuiltInActionLibraryBuilder;

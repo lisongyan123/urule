@@ -1,58 +1,81 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.rule;
-/**
- * @author Jacky.gao
- * @since 2015年3月10日
- */
+
+import com.bstek.urule.model.library.Datatype;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class ParameterValue extends AbstractValue {
-	private String variableName;
-	private String variableLabel;
-	private ValueType valueType=ValueType.Parameter;
-	@Override
-	public ValueType getValueType() {
-		return valueType;
-	}
+    private String keyName;
+    private String keyLabel;
+    private Datatype datatype;
+    private String variableName;
+    private String variableLabel;
+    private ValueType valueType;
 
-	public String getVariableName() {
-		return variableName;
-	}
+    public ParameterValue() {
+        this.valueType = ValueType.Parameter;
+    }
 
+    public ValueType getValueType() {
+        return this.valueType;
+    }
 
-	public void setVariableName(String variableName) {
-		this.variableName = variableName;
-	}
+    public String getVariableName() {
+        return this.variableName;
+    }
 
+    public void setVariableName(String var1) {
+        this.variableName = var1;
+    }
 
-	public String getVariableLabel() {
-		return variableLabel;
-	}
+    public String getVariableLabel() {
+        return this.variableLabel;
+    }
 
+    public void setVariableLabel(String var1) {
+        this.variableLabel = var1;
+    }
 
-	public void setVariableLabel(String variableLabel) {
-		this.variableLabel = variableLabel;
-	}
+    public String getKeyName() {
+        return this.keyName;
+    }
 
+    public void setKeyName(String var1) {
+        this.keyName = var1;
+    }
 
-	@Override
-	public String getId() {
-		String id="[P]参数."+variableLabel;
-		if(arithmetic!=null){
-			id+=arithmetic.getId();
-		}
-		return id;
-	}
+    public String getKeyLabel() {
+        return this.keyLabel;
+    }
+
+    public void setKeyLabel(String var1) {
+        this.keyLabel = var1;
+    }
+
+    public Datatype getDatatype() {
+        return this.datatype;
+    }
+
+    public void setDatatype(Datatype var1) {
+        this.datatype = var1;
+    }
+
+    @JsonIgnore
+    public String getId() {
+        String var1 = "[P]参数";
+        if (this.keyLabel != null) {
+            var1 = var1 + "." + this.keyLabel;
+        }
+
+        var1 = var1 + "." + this.variableLabel;
+        if (this.arithmetic != null) {
+            var1 = var1 + this.arithmetic.getId();
+        }
+
+        return var1;
+    }
 }

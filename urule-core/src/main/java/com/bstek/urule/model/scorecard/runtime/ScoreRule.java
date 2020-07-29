@@ -1,33 +1,12 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.scorecard.runtime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.Utils;
-import com.bstek.urule.action.ActionValue;
-import com.bstek.urule.debug.MsgType;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.Rule;
@@ -35,172 +14,210 @@ import com.bstek.urule.model.scorecard.AssignTargetType;
 import com.bstek.urule.model.scorecard.ScoringType;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ValueCompute;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2016年9月26日
- */
-public class ScoreRule extends Rule{
-	private ScoringType scoringType;
-	private String scoringBean;
-	private AssignTargetType assignTargetType;
-	
-	private String variableCategory;
-	private String variableName;
-	private String variableLabel;
-	private Datatype datatype;
-	@JsonIgnore
-	private List<Library> libraries;
-	private KnowledgePackageWrapper knowledgePackageWrapper;
-	private final Log log=LogFactory.getLog(getClass());
-	public List<ActionValue> execute(Context context,Object matchedObject,List<Object> allMatchedObjects,Map<String,Object> variableMap){
-		KnowledgeSession parentSession=(KnowledgeSession)context.getWorkingMemory();
-		List<Object> facts=parentSession.getAllFacts();
-		KnowledgeSession session=KnowledgeSessionFactory.newKnowledgeSession(knowledgePackageWrapper.getKnowledgePackage(),context.getDebugMessageItems());
-		for(Object fact:facts){
-			session.insert(fact);
-		}
-		boolean isdebug=false;
-		if(this.getDebug()!=null){
-			isdebug=this.getDebug();
-		}
-		List<ActionValue> values=session.fireRules(parentSession.getParameters()).getActionValues();
-		Map<Integer,RowItemImpl> rowMap=new HashMap<Integer,RowItemImpl>();
-		for(ActionValue value:values){
-			if(!(value.getValue() instanceof ScoreRuntimeValue)){
-				continue;
-			}
-			ScoreRuntimeValue scoreValue=(ScoreRuntimeValue)value.getValue();
-			int rowNumber=scoreValue.getRowNumber();
-			if(isdebug && Utils.isDebug()){
-				String msg="---行"+rowNumber+",得分："+scoreValue.getValue();
-				context.debugMsg(msg, MsgType.ScoreCard, isdebug);
-			}
-			RowItemImpl rowItem=null;
-			if(rowMap.containsKey(rowNumber)){
-				rowItem=rowMap.get(rowNumber);
-			}else{
-				rowItem=new RowItemImpl();
-				rowItem.setRowNumber(rowNumber);
-				rowMap.put(rowNumber, rowItem);
-			}
-			if(scoreValue.getName().equals(ScoreRuntimeValue.SCORE_VALUE)){
-				rowItem.setScore(scoreValue.getValue());
-				rowItem.setWeight(scoreValue.getWeight());
-			}else{
-				CellItem cellItem=new CellItem(scoreValue.getName(),scoreValue.getValue());
-				rowItem.addCellItem(cellItem);
-			}
-		}
-		List<RowItem> items=new ArrayList<RowItem>();
-		items.addAll(rowMap.values());
-		ScorecardImpl card=new ScorecardImpl(getName(),items,isdebug);
-		Object actualScore=null;
-		if(scoringType.equals(ScoringType.sum)){
-			actualScore=card.executeSum(context);
-		}else if(scoringType.equals(ScoringType.weightsum)){
-			actualScore=card.executeWeightSum(context);
-		}else if(scoringType.equals(ScoringType.custom)){
-			if(isdebug && Utils.isDebug()){
-				String msg="---执行自定义评分卡得分计算Bean:"+scoringBean;
-				context.debugMsg(msg, MsgType.ScoreCard, isdebug);
-			}
-			ScoringStrategy scoringStrategy=(ScoringStrategy)context.getApplicationContext().getBean(scoringBean);
-			actualScore=scoringStrategy.calculate(card, context);
-		}
-		if(assignTargetType.equals(AssignTargetType.none)){
-			log.warn("Scorecard ["+card.getName()+"] not setting assignment object for score value, score value is :"+actualScore);
-		}else{
-			Object targetFact=null;
-			ValueCompute valueCompute=context.getValueCompute();
-			String className=context.getVariableCategoryClass(variableCategory);
-			if(className.equals(HashMap.class.getName())){
-				targetFact=session.getParameters();
-			}else{
-				targetFact=valueCompute.findObject(className, matchedObject, context);				
-			}
-			if(targetFact==null){
-				throw new RuleException("Class["+className+"] not found in workingmemory.");
-			}
-			actualScore=datatype.convert(actualScore);
-			Utils.setObjectProperty(targetFact, variableName, actualScore);
-		}
-		parentSession.getParameters().putAll(session.getParameters());
-		return null;
-	}
+import java.util.*;
+import java.util.logging.Logger;
 
-	public ScoringType getScoringType() {
-		return scoringType;
-	}
+public class ScoreRule extends Rule {
+    private Logger log = Logger.getGlobal();
+    private ScoringType scoringType;
+    private String scoringBean;
+    private AssignTargetType assignTargetType;
+    private String keyLabel;
+    private String keyName;
+    private String variableCategory;
+    private String variableName;
+    private String variableLabel;
+    private Datatype datatype;
+    @JsonIgnore
+    private List<Library> libraries;
+    private KnowledgePackageWrapper knowledgePackageWrapper;
 
-	public void setScoringType(ScoringType scoringType) {
-		this.scoringType = scoringType;
-	}
+    public ScoreRule() {
+    }
 
-	public String getScoringBean() {
-		return scoringBean;
-	}
+    public void execute(Context var1, Map<String, Object> var2) {
+        boolean var3 = false;
+        if (this.getDebug() != null) {
+            var3 = this.getDebug();
+        }
 
-	public void setScoringBean(String scoringBean) {
-		this.scoringBean = scoringBean;
-	}
+        if (var3) {
+            var1.getLogger().logScoreCard(this.getName(), this.getFile());
+        }
 
-	public AssignTargetType getAssignTargetType() {
-		return assignTargetType;
-	}
+        KnowledgeSession var4 = (KnowledgeSession)var1.getWorkingMemory();
+        KnowledgeSession var5 = KnowledgeSessionFactory.newKnowledgeSession(this.knowledgePackageWrapper, var1, var4);
+        var5.fireRules(var4.getParameters());
+        var1.addRuleData(var5.getLogManager().getRuleData());
+        HashMap var6 = new HashMap();
+        Map var7 = var5.getParameters();
+        List var8 = (List)var7.get("_score_card_runtime_value_");
+        RowItemImpl var12;
+        if (var8 != null) {
+            var7.remove("_score_card_runtime_value_");
+            Iterator var9 = var8.iterator();
 
-	public void setAssignTargetType(AssignTargetType assignTargetType) {
-		this.assignTargetType = assignTargetType;
-	}
+            while(var9.hasNext()) {
+                ScoreRuntimeValue var10 = (ScoreRuntimeValue)var9.next();
+                int var11 = var10.getRowNumber();
+                if (var3) {
+                    var1.getLogger().logExecuteScoreCard(var11, var10.getValue());
+                }
 
-	public String getVariableCategory() {
-		return variableCategory;
-	}
+                var12 = null;
+                if (var6.containsKey(var11)) {
+                    var12 = (RowItemImpl)var6.get(var11);
+                } else {
+                    var12 = new RowItemImpl();
+                    var12.setRowNumber(var11);
+                    var6.put(var11, var12);
+                }
 
-	public void setVariableCategory(String variableCategory) {
-		this.variableCategory = variableCategory;
-	}
+                if (var10.getName().equals("scoring_value")) {
+                    var12.setScore(var10.getValue());
+                    var12.setWeight(var10.getWeight());
+                } else {
+                    CellItem var13 = new CellItem(var10.getName(), var10.getValue());
+                    var12.addCellItem(var13);
+                }
+            }
+        }
 
-	public String getVariableName() {
-		return variableName;
-	}
+        ArrayList var16 = new ArrayList();
+        var16.addAll(var6.values());
+        ScorecardImpl var17 = new ScorecardImpl(this.getName(), var16, var3);
+        Object var18 = null;
+        if (this.scoringType.equals(ScoringType.sum)) {
+            var18 = var17.executeSum(var1);
+        } else if (this.scoringType.equals(ScoringType.weightsum)) {
+            var18 = var17.executeWeightSum(var1);
+        } else if (this.scoringType.equals(ScoringType.custom)) {
+            if (var3) {
+                var1.getLogger().logScoreCardBean(this.scoringBean);
+            }
 
-	public void setVariableName(String variableName) {
-		this.variableName = variableName;
-	}
+            ScoringStrategy var20 = (ScoringStrategy)var1.getApplicationContext().getBean(this.scoringBean);
+            var18 = var20.calculate(var17, var1);
+        }
 
-	public String getVariableLabel() {
-		return variableLabel;
-	}
+        if (this.assignTargetType.equals(AssignTargetType.none)) {
+            this.log.warning("Scorecard [" + var17.getName() + "] not setting assignment object for score value, score value is :" + var18);
+        } else {
+            var12 = null;
+            ValueCompute var19 = var1.getValueCompute();
+            String var14 = var1.getVariableCategoryClass(this.variableCategory);
+            Object var21;
+            if (var14.equals(HashMap.class.getName())) {
+                var21 = var5.getParameters();
+            } else {
+                var21 = var19.findObject(var14, var2, var1);
+            }
 
-	public void setVariableLabel(String variableLabel) {
-		this.variableLabel = variableLabel;
-	}
+            if (var21 == null) {
+                throw new RuleException("Class[" + var14 + "] not found in workingmemory.");
+            }
 
-	public Datatype getDatatype() {
-		return datatype;
-	}
+            var18 = this.datatype.convert(var18);
+            if (this.keyName == null) {
+                Utils.setObjectProperty(var21, this.variableName, var18);
+            } else {
+                Object var15 = Utils.getObjectProperty(var21, this.keyName);
+                Utils.setObjectProperty(var15, this.variableName, var18);
+            }
+        }
 
-	public void setDatatype(Datatype datatype) {
-		this.datatype = datatype;
-	}
+        var4.getParameters().putAll(var5.getParameters());
+    }
 
-	public List<Library> getLibraries() {
-		return libraries;
-	}
+    public String getKeyLabel() {
+        return this.keyLabel;
+    }
 
-	public void setLibraries(List<Library> libraries) {
-		this.libraries = libraries;
-	}
+    public void setKeyLabel(String var1) {
+        this.keyLabel = var1;
+    }
 
-	public KnowledgePackageWrapper getKnowledgePackageWrapper() {
-		return knowledgePackageWrapper;
-	}
-	public void setKnowledgePackageWrapper(
-			KnowledgePackageWrapper knowledgePackageWrapper) {
-		this.knowledgePackageWrapper = knowledgePackageWrapper;
-	}
+    public String getKeyName() {
+        return this.keyName;
+    }
+
+    public void setKeyName(String var1) {
+        this.keyName = var1;
+    }
+
+    public ScoringType getScoringType() {
+        return this.scoringType;
+    }
+
+    public void setScoringType(ScoringType var1) {
+        this.scoringType = var1;
+    }
+
+    public String getScoringBean() {
+        return this.scoringBean;
+    }
+
+    public void setScoringBean(String var1) {
+        this.scoringBean = var1;
+    }
+
+    public AssignTargetType getAssignTargetType() {
+        return this.assignTargetType;
+    }
+
+    public void setAssignTargetType(AssignTargetType var1) {
+        this.assignTargetType = var1;
+    }
+
+    public String getVariableCategory() {
+        return this.variableCategory;
+    }
+
+    public void setVariableCategory(String var1) {
+        this.variableCategory = var1;
+    }
+
+    public String getVariableName() {
+        return this.variableName;
+    }
+
+    public void setVariableName(String var1) {
+        this.variableName = var1;
+    }
+
+    public String getVariableLabel() {
+        return this.variableLabel;
+    }
+
+    public void setVariableLabel(String var1) {
+        this.variableLabel = var1;
+    }
+
+    public Datatype getDatatype() {
+        return this.datatype;
+    }
+
+    public void setDatatype(Datatype var1) {
+        this.datatype = var1;
+    }
+
+    public List<Library> getLibraries() {
+        return this.libraries;
+    }
+
+    public void setLibraries(List<Library> var1) {
+        this.libraries = var1;
+    }
+
+    public KnowledgePackageWrapper getKnowledgePackageWrapper() {
+        return this.knowledgePackageWrapper;
+    }
+
+    public void setKnowledgePackageWrapper(KnowledgePackageWrapper var1) {
+        this.knowledgePackageWrapper = var1;
+    }
 }

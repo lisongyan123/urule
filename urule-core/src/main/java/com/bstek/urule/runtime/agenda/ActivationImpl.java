@@ -1,184 +1,147 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.agenda;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.bstek.urule.Utils;
 import com.bstek.urule.action.Action;
-import com.bstek.urule.action.ActionValue;
-import com.bstek.urule.model.GeneralEntity;
+import com.bstek.urule.action.ActionType;
+import com.bstek.urule.exception.RuleAssertException;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.rule.Rhs;
 import com.bstek.urule.model.rule.Rule;
-import com.bstek.urule.model.rule.RuleInfo;
-import com.bstek.urule.model.rule.lhs.BaseCriteria;
-import com.bstek.urule.model.rule.lhs.EvaluateResponse;
+import com.bstek.urule.model.rule.lhs.Criteria;
 import com.bstek.urule.model.rule.loop.LoopRule;
-import com.bstek.urule.model.scorecard.runtime.ScoreRule;
-import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.event.impl.ActivationAfterFiredEventImpl;
-import com.bstek.urule.runtime.event.impl.ActivationBeforeFiredEventImpl;
 import com.bstek.urule.runtime.rete.Context;
-import com.bstek.urule.runtime.rete.EvaluationContext;
+import com.bstek.urule.runtime.rete.ExecutionContextImpl;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月2日
- */
-public class ActivationImpl implements Activation{
-	private boolean processed;
-	private Rule rule;
-	//当前WorkingMemory当中命名变量,为then或else部分可能存在的根据变量引用进行的计算操作作为准备
-	private Map<String,Object> variableMap;
-	private Map<Object,List<BaseCriteria>> objectCriteriaMap=new HashMap<Object,List<BaseCriteria>>();
-	public ActivationImpl(Rule rule,Map<String,Object> variableMap) {
-		this.rule=rule;
-		this.variableMap=variableMap;
-	}
-	public RuleInfo execute(Context context,List<RuleInfo> executedRules,List<ActionValue> actionValues) {
-		KnowledgeSession session = (KnowledgeSession)context.getWorkingMemory();
-		session.fireEvent(new ActivationBeforeFiredEventImpl(this,session));
-		executedRules.add(rule);
-		boolean enabled=true;
-		if(rule.getEnabled()!=null){
-			enabled=rule.getEnabled();
-		}
-		if(!enabled){
-			return null;
-		}
-		Date now=new Date();
-		Date effectiveDate=rule.getEffectiveDate();
-		if(effectiveDate!=null){
-			if(effectiveDate.getTime()>now.getTime()){
-				return null;
-			}			
-		}
-		Date expiresDate=rule.getExpiresDate();
-		if(expiresDate!=null){
-			if(expiresDate.getTime()<now.getTime()){
-				return null;
-			}
-		}
-		
-		List<Object> matchedObjects=new ArrayList<Object>();
-		matchedObjects.addAll(objectCriteriaMap.keySet());
-		if(rule instanceof LoopRule){
-			LoopRule loopRule=(LoopRule)rule;
-			List<ActionValue> values=loopRule.execute(context, objectCriteriaMap.keySet(), matchedObjects,variableMap);
-			if(values!=null){
-				actionValues.addAll(values);
-			}
-		}else if(rule instanceof ScoreRule){
-			ScoreRule scoreRule=(ScoreRule)rule;
-			scoreRule.execute(context, objectCriteriaMap.keySet(), matchedObjects,variableMap);
-		}else{	
-			Rhs rhs=rule.getRhs();
-			if(rhs!=null){
-				List<Action> actions=rhs.getActions();
-				if(actions!=null){
-					for(Action action:actions){
-						if(rule.getDebug()!=null){
-							action.setDebug(rule.getDebug());							
-						}
-						ActionValue actionValue=action.execute(context,objectCriteriaMap.keySet(),matchedObjects,variableMap);
-						if(actionValue!=null){
-							actionValues.add(actionValue);
-						}
-					}
-				}
-			}
-		}
-		session.fireEvent(new ActivationAfterFiredEventImpl(this,session));
-		processed=true;
-		return rule;
-	}
-	public void setObjectCriteriaMap(Map<Object, List<BaseCriteria>> objectCriteriaMap) {
-		this.objectCriteriaMap = objectCriteriaMap;
-	}
-	
-	@Override
-	public boolean contain(Object obj) {
-		return objectCriteriaMap.containsKey(obj);
-	}
-	
-	@Override
-	public boolean reevaluate(Object obj,EvaluationContext context) {
-		Object key=obj;
-		if((obj instanceof HashMap) && !(obj instanceof GeneralEntity)){
-			key=HashMap.class.getName();
-		}
-		if(!objectCriteriaMap.containsKey(key)){
-			return true;
-		}
-		List<BaseCriteria> list=objectCriteriaMap.get(key);			
-		boolean result=false;
-		for(BaseCriteria criteria:list){
-			List<Object> allMatchedObjects=new ArrayList<Object>();
-			EvaluateResponse response=criteria.evaluate(context,obj,allMatchedObjects);
-			result=response.getResult();
-			if(result){
-				for(Object object:allMatchedObjects){
-					addObjectCriteria(object, criteria);
-				}
-			}else{
-				break;
-			}
-		}
-		return result;
-	}
-	private void addObjectCriteria(Object obj, BaseCriteria criteria) {
-		if(obj instanceof HashMap && !(obj instanceof GeneralEntity)){
-			obj=HashMap.class.getName();
-		}
-		if(objectCriteriaMap.containsKey(obj)){
-			List<BaseCriteria> list=objectCriteriaMap.get(obj);
-			if(!list.contains(criteria)){
-				list.add(criteria);
-			}
-		}else{
-			List<BaseCriteria> list=new ArrayList<BaseCriteria>();
-			list.add(criteria);
-			objectCriteriaMap.put(obj, list);
-		}
-	}
-	public Rule getRule() {
-		return rule;
-	}
-	public void setRule(Rule rule) {
-		this.rule = rule;
-	}
-	public boolean isProcessed() {
-		return processed;
-	}
-	public void setProcessed(boolean processed) {
-		this.processed = processed;
-	}
-	public int compareTo(Activation o) {
-		Integer o1=o.getRule().getSalience();
-		Integer o2=rule.getSalience();
-		if(o1!=null && o2!=null){
-			return o1-o2;			
-		}else if(o1!=null){
-			return 1;
-		}else if(o2!=null){
-			return -1;
-		}
-		return 0;
-	}
+public class ActivationImpl implements Activation {
+    private Rule a;
+    private Set<Criteria> b;
+    private Map<String, Object> c;
+
+    public ActivationImpl(Rule var1) {
+        this.a = var1;
+    }
+
+    public void execute(Context var1) {
+        try {
+            if (this.a.getDebug() != null && this.a.getDebug()) {
+                var1.getLogger().logExecuteRule(this.a);
+            }
+
+            var1.cleanTipMsg();
+            var1.addTipMsg("执行规则[" + this.a.getName() + "(" + this.a.getFile() + ")]动作");
+            ((ExecutionContextImpl)var1).setCurrentRule(this.a);
+            Date var2 = new Date();
+            Date var7 = this.a.getEffectiveDate();
+            if (var7 == null || var7.compareTo(var2) <= 0) {
+                Date var4 = this.a.getExpiresDate();
+                if (var4 == null || var4.compareTo(var2) >= 0) {
+                    ((ExecutionContextImpl)var1).setCurrentRuleFactMap(this.c);
+                    ((ExecutionContextImpl)var1).setCurrentRuleCriterias(this.b);
+                    if (this.a instanceof LoopRule) {
+                        LoopRule var5 = (LoopRule)this.a;
+                        var5.execute(var1, this.c);
+                    } else if (this.a instanceof ScoreRule) {
+                        ScoreRule var8 = (ScoreRule)this.a;
+                        var8.execute(var1, this.c);
+                    } else {
+                        this.a(var1, this.c);
+                    }
+
+                    var1.cleanTipMsg();
+                }
+            }
+        } catch (Exception var6) {
+            String var3 = var1.getTipMsg();
+            throw new RuleAssertException(var3, var6);
+        }
+    }
+
+    private void a(Context var1, Map<String, Object> var2) {
+        Rhs var3 = this.a.getRhs();
+        if (var3 != null) {
+            List var4 = var3.getActions();
+            if (var4 != null) {
+                int var5 = 1;
+
+                for(Iterator var6 = var4.iterator(); var6.hasNext(); ++var5) {
+                    Action var7 = (Action)var6.next();
+                    if (this.a.getDebug() != null) {
+                        var7.setDebug(this.a.getDebug());
+                    }
+
+                    var1.addTipMsg("动作" + var5 + "." + this.a(var7.getActionType()) + "");
+                    var7.execute(var1, var2);
+                }
+
+            }
+        }
+    }
+
+    private String a(ActionType var1) {
+        String var2 = "未知";
+        switch(var1) {
+            case ConsolePrint:
+                var2 = "控制台输出";
+                break;
+            case ExecuteCommonFunction:
+                var2 = "执行函数";
+                break;
+            case ExecuteMethod:
+                var2 = "执行方法";
+                break;
+            case Scoring:
+                var2 = "评分卡得分计算";
+                break;
+            case VariableAssign:
+                var2 = "变量赋值";
+                break;
+            case TemplateAction:
+                throw new RuleException("Unsupport action type:" + ActionType.TemplateAction);
+        }
+
+        return var2;
+    }
+
+    public Rule convertToElseRule() {
+        this.a = Utils.buildElseRule(this.a);
+        return this.a;
+    }
+
+    public void setCriterias(Set<Criteria> var1) {
+        this.b = var1;
+    }
+
+    public void setFactMap(Map<String, Object> var1) {
+        this.c = var1;
+    }
+
+    public Rule getRule() {
+        return this.a;
+    }
+
+    public void setRule(Rule var1) {
+        this.a = var1;
+    }
+
+    public int compareTo(Activation var1) {
+        Integer var2 = var1.getRule().getSalience();
+        Integer var3 = this.a.getSalience();
+        if (var2 != null && var3 != null) {
+            return var2 - var3;
+        } else if (var2 != null) {
+            return 1;
+        } else {
+            return var3 != null ? -1 : 0;
+        }
+    }
 }

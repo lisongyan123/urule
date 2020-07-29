@@ -1,31 +1,13 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.scorecard;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.Element;
-
 import com.bstek.urule.Configure;
-import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.builder.RulesRebuilder;
+import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.library.ResourceLibrary;
 import com.bstek.urule.model.library.variable.Variable;
@@ -33,166 +15,188 @@ import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.LibraryType;
 import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.model.scorecard.AssignTargetType;
-import com.bstek.urule.model.scorecard.AttributeRow;
 import com.bstek.urule.model.scorecard.CardCell;
-import com.bstek.urule.model.scorecard.CustomCol;
 import com.bstek.urule.model.scorecard.ScorecardDefinition;
 import com.bstek.urule.model.scorecard.ScoringType;
 import com.bstek.urule.model.table.Condition;
 import com.bstek.urule.model.table.Joint;
 import com.bstek.urule.parse.Parser;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年9月22日
- */
 public class ScorecardParser implements Parser<ScorecardDefinition> {
-	private CardCellParser cardCellParser;
-	private AttributeRowParser attributeRowParser=new AttributeRowParser();
-	private CustomColParser customColParser=new CustomColParser();
-	private RulesRebuilder rulesRebuilder;
-	@Override
-	public ScorecardDefinition parse(Element element) {
-		ScorecardDefinition card=new ScorecardDefinition();
-		card.setName(element.attributeValue("name"));
-		card.setScoringType(ScoringType.valueOf(element.attributeValue("scoring-type")));
-		card.setAssignTargetType(AssignTargetType.valueOf(element.attributeValue("assign-target-type")));
-		card.setVariableCategory(element.attributeValue("var-category"));
-		card.setVariableName(element.attributeValue("var"));
-		card.setVariableLabel(element.attributeValue("var-label"));
-		
-		String dt=element.attributeValue("datatype");
-		if(StringUtils.isNotBlank(dt)){			
-			card.setDatatype(Datatype.valueOf(dt));
-		}
-		card.setScoringBean(element.attributeValue("custom-scoring-bean"));
-		String salience=element.attributeValue("salience");
-		if(StringUtils.isNotEmpty(salience)){
-			card.setSalience(Integer.valueOf(salience));
-		}
-		String effectiveDate=element.attributeValue("effective-date");
-		SimpleDateFormat sd=new SimpleDateFormat(Configure.getDateFormat());
-		if(StringUtils.isNotEmpty(effectiveDate)){
-			try {
-				card.setEffectiveDate(sd.parse(effectiveDate));
-			} catch (ParseException e) {
-				throw new RuleException(e);
-			}
-		}
-		String expiresDate=element.attributeValue("expires-date");
-		if(StringUtils.isNotEmpty(expiresDate)){
-			try {
-				card.setExpiresDate(sd.parse(expiresDate));
-			} catch (ParseException e) {
-				throw new RuleException(e);
-			}
-		}
-		String enabled=element.attributeValue("enabled");
-		if(StringUtils.isNotEmpty(enabled)){
-			card.setEnabled(Boolean.valueOf(enabled));
-		}
-		String debug=element.attributeValue("debug");
-		if(StringUtils.isNotEmpty(debug)){
-			card.setDebug(Boolean.valueOf(debug));
-		}
-		
-		card.setAttributeColWidth(element.attributeValue("attr-col-width"));
-		card.setAttributeColName(element.attributeValue("attr-col-name"));
-		card.setAttributeColVariableCategory(element.attributeValue("attr-col-category"));
-		
-		card.setConditionColName(element.attributeValue("condition-col-name"));
-		card.setConditionColWidth(element.attributeValue("condition-col-width"));
-		
-		card.setScoreColName(element.attributeValue("score-col-name"));
-		card.setScoreColWidth(element.attributeValue("score-col-width"));
-		
-		String weightSupport=element.attributeValue("weight-support");
-		if(StringUtils.isNotBlank(weightSupport)){
-			card.setWeightSupport(Boolean.valueOf(weightSupport));			
-		}
-		
-		List<CardCell> cells=new ArrayList<CardCell>();
-		List<AttributeRow> rows=new ArrayList<AttributeRow>();
-		List<CustomCol> cols=new ArrayList<CustomCol>();
-		card.setCells(cells);
-		card.setRows(rows);
-		card.setCustomCols(cols);
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			String name=ele.getName();
-			if(cardCellParser.support(name)){
-				cells.add(cardCellParser.parse(ele));
-			}else if(attributeRowParser.support(name)){
-				rows.add(attributeRowParser.parse(ele));
-			}else if(customColParser.support(name)){
-				cols.add(customColParser.parse(ele));
-			}else if(name.equals("import-variable-library")){
-				card.addLibrary(new Library(ele.attributeValue("path"),null,LibraryType.Variable));
-			}else if(name.equals("import-constant-library")){
-				card.addLibrary(new Library(ele.attributeValue("path"),null,LibraryType.Constant));
-			}else if(name.equals("import-action-library")){
-				card.addLibrary(new Library(ele.attributeValue("path"),null,LibraryType.Action));
-			}else if(name.equals("import-parameter-library")){
-				card.addLibrary(new Library(ele.attributeValue("path"),null,LibraryType.Parameter));
-			}else if(name.equals("remark")){
-				card.setRemark(ele.getText());
-			}
-		}
-		rebuildScorecard(card);
-		return card;
-	}
-	
-	private void rebuildScorecard(ScorecardDefinition card){
-		ResourceLibrary resLibraries=rulesRebuilder.getResourceLibraryBuilder().buildResourceLibrary(card.getLibraries());
-		String category=card.getVariableCategory();
-		String name=card.getVariableName();
-		if(StringUtils.isNotBlank(category) && StringUtils.isNotBlank(name)){
-			Variable variable=rulesRebuilder.getVariableByName(resLibraries.getVariableCategories(), category, name, null);
-			card.setVariableLabel(variable.getLabel());
-			card.setDatatype(variable.getType());
-		}
-		String colCategory=card.getAttributeColVariableCategory();
-		List<CardCell> cells=card.getCells();
-		if(cells==null)return;
-		for(CardCell cell:cells){
-			Joint joint=cell.getJoint();
-			if(joint!=null && joint.getConditions()!=null){
-				for(Condition condition:joint.getConditions()){
-					if(condition==null){
-						continue;
-					}
-					Value value=condition.getValue();
-					if(value!=null){
-						rulesRebuilder.rebuildValue(value, resLibraries, null, false);
-					}
-				}
-			}
-			Value value=cell.getValue();
-			if(value!=null){
-				rulesRebuilder.rebuildValue(value, resLibraries, null, false);
-			}
-			String varName=cell.getVariableName();
-			if(StringUtils.isNotBlank(varName)){
-				Variable variable=rulesRebuilder.getVariableByName(resLibraries.getVariableCategories(), colCategory, varName, null);
-				cell.setDatatype(variable.getType());
-				cell.setVariableLabel(variable.getLabel());
-			}
-		}
-	}
-	
-	public void setCardCellParser(CardCellParser cardCellParser) {
-		this.cardCellParser = cardCellParser;
-	}
-	
-	public void setRulesRebuilder(RulesRebuilder rulesRebuilder) {
-		this.rulesRebuilder = rulesRebuilder;
-	}
-	
-	@Override
-	public boolean support(String name) {
-		return name.equals("scorecard");
-	}
+    private CardCellParser a;
+    private AttributeRowParser b = new AttributeRowParser();
+    private CustomColParser c = new CustomColParser();
+    private RulesRebuilder d;
+
+    public ScorecardParser() {
+    }
+
+    public ScorecardDefinition parse(Element var1) {
+        ScorecardDefinition var2 = new ScorecardDefinition();
+        var2.setName(var1.attributeValue("name"));
+        var2.setScoringType(ScoringType.valueOf(var1.attributeValue("scoring-type")));
+        var2.setAssignTargetType(AssignTargetType.valueOf(var1.attributeValue("assign-target-type")));
+        var2.setVariableCategory(var1.attributeValue("var-category"));
+        var2.setVariableName(var1.attributeValue("var"));
+        var2.setVariableLabel(var1.attributeValue("var-label"));
+        String var3 = var1.attributeValue("datatype");
+        if (StringUtils.isNotBlank(var3)) {
+            var2.setDatatype(Datatype.valueOf(var3));
+        }
+
+        var2.setKeyLabel(var1.attributeValue("key-label"));
+        var2.setKeyName(var1.attributeValue("key-name"));
+        var2.setScoringBean(var1.attributeValue("custom-scoring-bean"));
+        String var4 = var1.attributeValue("salience");
+        if (StringUtils.isNotEmpty(var4)) {
+            var2.setSalience(Integer.valueOf(var4));
+        }
+
+        String var5 = var1.attributeValue("effective-date");
+        SimpleDateFormat var6 = new SimpleDateFormat(Configure.getDateFormat());
+        if (StringUtils.isNotEmpty(var5)) {
+            try {
+                var2.setEffectiveDate(var6.parse(var5));
+            } catch (ParseException var20) {
+                throw new RuleException(var20);
+            }
+        }
+
+        String var7 = var1.attributeValue("expires-date");
+        if (StringUtils.isNotEmpty(var7)) {
+            try {
+                var2.setExpiresDate(var6.parse(var7));
+            } catch (ParseException var19) {
+                throw new RuleException(var19);
+            }
+        }
+
+        String var8 = var1.attributeValue("enabled");
+        if (StringUtils.isNotEmpty(var8)) {
+            var2.setEnabled(Boolean.valueOf(var8));
+        }
+
+        String var9 = var1.attributeValue("debug");
+        if (StringUtils.isNotEmpty(var9)) {
+            var2.setDebug(Boolean.valueOf(var9));
+        }
+
+        var2.setAttributeColWidth(var1.attributeValue("attr-col-width"));
+        var2.setAttributeColName(var1.attributeValue("attr-col-name"));
+        var2.setAttributeColVariableCategory(var1.attributeValue("attr-col-category"));
+        var2.setConditionColName(var1.attributeValue("condition-col-name"));
+        var2.setConditionColWidth(var1.attributeValue("condition-col-width"));
+        var2.setScoreColName(var1.attributeValue("score-col-name"));
+        var2.setScoreColWidth(var1.attributeValue("score-col-width"));
+        String var10 = var1.attributeValue("weight-support");
+        if (StringUtils.isNotBlank(var10)) {
+            var2.setWeightSupport(Boolean.valueOf(var10));
+        }
+
+        ArrayList var11 = new ArrayList();
+        ArrayList var12 = new ArrayList();
+        ArrayList var13 = new ArrayList();
+        var2.setCells(var11);
+        var2.setRows(var12);
+        var2.setCustomCols(var13);
+        Iterator var14 = var1.elements().iterator();
+
+        while(var14.hasNext()) {
+            Object var15 = var14.next();
+            if (var15 != null && var15 instanceof Element) {
+                Element var16 = (Element)var15;
+                String var17 = var16.getName();
+                if (this.a.support(var17)) {
+                    var11.add(this.a.parse(var16));
+                } else if (this.b.support(var17)) {
+                    var12.add(this.b.parse(var16));
+                } else if (this.c.support(var17)) {
+                    var13.add(this.c.parse(var16));
+                } else if (var17.equals("quick-test-data")) {
+                    String var18 = var16.getTextTrim();
+                    var2.setQuickTestData(var18);
+                } else if (var17.equals("import-variable-library")) {
+                    var2.addLibrary(new Library(var16.attributeValue("path"), (String)null, LibraryType.Variable));
+                } else if (var17.equals("import-constant-library")) {
+                    var2.addLibrary(new Library(var16.attributeValue("path"), (String)null, LibraryType.Constant));
+                } else if (var17.equals("import-action-library")) {
+                    var2.addLibrary(new Library(var16.attributeValue("path"), (String)null, LibraryType.Action));
+                } else if (var17.equals("import-parameter-library")) {
+                    var2.addLibrary(new Library(var16.attributeValue("path"), (String)null, LibraryType.Parameter));
+                } else if (var17.equals("remark")) {
+                    var2.setRemark(var16.getText());
+                }
+            }
+        }
+
+        this.a(var2);
+        return var2;
+    }
+
+    private void a(ScorecardDefinition var1) {
+        ResourceLibrary var2 = this.d.getResourceLibraryBuilder().buildResourceLibrary(var1.getLibraries());
+        String var3 = var1.getVariableCategory();
+        String var4 = var1.getVariableName();
+        if (StringUtils.isNotBlank(var3) && StringUtils.isNotBlank(var4) && !var3.equals("参数")) {
+            Variable var5 = this.d.getVariableByName(var2.getVariableCategories(), var3, var4);
+            var1.setVariableLabel(var5.getLabel());
+            var1.setDatatype(var5.getType());
+        }
+
+        String var13 = var1.getAttributeColVariableCategory();
+        List var6 = var1.getCells();
+        if (var6 != null) {
+            Iterator var7 = var6.iterator();
+
+            while(var7.hasNext()) {
+                CardCell var8 = (CardCell)var7.next();
+                Joint var9 = var8.getJoint();
+                if (var9 != null && var9.getConditions() != null) {
+                    Iterator var10 = var9.getConditions().iterator();
+
+                    while(var10.hasNext()) {
+                        Condition var11 = (Condition)var10.next();
+                        if (var11 != null) {
+                            Value var12 = var11.getValue();
+                            if (var12 != null) {
+                                this.d.rebuildValue(var12, var2, false);
+                            }
+                        }
+                    }
+                }
+
+                Value var14 = var8.getValue();
+                if (var14 != null) {
+                    this.d.rebuildValue(var14, var2, false);
+                }
+
+                String var15 = var8.getVariableName();
+                if (StringUtils.isNotBlank(var15) && !var13.equals("参数")) {
+                    Variable var16 = this.d.getVariableByName(var2.getVariableCategories(), var13, var15);
+                    var8.setDatatype(var16.getType());
+                    var8.setVariableLabel(var16.getLabel());
+                }
+            }
+
+        }
+    }
+
+    public void setCardCellParser(CardCellParser var1) {
+        this.a = var1;
+    }
+
+    public void setRulesRebuilder(RulesRebuilder var1) {
+        this.d = var1;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("scorecard");
+    }
 }

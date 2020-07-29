@@ -1,61 +1,103 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.model.flow;
 
 import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.FlowInstance;
+import java.util.Iterator;
+import java.util.Map;
 
-/**
- * @author Jacky.gao
- * @since 2015年4月20日
- */
 public class JoinNode extends FlowNode {
-	private FlowNodeType type=FlowNodeType.Join;
-	public JoinNode() {
-	}
-	public JoinNode(String name) {
-		super(name);
-	}
-	@Override
-	public FlowNodeType getType() {
-		return type;
-	}
-	@Override
-	public void enterNode(FlowContext context,FlowInstance instance) {
-		instance.setCurrentNode(this);
-		executeNodeEvent(EventType.enter, context, instance);
-		FlowInstance parentInstance=instance.getParent();
-		if(parentInstance==null){
-			throw new RuleException("Invalid flow instance.");
-		}
-		String id=parentInstance.getId();
-		int arrivedChild=1;
-		if(context.getVariable(id)==null){
-			context.addVariable(id, arrivedChild);
-		}else{
-			arrivedChild=(Integer)context.getVariable(id);
-			arrivedChild++;
-			context.addVariable(id, arrivedChild);
-		}
-		executeNodeEvent(EventType.leave, context, instance);
-		int childCount=instance.getParallelInstanceCount();
-		if(arrivedChild>=childCount){
-			context.removeVariable(id);
-			leave(null,context,parentInstance);
-		}
-	}	
+    private FlowNodeType type;
+
+    public JoinNode() {
+        this.type = FlowNodeType.Join;
+    }
+
+    public JoinNode(String var1) {
+        super(var1);
+        this.type = FlowNodeType.Join;
+    }
+
+    public FlowNodeType getType() {
+        return this.type;
+    }
+
+    public void enterNode(FlowContext var1, FlowInstance var2) {
+        FlowInstance var3 = var2.getParent();
+        if (var3 == null) {
+            throw new RuleException("Invalid flow instance.");
+        } else {
+            int var4 = var2.getParallelInstanceCount();
+            boolean var5 = (Boolean)var2.getVariable("fork_node_multi_thread_support_");
+            int var6;
+            if (var5) {
+                var6 = var2.riseArrivedBranch();
+                String var7 = Thread.currentThread().getName();
+                if (var7 != null && var7.startsWith("fork_node_sub_thread_")) {
+                    return;
+                }
+
+                if (var6 >= var4) {
+                    this.doLeave(var1, var3);
+                } else {
+                    Map var8 = (Map)var2.getVariable("fork_node_exception_map_");
+                    var2.removeVariable("fork_node_exception_map_");
+
+                    while(true) {
+                        var6 = var2.getArrivedBranchSize();
+                        if (var6 >= var4) {
+                            this.doLeave(var1, var3);
+                            break;
+                        }
+
+                        Exception var9 = null;
+                        Iterator var10 = var8.keySet().iterator();
+
+                        Thread var11;
+                        while(var10.hasNext()) {
+                            var11 = (Thread)var10.next();
+                            Object var12 = var8.get(var11);
+                            if (var12 instanceof Exception) {
+                                var9 = (Exception)var12;
+                            }
+                        }
+
+                        if (var9 != null) {
+                            var10 = var8.keySet().iterator();
+
+                            while(var10.hasNext()) {
+                                var11 = (Thread)var10.next();
+                                var11.interrupt();
+                            }
+
+                            throw new RuleException(var9);
+                        }
+
+                        Thread.yield();
+                    }
+                }
+            } else {
+                var2.riseArrivedBranch();
+                var6 = var2.getArrivedBranchSize();
+                if (var6 >= var4) {
+                    this.doLeave(var1, var3);
+                }
+            }
+
+        }
+    }
+
+    private void doLeave(FlowContext var1, FlowInstance var2) {
+        var2.setCurrentNode(this);
+        this.executeNodeEvent(EventType.enter, var1, var2);
+        this.executeNodeEvent(EventType.leave, var1, var2);
+        String var3 = var2.getId() + this.getName();
+        var1.removeVariable(var3);
+        this.leave((String)null, var1, var2);
+    }
 }

@@ -1,74 +1,79 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.rete;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.Map;
+package com.bstek.urule.model.rete;
 
 import com.bstek.urule.model.rule.lhs.Criteria;
 import com.bstek.urule.runtime.rete.Activity;
 import com.bstek.urule.runtime.rete.CriteriaActivity;
+import java.util.Iterator;
+import java.util.Map;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月6日
- */
-public class CriteriaNode extends BaseReteNode implements ConditionNode{
-	private String criteriaInfo;
-	private Criteria criteria;
-	private boolean debug;
-	private NodeType nodeType=NodeType.criteria;
-	public CriteriaNode() {
-		super(0);
-	}
-	public CriteriaNode(Criteria criteria,int id,boolean debug) {
-		super(id);
-		this.criteria = criteria;
-		setCriteriaInfo(criteria.getId());
-		this.debug=debug;
-	}
-	@Override
-	public NodeType getNodeType() {
-		return nodeType;
-	}
-	
-	@Override
-	public Criteria getCriteria() {
-		return criteria;
-	}
-	public void setCriteria(Criteria criteria) {
-		this.criteria = criteria;
-	}
-	
-	@Override
-	public String getCriteriaInfo() {
-		return criteriaInfo;
-	}
-	public void setCriteriaInfo(String criteriaInfo) {
-		this.criteriaInfo = criteriaInfo;
-	}
-	@Override
-	public Activity newActivity(Map<Object,Object> context) {
-		if(context.containsKey(this)){
-			return (CriteriaActivity)context.get(this);
-		}
-		CriteriaActivity activity=new CriteriaActivity(criteria,debug);
-		for(Line line:lines){
-			activity.addPath(line.newPath(context));
-		}
-		context.put(this, activity);
-		return activity;
-	}
+public class CriteriaNode extends BaseReteNode implements ConditionNode {
+    @JsonIgnore
+    private String criteriaInfo;
+    private boolean debug;
+    private Criteria criteria;
+    private NodeType nodeType;
+
+    public CriteriaNode() {
+        super(0);
+        this.nodeType = NodeType.criteria;
+    }
+
+    public CriteriaNode(Criteria var1, int var2, boolean var3) {
+        super(var2);
+        this.nodeType = NodeType.criteria;
+        this.criteria = var1;
+        this.setCriteriaInfo(var1.getId());
+        this.debug = var3;
+    }
+
+    public NodeType getNodeType() {
+        return this.nodeType;
+    }
+
+    public Criteria getCriteria() {
+        return this.criteria;
+    }
+
+    public void setCriteria(Criteria var1) {
+        this.criteria = var1;
+    }
+
+    public String getCriteriaInfo() {
+        return this.criteriaInfo;
+    }
+
+    public void setCriteriaInfo(String var1) {
+        this.criteriaInfo = var1;
+    }
+
+    public boolean isDebug() {
+        return this.debug;
+    }
+
+    public void setDebug(boolean var1) {
+        this.debug = var1;
+    }
+
+    public Activity newActivity(Map<Object, Object> var1) {
+        if (var1.containsKey(this)) {
+            return (CriteriaActivity)var1.get(this);
+        } else {
+            CriteriaActivity var2 = new CriteriaActivity(this.criteria, this.debug);
+            Iterator var3 = this.lines.iterator();
+
+            while(var3.hasNext()) {
+                Line var4 = (Line)var3.next();
+                var2.addPath(var4.newPath(var1));
+            }
+
+            var1.put(this, var2);
+            return var2;
+        }
+    }
 }

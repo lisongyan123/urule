@@ -1,43 +1,28 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.rete.jsondeserializer;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import org.codehaus.jackson.JsonNode;
+package com.bstek.urule.model.rete.jsondeserializer;
 
 import com.bstek.urule.model.rete.JsonUtils;
 import com.bstek.urule.model.rule.SimpleValue;
 import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.model.rule.ValueType;
+import org.codehaus.jackson.JsonNode;
 
-/**
- * @author Jacky.gao
- * @since 2015年3月6日
- */
 public class InputValueDeserializer implements ValueDeserializer {
+    public InputValueDeserializer() {
+    }
 
-	@Override
-	public Value deserialize(JsonNode jsonNode) {
-		SimpleValue value=new SimpleValue();
-		value.setContent(JsonUtils.getJsonValue(jsonNode, "content"));
-		value.setArithmetic(JsonUtils.parseComplexArithmetic(jsonNode));
-		return value;
-	}
+    public Value deserialize(JsonNode var1) {
+        SimpleValue var2 = new SimpleValue();
+        var2.setContent(JsonUtils.getJsonValue(var1, "content"));
+        var2.setArithmetic(JsonUtils.parseComplexArithmetic(var1));
+        return var2;
+    }
 
-	@Override
-	public boolean support(ValueType type) {
-		return type.equals(ValueType.Input);
-	}
+    public boolean support(ValueType var1) {
+        return var1.equals(ValueType.Input);
+    }
 }

@@ -1,55 +1,44 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.parse.scorecard;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dom4j.Element;
 
 import com.bstek.urule.model.scorecard.AttributeRow;
 import com.bstek.urule.model.scorecard.ConditionRow;
 import com.bstek.urule.parse.Parser;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.dom4j.Element;
 
-/**
- * @author Jacky.gao
- * @since 2016年9月22日
- */
 public class AttributeRowParser implements Parser<AttributeRow> {
-	@Override
-	public AttributeRow parse(Element element) {
-		AttributeRow row=new AttributeRow();
-		row.setRowNumber(Integer.valueOf(element.attributeValue("row-number")));
-		List<ConditionRow> rows=new ArrayList<ConditionRow>();
-		for(Object obj:element.elements()){
-			if(obj==null || !(obj instanceof Element)){
-				continue;
-			}
-			Element ele=(Element)obj;
-			if(ele.getName().equals("condition-row")){
-				ConditionRow r=new ConditionRow();
-				r.setRowNumber(Integer.valueOf(ele.attributeValue("row-number")));
-				rows.add(r);
-			}
-		}
-		row.setConditionRows(rows);
-		return row;
-	}
-	@Override
-	public boolean support(String name) {
-		return name.equals("attribute-row");
-	}
+    public AttributeRowParser() {
+    }
+
+    public AttributeRow parse(Element var1) {
+        AttributeRow var2 = new AttributeRow();
+        var2.setRowNumber(Integer.valueOf(var1.attributeValue("row-number")));
+        ArrayList var3 = new ArrayList();
+        Iterator var4 = var1.elements().iterator();
+
+        while(var4.hasNext()) {
+            Object var5 = var4.next();
+            if (var5 != null && var5 instanceof Element) {
+                Element var6 = (Element)var5;
+                if (var6.getName().equals("condition-row")) {
+                    ConditionRow var7 = new ConditionRow();
+                    var7.setRowNumber(Integer.valueOf(var6.attributeValue("row-number")));
+                    var3.add(var7);
+                }
+            }
+        }
+
+        var2.setConditionRows(var3);
+        return var2;
+    }
+
+    public boolean support(String var1) {
+        return var1.equals("attribute-row");
+    }
 }

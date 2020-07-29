@@ -1,75 +1,69 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.bstek.urule.model.flow;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
 
-import java.util.List;
-import java.util.Map;
+package com.bstek.urule.model.flow;
 
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.ProcessInstance;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.KnowledgeSession;
-import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.response.ExecutionResponseImpl;
 import com.bstek.urule.runtime.response.FlowExecutionResponse;
 import com.bstek.urule.runtime.response.RuleExecutionResponse;
+import java.util.Iterator;
+import java.util.Map;
 
-/**
- * @author Jacky.gao
- * @since 2015年4月20日
- */
 public abstract class BindingNode extends FlowNode {
-	private KnowledgePackageWrapper knowledgePackageWrapper;
-	public BindingNode() {
-	}
-	public BindingNode(String name) {
-		super(name);
-	}
-	
-	protected KnowledgeSession executeKnowledgePackage(FlowContext context,ProcessInstance instance){
-		KnowledgeSession parentSession=(KnowledgeSession)context.getWorkingMemory();
-		List<Object> facts=parentSession.getAllFacts();
-		KnowledgePackage knowledgePackage=knowledgePackageWrapper.getKnowledgePackage();
-		KnowledgeSession session=KnowledgeSessionFactory.newKnowledgeSession(knowledgePackage,context.getDebugMessageItems());
-		for(Object fact:facts){
-			session.insert(fact);
-		}
-		if(knowledgePackage.getFlowMap()==null || knowledgePackage.getFlowMap().size()==0){
-			RuleExecutionResponse ruleExecutionResponse=session.fireRules(context.getVariables());
-			((ExecutionResponseImpl)context.getResponse()).addRuleExecutionResponse(ruleExecutionResponse);
-		}else{
-			String processId=knowledgePackage.getFlowMap().values().iterator().next().getId();
-			FlowExecutionResponse flowExecutionResponse=session.startProcess(processId,context.getVariables());
-			((ExecutionResponseImpl)context.getResponse()).addFlowExecutionResponse(flowExecutionResponse);
-		}
-		Map<String,Object> parameters=session.getParameters();
-		Map<String,Object> variables=context.getVariables();
-		for(String key:parameters.keySet()){
-			if(key.equals(DecisionItem.RETURN_VALUE_KEY)){
-				continue;
-			}
-			variables.put(key, parameters.get(key));
-		}
-		return session;
-	}
-	public KnowledgePackageWrapper getKnowledgePackageWrapper() {
-		return knowledgePackageWrapper;
-	}
-	public void setKnowledgePackageWrapper(KnowledgePackageWrapper knowledgePackageWrapper) {
-		this.knowledgePackageWrapper = knowledgePackageWrapper;
-	}
+    private KnowledgePackageWrapper knowledgePackageWrapper;
+
+    public BindingNode() {
+    }
+
+    public BindingNode(String var1) {
+        super(var1);
+    }
+
+    protected KnowledgeSession executeKnowledgePackage(FlowContext var1, ProcessInstance var2) {
+        KnowledgeSession var3 = (KnowledgeSession)var1.getWorkingMemory();
+        KnowledgePackage var4 = this.knowledgePackageWrapper.getKnowledgePackage();
+        KnowledgeSession var5 = KnowledgeSessionFactory.newKnowledgeSession(this.knowledgePackageWrapper, var1, var3);
+        if (var4.getFlowMap() != null && var4.getFlowMap().size() != 0) {
+            String var14 = ((FlowDefinition)var4.getFlowMap().values().iterator().next()).getId();
+            FlowExecutionResponse var7 = var5.startProcess(var14, var1.getVariables());
+            ((ExecutionResponseImpl)var1.getResponse()).addFlowExecutionResponse(var7);
+        } else {
+            RuleExecutionResponse var6 = var5.fireRules(var1.getVariables());
+            ((ExecutionResponseImpl)var1.getResponse()).addRuleExecutionResponse(var6);
+        }
+
+        var1.addRuleData(var5.getLogManager().getRuleData());
+        synchronized(var1) {
+            Map var15 = var5.getParameters();
+            Map var8 = var1.getVariables();
+            Iterator var9 = var15.keySet().iterator();
+
+            while(var9.hasNext()) {
+                String var10 = (String)var9.next();
+                if (!var10.equals("return_to__")) {
+                    Object var11 = var15.get(var10);
+                    if (var11 != null) {
+                        var8.put(var10, var11);
+                    }
+                }
+            }
+
+            return var5;
+        }
+    }
+
+    public KnowledgePackageWrapper getKnowledgePackageWrapper() {
+        return this.knowledgePackageWrapper;
+    }
+
+    public void setKnowledgePackageWrapper(KnowledgePackageWrapper var1) {
+        this.knowledgePackageWrapper = var1;
+    }
 }

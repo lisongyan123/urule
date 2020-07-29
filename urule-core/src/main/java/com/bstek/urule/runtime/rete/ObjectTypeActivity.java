@@ -1,70 +1,64 @@
-/*******************************************************************************
- * Copyright 2017 Bstek
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.bstek.urule.runtime.rete;
 
-import java.util.Collection;
-import java.util.Map;
-
+import com.bstek.urule.exception.RuleAssertException;
 import com.bstek.urule.model.GeneralEntity;
+import java.util.Collection;
 
-/**
- * @author Jacky.gao
- * @since 2015年1月9日
- */
 public class ObjectTypeActivity extends AbstractActivity {
-	private Class<?> typeClass;
-	private String clazz;
-	public ObjectTypeActivity(String clazz){
-		this.clazz=clazz;
-	}
-	public ObjectTypeActivity(Class<?> typeClass){
-		this.typeClass=typeClass;
-	}
-	public Collection<FactTracker> enter(EvaluationContext context, Object obj,FactTracker tracker,Map<String,Object> variableMap) {
-		return visitPahs(context,obj,tracker,variableMap);
-	}
-	public boolean support(Object object){
-		if(typeClass==null && clazz==null){
-			return true;
-		}
-		if(object instanceof GeneralEntity){
-			GeneralEntity generalEntity=(GeneralEntity)object;
-			String targetClass=generalEntity.getTargetClass();
-			if(clazz!=null){
-				if(targetClass.equals(clazz)){
-					return true;
-				}				
-			}else{
-				if(targetClass.equals(typeClass.getName())){
-					return true;
-				}
-			}
-		}else if(typeClass!=null){
-			Class<?> c=object.getClass();
-			if(typeClass.isAssignableFrom(c) || typeClass.getName().equals(c.getName())){
-				return true;				
-			}
-		}
-		return false;
-	}
-	@Override
-	public boolean orNodeIsPassed() {
-		return false;
-	}
-	@Override
-	public void reset() {
-	}
+    private Class<?> a;
+    private String b;
+
+    public ObjectTypeActivity(String var1) {
+        this.b = var1;
+    }
+
+    public ObjectTypeActivity(Class<?> var1) {
+        this.a = var1;
+    }
+
+    public Collection<FactTracker> enter(EvaluationContext var1, Object var2, FactTracker var3) {
+        try {
+            var3.setToken(var1.nextToken());
+            return this.visitPahs(var1, var2, var3);
+        } catch (Exception var6) {
+            String var5 = var1.getTipMsg();
+            throw new RuleAssertException(var5, var6);
+        }
+    }
+
+    public boolean support(Object var1) {
+        if (this.b != null && this.b.equals("__*__") && this.b.equals(var1)) {
+            return true;
+        } else if (this.a == null && this.b == null) {
+            return true;
+        } else {
+            if (var1 instanceof GeneralEntity) {
+                GeneralEntity var2 = (GeneralEntity)var1;
+                String var3 = var2.getTargetClass();
+                if (this.b != null) {
+                    if (var3.equals(this.b)) {
+                        return true;
+                    }
+                } else if (var3.equals(this.a.getName())) {
+                    return true;
+                }
+            } else if (this.a != null) {
+                Class var4 = var1.getClass();
+                if (this.a.isAssignableFrom(var4) || this.a.getName().equals(var4.getName())) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public void reset() {
+    }
 }
+
