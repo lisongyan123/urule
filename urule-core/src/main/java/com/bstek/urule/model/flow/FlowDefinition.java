@@ -8,6 +8,7 @@ package com.bstek.urule.model.flow;
 import com.bstek.urule.builder.KnowledgeBase;
 import com.bstek.urule.builder.KnowledgeBuilder;
 import com.bstek.urule.builder.ResourceBase;
+import com.bstek.urule.dsl.DSLRuleSetBuilder;
 import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.flow.ins.FlowContext;
 import com.bstek.urule.model.flow.ins.FlowInstance;

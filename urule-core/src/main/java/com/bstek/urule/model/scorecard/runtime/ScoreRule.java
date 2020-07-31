@@ -14,6 +14,7 @@ import com.bstek.urule.model.scorecard.AssignTargetType;
 import com.bstek.urule.model.scorecard.ScoringType;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.KnowledgeSession;
+import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ValueCompute;
 import org.codehaus.jackson.annotate.JsonIgnore;

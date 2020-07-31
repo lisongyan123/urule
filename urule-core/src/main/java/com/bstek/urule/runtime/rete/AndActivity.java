@@ -60,7 +60,7 @@ public class AndActivity extends JoinActivity {
                 var4 = (List)this.b.get(var2);
             } else {
                 var4 = new ArrayList();
-                this.b.put(var2, var4);
+                this.b.put(var2, (List<Map<String, Object>>) var4);
             }
 
             ((List)var4).add(var3);

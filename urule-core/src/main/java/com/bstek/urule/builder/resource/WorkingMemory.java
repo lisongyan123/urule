@@ -5,6 +5,8 @@
 
 package com.bstek.urule.builder.resource;
 
+import com.bstek.urule.runtime.FactManager;
+import com.bstek.urule.runtime.KnowledgeSession;
 import com.bstek.urule.runtime.log.LogManager;
 import com.bstek.urule.runtime.rete.Context;
 

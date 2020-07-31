@@ -29,6 +29,7 @@ import com.bstek.urule.model.rule.loop.LoopTarget;
 import com.bstek.urule.model.rule.loop.LoopTargetType;
 import com.bstek.urule.model.scorecard.AssignTargetType;
 import com.bstek.urule.model.scorecard.ScoringType;
+import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

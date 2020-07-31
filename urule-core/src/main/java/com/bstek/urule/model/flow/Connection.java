@@ -14,6 +14,8 @@ import com.bstek.urule.runtime.KnowledgeSession;
 
 import java.util.Iterator;
 import java.util.List;
+
+import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class Connection {

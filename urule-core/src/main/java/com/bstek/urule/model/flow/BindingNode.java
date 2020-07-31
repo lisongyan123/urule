@@ -10,6 +10,7 @@ import com.bstek.urule.model.flow.ins.ProcessInstance;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.KnowledgeSession;
+import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.response.ExecutionResponseImpl;
 import com.bstek.urule.runtime.response.FlowExecutionResponse;
 import com.bstek.urule.runtime.response.RuleExecutionResponse;

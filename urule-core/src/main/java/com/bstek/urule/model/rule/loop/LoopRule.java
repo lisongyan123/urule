@@ -11,6 +11,7 @@ import com.bstek.urule.model.rule.Rule;
 import com.bstek.urule.runtime.FactManager;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.KnowledgeSession;
+import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.rete.Context;
 import java.util.ArrayList;
 import java.util.Collection;

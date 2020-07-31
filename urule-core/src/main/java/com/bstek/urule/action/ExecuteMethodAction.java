@@ -11,6 +11,7 @@ import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Parameter;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgeSession;
+import com.bstek.urule.runtime.KnowledgeSessionFactory;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ValueCompute;
 import com.bstek.urule.runtime.service.KnowledgeService;

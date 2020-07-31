@@ -3,9 +3,10 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.bstek.urule.resource;
+package com.bstek.urule.builder.resource;
 
 import com.bstek.urule.model.rule.RuleSet;
+import com.bstek.urule.parse.deserializer.RuleSetDeserializer;
 import org.dom4j.Element;
 
 public class RuleSetResourceBuilder implements ResourceBuilder<RuleSet> {

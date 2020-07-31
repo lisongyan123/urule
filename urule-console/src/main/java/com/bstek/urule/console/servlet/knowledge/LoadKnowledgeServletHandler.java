@@ -12,6 +12,7 @@ import com.bstek.urule.console.repository.model.VersionFile;
 import com.bstek.urule.console.servlet.RenderPageServletHandler;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
+import com.bstek.urule.runtime.RemoteDynamicJarsBuilder;
 import com.bstek.urule.runtime.cache.CacheUtils;
 import com.bstek.urule.runtime.service.KnowledgePackageService;
 import java.io.IOException;

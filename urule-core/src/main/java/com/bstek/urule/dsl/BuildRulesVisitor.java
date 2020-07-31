@@ -398,7 +398,7 @@ public class BuildRulesVisitor extends RuleParserBaseVisitor<Object> {
                 }
 
                 if (var4 != null && var10) {
-                    this.a.put(var7, var4);
+                    this.a.put(var7, (Junction) var4);
                 }
 
                 var3 = this.buildCriterion(var7);

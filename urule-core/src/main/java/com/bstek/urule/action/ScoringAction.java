@@ -6,6 +6,7 @@
 package com.bstek.urule.action;
 
 import com.bstek.urule.model.rule.Value;
+import com.bstek.urule.model.scorecard.runtime.ScoreRuntimeValue;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ValueCompute;
 import java.util.ArrayList;

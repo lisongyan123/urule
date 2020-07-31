@@ -27,6 +27,7 @@ import com.bstek.urule.model.scorecard.CardCell;
 import com.bstek.urule.model.scorecard.ConditionRow;
 import com.bstek.urule.model.scorecard.CustomCol;
 import com.bstek.urule.model.scorecard.ScorecardDefinition;
+import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.model.table.Condition;
 import com.bstek.urule.parse.deserializer.ScorecardDeserializer;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;

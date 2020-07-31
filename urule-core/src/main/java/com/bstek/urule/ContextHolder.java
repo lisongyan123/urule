@@ -23,7 +23,7 @@ public class ContextHolder {
         Object var2 = (Map)a.get();
         if (var2 == null) {
             var2 = new HashMap();
-            a.set(var2);
+            a.set((Map<String, Object>) var2);
         }
 
         ((Map)var2).put(var0, var1);

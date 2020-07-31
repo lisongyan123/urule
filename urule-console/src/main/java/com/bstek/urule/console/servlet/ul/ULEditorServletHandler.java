@@ -11,6 +11,7 @@ import com.bstek.urule.Utils;
 import com.bstek.urule.builder.ResourceLibraryBuilder;
 import com.bstek.urule.console.repository.RepositoryService;
 import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.dsl.DSLRuleSetBuilder;
 import com.bstek.urule.exception.RuleException;
 import com.bstek.urule.model.library.ResourceLibrary;
 import com.bstek.urule.model.rule.RuleSet;

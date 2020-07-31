@@ -8,6 +8,7 @@ package com.bstek.urule;
 import com.bstek.urule.runtime.DynamicSpringConfigLoader;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageImpl;
+import com.bstek.urule.runtime.RemoteDynamicJarsBuilder;
 import com.bstek.urule.runtime.cache.CacheUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -17,6 +17,8 @@ import com.bstek.urule.model.rete.Rete;
 import com.bstek.urule.model.rule.Rhs;
 import com.bstek.urule.model.rule.Rule;
 import com.bstek.urule.model.rule.lhs.*;
+import com.bstek.urule.model.scorecard.*;
+import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.model.table.Condition;
 import com.bstek.urule.parse.deserializer.ScorecardDeserializer;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;

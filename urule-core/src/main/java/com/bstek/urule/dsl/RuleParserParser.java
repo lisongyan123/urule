@@ -3243,7 +3243,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitOp(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor) var1).visitOp(this) : var1.visitChildren(this);
         }
     }
 
@@ -3269,7 +3269,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitValue(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitValue(this) : var1.visitChildren(this);
         }
     }
 
@@ -3287,7 +3287,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitConstantCategory(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitConstantCategory(this) : var1.visitChildren(this);
         }
     }
 
@@ -3305,7 +3305,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitNamedVariableCategory(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitNamedVariableCategory(this) : var1.visitChildren(this);
         }
     }
 
@@ -3323,7 +3323,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitVariableCategory(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitVariableCategory(this) : var1.visitChildren(this);
         }
     }
 
@@ -3345,7 +3345,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitProperty(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitProperty(this) : var1.visitChildren(this);
         }
     }
 
@@ -3367,7 +3367,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitNamedVariable(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitNamedVariable(this) : var1.visitChildren(this);
         }
     }
 
@@ -3389,7 +3389,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitVariable(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitVariable(this) : var1.visitChildren(this);
         }
     }
 
@@ -3411,7 +3411,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitConstant(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitConstant(this) : var1.visitChildren(this);
         }
     }
 
@@ -3425,7 +3425,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitParameterName(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitParameterName(this) : var1.visitChildren(this);
         }
     }
 
@@ -3447,7 +3447,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitParameter(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitParameter(this) : var1.visitChildren(this);
         }
     }
 
@@ -3521,7 +3521,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitComplexValue(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitComplexValue(this) : var1.visitChildren(this);
         }
     }
 
@@ -3543,7 +3543,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitBeanMethod(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitBeanMethod(this) : var1.visitChildren(this);
         }
     }
 
@@ -3565,7 +3565,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitActionParameters(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitActionParameters(this) : var1.visitChildren(this);
         }
     }
 
@@ -3587,7 +3587,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitFunctionInvoke(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitFunctionInvoke(this) : var1.visitChildren(this);
         }
     }
 
@@ -3609,7 +3609,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitMethodInvoke(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitMethodInvoke(this) : var1.visitChildren(this);
         }
     }
 
@@ -3627,7 +3627,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitOutAction(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitOutAction(this) : var1.visitChildren(this);
         }
     }
 
@@ -3657,7 +3657,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitAssignAction(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitAssignAction(this) : var1.visitChildren(this);
         }
     }
 
@@ -3691,7 +3691,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitAction(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitAction(this) : var1.visitChildren(this);
         }
     }
 
@@ -3713,7 +3713,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitActions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitActions(this) : var1.visitChildren(this);
         }
     }
 
@@ -3735,7 +3735,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitOther(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitOther(this) : var1.visitChildren(this);
         }
     }
 
@@ -3757,7 +3757,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRight(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRight(this) : var1.visitChildren(this);
         }
     }
 
@@ -3779,7 +3779,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitJoin(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitJoin(this) : var1.visitChildren(this);
         }
     }
 
@@ -3793,7 +3793,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitColon(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitColon(this) : var1.visitChildren(this);
         }
     }
 
@@ -3807,7 +3807,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRightParen(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRightParen(this) : var1.visitChildren(this);
         }
     }
 
@@ -3821,7 +3821,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLeftParen(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLeftParen(this) : var1.visitChildren(this);
         }
     }
 
@@ -3839,7 +3839,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitPercent(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitPercent(this) : var1.visitChildren(this);
         }
     }
 
@@ -3853,7 +3853,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitExpressionBody(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitExpressionBody(this) : var1.visitChildren(this);
         }
     }
 
@@ -3899,7 +3899,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitExprCondition(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitExprCondition(this) : var1.visitChildren(this);
         }
     }
 
@@ -3933,7 +3933,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitCommonFunction(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitCommonFunction(this) : var1.visitChildren(this);
         }
     }
 
@@ -3983,7 +3983,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitConditionLeft(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitConditionLeft(this) : var1.visitChildren(this);
         }
     }
 
@@ -3997,7 +3997,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitNullValue(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitNullValue(this) : var1.visitChildren(this);
         }
     }
 
@@ -4019,7 +4019,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRefObject(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRefObject(this) : var1.visitChildren(this);
         }
     }
 
@@ -4037,7 +4037,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRefName(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRefName(this) : var1.visitChildren(this);
         }
     }
 
@@ -4059,7 +4059,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitParenCellConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitParenCellConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4085,7 +4085,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitMultiCellConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitMultiCellConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4107,7 +4107,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitSingleCellCondition(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitSingleCellCondition(this) : var1.visitChildren(this);
         }
     }
 
@@ -4150,7 +4150,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitSingleNamedConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitSingleNamedConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4176,7 +4176,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitMultiNamedConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitMultiNamedConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4198,7 +4198,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitParenNamedConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitParenNamedConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4253,7 +4253,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitNamedConditionSet(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitNamedConditionSet(this) : var1.visitChildren(this);
         }
     }
 
@@ -4267,7 +4267,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitSingleNamedConditionSet(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitSingleNamedConditionSet(this) : var1.visitChildren(this);
         }
     }
 
@@ -4293,7 +4293,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitSingleCondition(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitSingleCondition(this) : var1.visitChildren(this);
         }
     }
 
@@ -4319,7 +4319,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitMultiConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitMultiConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4341,7 +4341,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitParenConditions(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitParenConditions(this) : var1.visitChildren(this);
         }
     }
 
@@ -4376,7 +4376,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLeft(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLeft(this) : var1.visitChildren(this);
         }
     }
 
@@ -4394,7 +4394,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRuleflowGroupAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRuleflowGroupAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4412,7 +4412,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitAutoFocusAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitAutoFocusAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4430,7 +4430,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitAgendaGroupAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitAgendaGroupAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4448,7 +4448,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitActivationGroupAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitActivationGroupAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4466,7 +4466,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitDebugAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitDebugAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4484,7 +4484,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitEnabledAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitEnabledAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4502,7 +4502,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitExpiresDateAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitExpiresDateAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4520,7 +4520,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitEffectiveDateAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitEffectiveDateAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4538,7 +4538,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitSalienceAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitSalienceAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4556,7 +4556,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4610,7 +4610,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitAttribute(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitAttribute(this) : var1.visitChildren(this);
         }
     }
 
@@ -4632,7 +4632,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopEnd(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopEnd(this) : var1.visitChildren(this);
         }
     }
 
@@ -4654,7 +4654,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopStart(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopStart(this) : var1.visitChildren(this);
         }
     }
 
@@ -4672,7 +4672,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopTarget(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopTarget(this) : var1.visitChildren(this);
         }
     }
 
@@ -4702,7 +4702,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopRuleUnit(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopRuleUnit(this) : var1.visitChildren(this);
         }
     }
 
@@ -4748,7 +4748,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitLoopRuleDef(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitLoopRuleDef(this) : var1.visitChildren(this);
         }
     }
 
@@ -4786,7 +4786,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRuleDef(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRuleDef(this) : var1.visitChildren(this);
         }
     }
 
@@ -4808,7 +4808,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitFunctionParameter(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitFunctionParameter(this) : var1.visitChildren(this);
         }
     }
 
@@ -4830,7 +4830,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitFunctionParameters(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitFunctionParameters(this) : var1.visitChildren(this);
         }
     }
 
@@ -4856,7 +4856,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitFunctionDef(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitFunctionDef(this) : var1.visitChildren(this);
         }
     }
 
@@ -4874,7 +4874,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitImportActionLibrary(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitImportActionLibrary(this) : var1.visitChildren(this);
         }
     }
 
@@ -4892,7 +4892,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitImportConstantLibrary(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitImportConstantLibrary(this) : var1.visitChildren(this);
         }
     }
 
@@ -4910,7 +4910,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitImportVariableLibrary(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitImportVariableLibrary(this) : var1.visitChildren(this);
         }
     }
 
@@ -4928,7 +4928,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitImportParameterLibrary(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitImportParameterLibrary(this) : var1.visitChildren(this);
         }
     }
 
@@ -4958,7 +4958,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitResource(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitResource(this) : var1.visitChildren(this);
         }
     }
 
@@ -4984,7 +4984,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitPackageDef(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitPackageDef(this) : var1.visitChildren(this);
         }
     }
 
@@ -5002,7 +5002,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitFunctionImport(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitFunctionImport(this) : var1.visitChildren(this);
         }
     }
 
@@ -5024,7 +5024,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRules(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRules(this) : var1.visitChildren(this);
         }
     }
 
@@ -5046,7 +5046,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRuleSetBody(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRuleSetBody(this) : var1.visitChildren(this);
         }
     }
 
@@ -5076,7 +5076,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRuleSetHeader(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRuleSetHeader(this) : var1.visitChildren(this);
         }
     }
 
@@ -5098,7 +5098,7 @@ public class RuleParserParser extends Parser {
         }
 
         public <T> T accept(ParseTreeVisitor<? extends T> var1) {
-            return var1 instanceof RuleParserVisitor ? ((RuleParserVisitor)var1).visitRuleSet(this) : var1.visitChildren(this);
+            return var1 instanceof RuleParserVisitor ? (T) ((RuleParserVisitor)var1).visitRuleSet(this) : var1.visitChildren(this);
         }
     }
 }

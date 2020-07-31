@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.bstek.urule.resource;
+package com.bstek.urule.builder.resource;
 
 import com.bstek.urule.action.ScoringAction;
 import com.bstek.urule.builder.KnowledgeBase;
@@ -23,16 +23,16 @@ import com.bstek.urule.model.rule.lhs.Lhs;
 import com.bstek.urule.model.scorecard.ComplexColumn;
 import com.bstek.urule.model.scorecard.ComplexColumnType;
 import com.bstek.urule.model.scorecard.ComplexScorecardDefinition;
+import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.model.table.Cell;
 import com.bstek.urule.model.table.Row;
 import com.bstek.urule.parse.deserializer.ComplexScorecardDeserializer;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
-import org.dom4j.Element;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.dom4j.Element;
 
 public class ComplexScorecardRulesBuilder implements ResourceBuilder<ScoreRule> {
     private ReteBuilder a;

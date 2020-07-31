@@ -14,6 +14,7 @@ import com.bstek.urule.model.rule.Rhs;
 import com.bstek.urule.model.rule.Rule;
 import com.bstek.urule.model.rule.lhs.Criteria;
 import com.bstek.urule.model.rule.loop.LoopRule;
+import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ExecutionContextImpl;
 import java.util.Date;
