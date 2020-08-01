@@ -140,11 +140,10 @@ public class RestfulServiceServletHandler extends RenderPageServletHandler {
                         var13.addDuration((Long)var16.get("duration"));
                         var13.addOutput((List)var16.get("output"));
                     }
-
                     this.writeObjectToJson(var3, var13);
                 } else {
                     Map var18 = this.a(var10, var9, var8, var4);
-                    this.writeObjectToJson(var3, var18);
+                    this.writeObjectToJson(var3, var18.get("output"));
                 }
 
             }
